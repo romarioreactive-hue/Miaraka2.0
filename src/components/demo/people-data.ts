@@ -1,3 +1,7 @@
+import type { ImageSourcePropType } from 'react-native';
+
+import { avatars } from '@/theme';
+
 export type PersonGroup = 'famille' | 'amis' | 'equipe';
 
 export type TimelineEvent = {
@@ -13,6 +17,7 @@ export type Person = {
   isMe?: boolean;
   group: PersonGroup;
   initials: string;
+  avatar: ImageSourcePropType;
   color: string;
   position: { top: `${number}%`; left: `${number}%` };
   location: string;
@@ -70,6 +75,7 @@ export const PEOPLE: Person[] = [
     isMe: true,
     group: 'famille',
     initials: 'M',
+    avatar: avatars.moi,
     color: PERSON_COLORS.moi,
     position: { top: '52%', left: '48%' },
     location: 'Analakely, Antananarivo',
@@ -91,6 +97,7 @@ export const PEOPLE: Person[] = [
     name: 'Rica',
     group: 'amis',
     initials: 'R',
+    avatar: avatars.rica,
     color: PERSON_COLORS.rica,
     position: { top: '32%', left: '28%' },
     location: 'Ivandry, Antananarivo',
@@ -112,6 +119,7 @@ export const PEOPLE: Person[] = [
     name: 'Mario',
     group: 'equipe',
     initials: 'MA',
+    avatar: avatars.mario,
     color: PERSON_COLORS.mario,
     position: { top: '68%', left: '62%' },
     location: 'Ankorondrano, Antananarivo',
@@ -133,6 +141,7 @@ export const PEOPLE: Person[] = [
     name: 'Taratra',
     group: 'amis',
     initials: 'T',
+    avatar: avatars.taratra,
     color: PERSON_COLORS.taratra,
     position: { top: '22%', left: '66%' },
     location: 'Antaninarenina, Antananarivo',
@@ -154,6 +163,7 @@ export const PEOPLE: Person[] = [
     name: 'Papa',
     group: 'famille',
     initials: 'P',
+    avatar: avatars.papa,
     color: PERSON_COLORS.papa,
     position: { top: '74%', left: '30%' },
     location: 'Ambohipo, Antananarivo',
@@ -175,6 +185,7 @@ export const PEOPLE: Person[] = [
     name: 'Maman',
     group: 'famille',
     initials: 'MM',
+    avatar: avatars.maman,
     color: PERSON_COLORS.maman,
     position: { top: '40%', left: '52%' },
     location: 'Analakely, Antananarivo',

@@ -19,7 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Avatar } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/cards';
 import { useLanguage } from '@/contexts/language-context';
-import { radius, spacing, typography } from '@/theme';
+import { darkColors, radius, spacing, typography } from '@/theme';
 
 type OnboardingChallengesScreenProps = {
   onBack: () => void;
@@ -28,22 +28,22 @@ type OnboardingChallengesScreenProps = {
 };
 
 const COLORS = {
-  background: '#12140A',
-  surface: '#1E2115',
-  surfaceHigh: '#292B1F',
-  surfaceHighest: '#333629',
-  outline: '#8F937B',
-  outlineVariant: '#444935',
-  text: '#E2E4D1',
-  textSecondary: '#C5C9AF',
-  primary: '#FFFFFF',
-  onPrimary: '#293500',
-  secondary: '#BAD077',
-  tertiary: '#FFFFFF',
-  green: '#3EE09D',
-  blue: '#4F8CFF',
-  paleBlue: '#AFC6FF',
-  cyan: '#46DFF1',
+  background: darkColors.background,
+  surface: darkColors.surface,
+  surfaceHigh: darkColors.surfaceElevated,
+  surfaceHighest: darkColors.surfaceInteractive,
+  outline: darkColors.textMuted,
+  outlineVariant: darkColors.border,
+  text: darkColors.textPrimary,
+  textSecondary: darkColors.textSecondary,
+  primary: darkColors.textPrimary,
+  onPrimary: darkColors.textInverse,
+  secondary: darkColors.accent,
+  tertiary: darkColors.textPrimary,
+  green: darkColors.success,
+  blue: darkColors.primary,
+  paleBlue: darkColors.accent,
+  cyan: darkColors.accent,
   glass: 'rgba(12, 33, 71, 0.72)',
 } as const;
 

@@ -24,7 +24,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Avatar } from '@/components/ui/avatar';
 import { useLanguage } from '@/contexts/language-context';
-import { radius, spacing, typography } from '@/theme';
+import { darkColors, radius, spacing, typography } from '@/theme';
 
 type InvitePersonSheetProps = {
   visible: boolean;
@@ -44,23 +44,23 @@ type Invitation = {
 };
 
 const COLORS = {
-  background: '#071424',
-  shellBackground: '#000814',
-  glass: 'rgba(12, 33, 71, 0.70)',
-  glassBorder: 'rgba(255, 255, 255, 0.05)',
-  surface: '#1E2115',
-  surfaceLow: '#1A1D11',
-  surfaceHigh: '#292B1F',
-  outline: '#8F937B',
-  outlineVariant: '#444935',
-  text: '#D7E3FA',
-  textSecondary: '#C5C9AF',
-  white: '#FFFFFF',
-  green: '#3EE09D',
-  blue: '#4F8CFF',
-  paleBlue: '#AFC6FF',
-  lime: '#C9F23B',
-  onPrimary: '#576C00',
+  background: darkColors.background,
+  shellBackground: darkColors.background,
+  glass: 'rgba(9, 26, 55, 0.70)',
+  glassBorder: darkColors.border,
+  surface: darkColors.surface,
+  surfaceLow: darkColors.backgroundElevated,
+  surfaceHigh: darkColors.surfaceElevated,
+  outline: darkColors.textMuted,
+  outlineVariant: darkColors.border,
+  text: darkColors.textPrimary,
+  textSecondary: darkColors.textSecondary,
+  white: darkColors.textPrimary,
+  green: darkColors.success,
+  blue: darkColors.primary,
+  paleBlue: darkColors.accent,
+  lime: darkColors.accent,
+  onPrimary: darkColors.textInverse,
 } as const;
 
 const RECEIVED: Invitation[] = [

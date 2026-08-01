@@ -1,6 +1,12 @@
-import { Image, StyleSheet, Text, View, useColorScheme, type ImageSourcePropType, type StyleProp, type ViewStyle } from 'react-native';
+import { Image, Platform, StyleSheet, Text, View, useColorScheme, type ImageSourcePropType, type StyleProp, type ViewStyle } from 'react-native';
 
-import { darkColors, lightColors, palette, radius, typography } from '@/theme';
+import { darkColors, glow, lightColors, palette, radius, typography } from '@/theme';
+
+const liveGlowStyle = Platform.OS === 'web'
+  ? glow.live.web
+  : Platform.OS === 'android'
+    ? glow.live.android
+    : glow.live.ios;
 
 export type AvatarSize = 32 | 48 | 64 | 88;
 export type AvatarStatus = 'live' | 'last-known' | 'offline';
@@ -45,7 +51,12 @@ export function Avatar({
     <View
       accessible
       accessibilityLabel={[name, statusLabel].filter(Boolean).join(', ')}
-      style={[styles.wrapper, { height: size, width: size }, style]}>
+      style={[
+        styles.wrapper,
+        { height: size, width: size },
+        status === 'live' && liveGlowStyle,
+        style,
+      ]}>
       <View
         style={[
           styles.avatar,

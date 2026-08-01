@@ -18,7 +18,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Avatar } from '@/components/ui/avatar';
 import { useLanguage } from '@/contexts/language-context';
-import { radius, spacing, typography } from '@/theme';
+import { darkColors, radius, spacing, typography } from '@/theme';
 
 import { GROUP_COLORS, Person } from './people-data';
 
@@ -28,26 +28,26 @@ type PersonSheetProps = {
 };
 
 const COLORS = {
-  background: '#06142B',
-  glass: 'rgba(12, 33, 71, 0.94)',
-  glassBorder: 'rgba(255, 255, 255, 0.10)',
-  surface: '#1E2115',
-  surfaceLow: '#1A1D11',
-  surfaceHigh: '#292B1F',
-  surfaceHighest: '#333629',
-  outline: '#8F937B',
-  outlineVariant: '#444935',
-  text: '#E2E4D1',
-  textSecondary: '#C5C9AF',
-  white: '#FFFFFF',
-  green: '#3EE09D',
-  cyan: '#38D6E8',
-  blue: '#4F8CFF',
-  paleBlue: '#AFC6FF',
-  lime: '#C9F23B',
-  onPrimary: '#293500',
-  warning: '#F6BE4F',
-  error: '#FF6577',
+  background: darkColors.background,
+  glass: 'rgba(9, 26, 55, 0.94)',
+  glassBorder: darkColors.border,
+  surface: darkColors.surface,
+  surfaceLow: darkColors.backgroundElevated,
+  surfaceHigh: darkColors.surfaceElevated,
+  surfaceHighest: darkColors.surfaceInteractive,
+  outline: darkColors.textMuted,
+  outlineVariant: darkColors.border,
+  text: darkColors.textPrimary,
+  textSecondary: darkColors.textSecondary,
+  white: darkColors.textPrimary,
+  green: darkColors.success,
+  cyan: darkColors.accent,
+  blue: darkColors.primary,
+  paleBlue: darkColors.accent,
+  lime: darkColors.accent,
+  onPrimary: darkColors.textInverse,
+  warning: darkColors.warning,
+  error: darkColors.error,
 } as const;
 
 export function PersonSheet({ person, onClose }: PersonSheetProps) {
@@ -87,6 +87,7 @@ export function PersonSheet({ person, onClose }: PersonSheetProps) {
                 name={person.name}
                 ringColor={COLORS.paleBlue}
                 size={88}
+                source={person.avatar}
               />
               <View style={styles.movementBadge}>
                 <SymbolView

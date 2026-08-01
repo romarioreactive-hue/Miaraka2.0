@@ -15,7 +15,7 @@ import Animated, {
 import { Avatar } from '@/components/ui/avatar';
 import { EmptyState } from '@/components/ui/empty-state';
 import { useLanguage } from '@/contexts/language-context';
-import { radius, spacing, typography } from '@/theme';
+import { avatars, darkColors, radius, spacing, typography } from '@/theme';
 
 import { PALETTE, Person, PersonGroup } from './people-data';
 
@@ -31,24 +31,24 @@ type DemoMapProps = {
 };
 
 const COLORS = {
-  background: '#06142B',
+  background: darkColors.background,
   map: '#071A31',
   mapDeep: '#041121',
   road: 'rgba(56, 214, 232, 0.24)',
   roadStrong: 'rgba(79, 140, 255, 0.42)',
-  glass: 'rgba(30, 33, 21, 0.80)',
-  glassStrong: 'rgba(41, 43, 31, 0.92)',
-  border: 'rgba(255, 255, 255, 0.10)',
-  text: '#E2E4D1',
-  textSecondary: '#C5C9AF',
-  outline: '#8F937B',
-  primary: '#FFFFFF',
-  onPrimary: '#293500',
-  lime: '#C9F23B',
-  green: '#29D391',
-  cyan: '#38D6E8',
-  blue: '#4F8CFF',
-  paleBlue: '#AFC6FF',
+  glass: 'rgba(9, 26, 55, 0.80)',
+  glassStrong: 'rgba(18, 43, 87, 0.92)',
+  border: darkColors.border,
+  text: darkColors.textPrimary,
+  textSecondary: darkColors.textSecondary,
+  outline: darkColors.textMuted,
+  primary: darkColors.textPrimary,
+  onPrimary: darkColors.textInverse,
+  lime: darkColors.accent,
+  green: darkColors.success,
+  cyan: darkColors.accent,
+  blue: darkColors.primary,
+  paleBlue: darkColors.accent,
 } as const;
 
 const FILTERS: MapFilter[] = ['tous', 'famille', 'amis', 'equipe'];
@@ -107,10 +107,10 @@ export function DemoMap({
         <View style={styles.searchShell}>
           <Avatar
             backgroundColor="#253B63"
-            initials="M"
             name={t('common.me')}
             ringColor="rgba(255, 255, 255, 0.20)"
             size={48}
+            source={avatars.moi}
           />
           <View accessibilityRole="search" style={styles.searchField}>
             <SymbolView
@@ -352,6 +352,7 @@ function MapMarker({ person, isSelected, delay, onPress }: MapMarkerProps) {
               name={person.name}
               ringColor={person.isMe ? COLORS.primary : person.color}
               size={person.isMe ? 64 : 48}
+              source={person.avatar}
             />
             {person.isMe ? <View style={styles.liveDot} /> : null}
           </Animated.View>
@@ -393,6 +394,7 @@ function FamilyCluster({
               name={person.name}
               ringColor={COLORS.outline}
               size={48}
+              source={person.avatar}
               style={{ marginLeft: index === 0 ? 0 : -14, zIndex: people.length - index }}
             />
           ))}

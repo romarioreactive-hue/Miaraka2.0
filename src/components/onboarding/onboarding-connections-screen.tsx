@@ -19,7 +19,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Avatar, type AvatarSize } from '@/components/ui/avatar';
 import { PrimaryButton, SecondaryButton } from '@/components/ui/buttons';
 import { useLanguage } from '@/contexts/language-context';
-import { darkColors, radius, spacing, typography } from '@/theme';
+import { avatars, darkColors, radius, spacing, typography } from '@/theme';
+import type { ImageSourcePropType } from 'react-native';
 
 type OnboardingConnectionsScreenProps = {
   onContinue: () => void;
@@ -27,17 +28,17 @@ type OnboardingConnectionsScreenProps = {
 };
 
 const COLORS = {
-  background: '#071424',
-  text: '#D7E3FA',
-  textSecondary: '#C5C9AF',
-  green: '#29D391',
-  brightGreen: '#3EE09D',
-  cyan: '#38D6E8',
-  blue: '#4F8CFF',
-  paleBlue: '#AFC6FF',
-  surface: '#1E2115',
-  surfaceHigh: '#333629',
-  outline: '#444935',
+  background: darkColors.background,
+  text: darkColors.textPrimary,
+  textSecondary: darkColors.textSecondary,
+  green: darkColors.success,
+  brightGreen: darkColors.success,
+  cyan: darkColors.accent,
+  blue: darkColors.primary,
+  paleBlue: darkColors.accent,
+  surface: darkColors.surface,
+  surfaceHigh: darkColors.surfaceElevated,
+  outline: darkColors.border,
 } as const;
 
 export function OnboardingConnectionsScreen({ onContinue, onSkip }: OnboardingConnectionsScreenProps) {
@@ -155,6 +156,7 @@ function ConnectionsVisual({ size }: { size: number }) {
           delay={1200}
           name="Papa"
           size={64}
+          source={avatars.papa}
           style={styles.avatarTopLeft}
           visualScale={0.875}
         />
@@ -163,6 +165,7 @@ function ConnectionsVisual({ size }: { size: number }) {
           delay={1400}
           name="Rica"
           size={48}
+          source={avatars.rica}
           style={styles.avatarTopRight}
         />
         <FloatingAvatar
@@ -177,6 +180,7 @@ function ConnectionsVisual({ size }: { size: number }) {
           delay={1800}
           name="Mario"
           size={64}
+          source={avatars.mario}
           style={styles.avatarBottomLeft}
           visualScale={0.875}
         />
@@ -201,9 +205,10 @@ type FloatingAvatarProps = {
   delay: number;
   style: object;
   visualScale?: number;
+  source?: ImageSourcePropType;
 };
 
-function FloatingAvatar({ name, color, size, delay, style, visualScale = 1 }: FloatingAvatarProps) {
+function FloatingAvatar({ name, color, size, delay, style, visualScale = 1, source }: FloatingAvatarProps) {
   const reduceMotion = useReducedMotion();
   const translateY = useSharedValue(0);
 
@@ -236,6 +241,7 @@ function FloatingAvatar({ name, color, size, delay, style, visualScale = 1 }: Fl
           name={name}
           ringColor={COLORS.surfaceHigh}
           size={size}
+          source={source}
         />
       </Animated.View>
     </Animated.View>

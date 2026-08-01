@@ -193,6 +193,8 @@ export const fr = {
   'spaces.familyChallenge': 'Balade du dimanche',
   'spaces.friendsChallenge': '10 000 pas entre amis',
   'spaces.teamChallenge': 'Cap sur 300 km',
+  'spaces.streakTitle': '12 jours de suite',
+  'spaces.streakSubtitle': 'Vos espaces restent actifs chaque jour cette semaine.',
 
   'profile.verified': 'Compte fictif vérifié',
   'profile.edit': 'Modifier',

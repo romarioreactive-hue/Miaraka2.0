@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   Easing,
+  FadeInDown,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withDelay,
   withRepeat,
@@ -11,21 +13,22 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { AppBackground } from '@/components/ui/app-background';
 import { Avatar } from '@/components/ui/avatar';
 import { EmptyState } from '@/components/ui/empty-state';
 import { CreateChallengeSheet } from './create-challenge-sheet';
 import { useLanguage } from '@/contexts/language-context';
-import { alpha, darkColors, radius, spacing, typography } from '@/theme';
+import { alpha, avatars, darkColors, radius, spacing, typography } from '@/theme';
 
 type ChallengeFilter = 'En cours' | 'Terminés' | 'Mes groupes';
 
 const FILTERS: ChallengeFilter[] = ['En cours', 'Terminés', 'Mes groupes'];
 
 const PARTICIPANTS = [
-  { rank: 1, name: 'Moi', initials: 'M', distance: 7.4, goal: 10, color: darkColors.accent },
-  { rank: 2, name: 'Rica', initials: 'R', distance: 6.2, goal: 8, color: darkColors.success },
-  { rank: 3, name: 'Mario', initials: 'MA', distance: 3.7, goal: 5, color: darkColors.primary },
-  { rank: 4, name: 'Taratra', initials: 'T', distance: 4.1, goal: 6, color: '#7C8DF6' },
+  { rank: 1, name: 'Moi', initials: 'M', avatar: avatars.moi, distance: 7.4, goal: 10, color: darkColors.accent },
+  { rank: 2, name: 'Rica', initials: 'R', avatar: avatars.rica, distance: 6.2, goal: 8, color: darkColors.success },
+  { rank: 3, name: 'Mario', initials: 'MA', avatar: avatars.mario, distance: 3.7, goal: 5, color: darkColors.primary },
+  { rank: 4, name: 'Taratra', initials: 'T', avatar: avatars.taratra, distance: 4.1, goal: 6, color: '#7C8DF6' },
 ] as const;
 
 type ChallengeTypeCard = {
@@ -43,6 +46,8 @@ const CHALLENGE_TYPES: ChallengeTypeCard[] = [
 
 export function ChallengesScreen() {
   const { t } = useLanguage();
+  const reduceMotion = useReducedMotion();
+  const enter = (delay: number) => (reduceMotion ? FadeInDown.duration(1) : FadeInDown.delay(delay).duration(420));
   const [activeFilter, setActiveFilter] = useState<ChallengeFilter>('En cours');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [showAllRanking, setShowAllRanking] = useState(false);
@@ -52,14 +57,14 @@ export function ChallengesScreen() {
   const overflowCount = PARTICIPANTS.length - 3;
 
   return (
-    <>
+    <AppBackground variant="dashboard">
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
           <View style={styles.topBarIdentity}>
-            <Avatar backgroundColor="#253B63" initials="M" name={t('common.me')} ringColor={alpha.white24} size={32} />
+            <Avatar backgroundColor="#253B63" name={t('common.me')} ringColor={alpha.white24} size={32} source={avatars.moi} />
             <Text accessibilityRole="header" style={styles.title}>{t('challenges.title')}</Text>
           </View>
           <Pressable
@@ -107,7 +112,7 @@ export function ChallengesScreen() {
           />
         ) : (
           <>
-            <View style={styles.heroCard}>
+            <Animated.View entering={enter(60)} style={styles.heroCard}>
               <View style={styles.heroTopRow}>
                 <View style={styles.teamBadge}>
                   <View style={styles.teamDot} />
@@ -140,14 +145,16 @@ export function ChallengesScreen() {
               <View style={styles.avatarStackRow}>
                 <View style={styles.avatarStack}>
                   {PARTICIPANTS.slice(0, 3).map((participant, index) => (
-                    <View
+                    <Avatar
+                      backgroundColor={`${participant.color}33`}
+                      initials={participant.initials}
                       key={participant.name}
-                      style={[
-                        styles.stackAvatar,
-                        { marginLeft: index === 0 ? 0 : -10, backgroundColor: `${participant.color}33`, borderColor: darkColors.surface },
-                      ]}>
-                      <Text style={[styles.stackAvatarText, { color: participant.color }]}>{participant.initials}</Text>
-                    </View>
+                      name={participant.name}
+                      ringColor={darkColors.surface}
+                      size={32}
+                      source={participant.avatar}
+                      style={{ marginLeft: index === 0 ? 0 : -10 }}
+                    />
                   ))}
                   {overflowCount > 0 ? (
                     <View style={[styles.stackAvatar, styles.stackAvatarMore]}>
@@ -156,9 +163,9 @@ export function ChallengesScreen() {
                   ) : null}
                 </View>
               </View>
-            </View>
+            </Animated.View>
 
-            <View style={styles.sectionHeader}>
+            <Animated.View entering={enter(140)} style={styles.sectionHeader}>
               <View>
                 <Text style={styles.sectionEyebrow}>{PARTICIPANTS.length} PARTICIPANTS</Text>
                 <Text style={styles.sectionTitle}>{t('challenges.ranking')}</Text>
@@ -174,9 +181,9 @@ export function ChallengesScreen() {
               ) : (
                 <Text style={styles.updated}>{t('challenges.updated')}</Text>
               )}
-            </View>
+            </Animated.View>
 
-            <View style={styles.rankingCard}>
+            <Animated.View entering={enter(200)} style={styles.rankingCard}>
               {visibleParticipants.map((participant, index) => (
                 <ParticipantRow
                   key={participant.name}
@@ -185,7 +192,7 @@ export function ChallengesScreen() {
                   isLast={index === visibleParticipants.length - 1}
                 />
               ))}
-            </View>
+            </Animated.View>
 
             <View style={styles.sectionHeader}>
               <View>
@@ -195,8 +202,8 @@ export function ChallengesScreen() {
             </View>
 
             <View style={styles.typeRow}>
-              {CHALLENGE_TYPES.map((type) => (
-                <View key={type.label} style={styles.typeCard}>
+              {CHALLENGE_TYPES.map((type, index) => (
+                <Animated.View entering={enter(260 + index * 70)} key={type.label} style={styles.typeCard}>
                   <View style={[styles.typeIcon, type.complete && styles.typeIconComplete]}>
                     <Text style={[styles.typeIconText, type.complete && styles.typeIconTextComplete]}>
                       {type.icon}
@@ -205,11 +212,11 @@ export function ChallengesScreen() {
                   <Text style={styles.typeLabel}>{type.label === 'Individuel' ? t('challenges.individual') : type.label === 'Collectif' ? t('challenges.collective') : t('challenges.ranking')}</Text>
                   <Text numberOfLines={2} style={styles.typeDetail}>{type.detail === 'Objectif atteint' ? t('challenges.goalReached') : type.detail === 'Un objectif commun' ? t('challenges.commonGoal') : t('challenges.bestWins')}</Text>
                   {type.complete && <AchievementPulse />}
-                </View>
+                </Animated.View>
               ))}
             </View>
 
-            <View style={styles.ctaBlock}>
+            <Animated.View entering={enter(480)} style={styles.ctaBlock}>
               <Pressable
                 accessibilityRole="button"
                 onPress={() => setIsCreateOpen(true)}
@@ -218,19 +225,19 @@ export function ChallengesScreen() {
                 <Text style={styles.ctaButtonText}>{t('challenges.createTitle')}</Text>
               </Pressable>
               <Text style={styles.ctaHelper}>{t('challenges.ctaHelper')}</Text>
-            </View>
+            </Animated.View>
           </>
         )}
       </ScrollView>
 
       <CreateChallengeSheet visible={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
-    </>
+    </AppBackground>
   );
 }
 
 type ParticipantRowProps = (typeof PARTICIPANTS)[number] & { isFirst: boolean; isLast: boolean };
 
-function ParticipantRow({ rank, name, initials, distance, goal, color, isFirst, isLast }: ParticipantRowProps) {
+function ParticipantRow({ rank, name, initials, avatar, distance, goal, color, isFirst, isLast }: ParticipantRowProps) {
   const { t } = useLanguage();
   const percentage = Math.round((distance / goal) * 100);
 
@@ -238,9 +245,16 @@ function ParticipantRow({ rank, name, initials, distance, goal, color, isFirst, 
     <View style={[styles.participantRow, isFirst && styles.participantRowFirst, !isLast && styles.participantDivider]}>
       <View style={styles.participantTopRow}>
         <Text style={[styles.rank, rank === 1 && styles.rankFirst]}>#{rank}</Text>
-        <View style={[styles.avatar, { backgroundColor: `${color}22`, borderColor: `${color}55` }]}>
-          <Text style={[styles.avatarText, { color }]}>{initials}</Text>
-        </View>
+        <Avatar
+          backgroundColor={`${color}22`}
+          initials={initials}
+          name={name}
+          ringColor={`${color}55`}
+          size={32}
+          source={avatar}
+          status={rank === 1 ? 'live' : undefined}
+          style={styles.participantAvatar}
+        />
         <View style={styles.participantNameBlock}>
           <Text style={styles.participantName}>{name === 'Moi' ? t('common.me') : name}</Text>
           <Text style={styles.participantDistance}>
@@ -316,7 +330,7 @@ function AchievementPulse() {
 }
 
 const styles = StyleSheet.create({
-  scrollView: { flex: 1, backgroundColor: darkColors.background },
+  scrollView: { flex: 1 },
   content: { paddingHorizontal: spacing[4], paddingTop: spacing[3], paddingBottom: spacing[10], gap: spacing[4] },
   topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 48 },
   topBarIdentity: { flexDirection: 'row', alignItems: 'center', gap: spacing[3] },
@@ -399,16 +413,7 @@ const styles = StyleSheet.create({
   participantTopRow: { flexDirection: 'row', alignItems: 'center' },
   rank: { width: 28, color: darkColors.textMuted, fontSize: 10, fontWeight: '900' },
   rankFirst: { color: darkColors.accent },
-  avatar: {
-    width: 36,
-    height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 13,
-    borderWidth: 1,
-    marginRight: 9,
-  },
-  avatarText: { fontSize: 10, fontWeight: '900' },
+  participantAvatar: { marginRight: 9 },
   participantNameBlock: { flex: 1 },
   participantName: { color: darkColors.textPrimary, fontSize: 12, fontWeight: '800' },
   participantDistance: { color: darkColors.textMuted, fontSize: 9, fontWeight: '600', marginTop: 2 },

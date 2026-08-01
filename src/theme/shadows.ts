@@ -83,3 +83,9 @@ export const shadows = {
   liveGlow: glowLive,
 } as const;
 
+/** Alias explicite pour les halos lumineux (glow) utilisés sur les états actifs/en direct. */
+export const glow = {
+  primary: glowPrimary,
+  live: glowLive,
+} as const;
+

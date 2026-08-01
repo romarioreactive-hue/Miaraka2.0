@@ -17,7 +17,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { Card } from '@/components/ui/cards';
 import { useLanguage } from '@/contexts/language-context';
-import { radius, spacing, typography } from '@/theme';
+import { darkColors, radius, spacing, typography } from '@/theme';
 
 type OnboardingPrivacyControlScreenProps = {
   onBack: () => void;
@@ -25,25 +25,25 @@ type OnboardingPrivacyControlScreenProps = {
 };
 
 const COLORS = {
-  background: '#12140A',
-  surface: '#1E2115',
-  surfaceHigh: '#292B1F',
-  surfaceHighest: '#333629',
-  outline: '#8F937B',
-  outlineVariant: '#444935',
-  text: '#E2E4D1',
-  textSecondary: '#C5C9AF',
-  primary: '#FFFFFF',
-  primaryContainer: '#C9F23B',
-  onPrimaryContainer: '#576C00',
-  secondary: '#BAD077',
-  tertiary: '#FFFFFF',
-  green: '#29D391',
-  brightGreen: '#3EE09D',
-  cyan: '#38D6E8',
-  blue: '#4F8CFF',
+  background: darkColors.background,
+  surface: darkColors.surface,
+  surfaceHigh: darkColors.surfaceElevated,
+  surfaceHighest: darkColors.surfaceInteractive,
+  outline: darkColors.textMuted,
+  outlineVariant: darkColors.border,
+  text: darkColors.textPrimary,
+  textSecondary: darkColors.textSecondary,
+  primary: darkColors.textPrimary,
+  primaryContainer: darkColors.primary,
+  onPrimaryContainer: darkColors.textInverse,
+  secondary: darkColors.accent,
+  tertiary: darkColors.textPrimary,
+  green: darkColors.success,
+  brightGreen: darkColors.success,
+  cyan: darkColors.accent,
+  blue: darkColors.primary,
   glass: 'rgba(12, 33, 71, 0.72)',
-  glassBorder: 'rgba(255, 255, 255, 0.05)',
+  glassBorder: darkColors.border,
 } as const;
 
 export function OnboardingPrivacyControlScreen({ onBack, onContinue }: OnboardingPrivacyControlScreenProps) {

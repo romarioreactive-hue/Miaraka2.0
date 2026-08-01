@@ -3,7 +3,9 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
-import { alpha, darkColors, groupColors, radius, spacing, typography } from '@/theme';
+import { AppBackground } from '@/components/ui/app-background';
+import { Avatar } from '@/components/ui/avatar';
+import { alpha, avatars, darkColors, groupColors, radius, spacing, typography } from '@/theme';
 import { useLanguage } from '@/contexts/language-context';
 
 import {
@@ -48,7 +50,7 @@ export function ProfileScreen() {
   }
 
   return (
-    <>
+    <AppBackground variant="profile">
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
           <Text accessibilityRole="header" style={styles.topBarTitle}>{t('nav.profile')}</Text>
@@ -67,7 +69,14 @@ export function ProfileScreen() {
 
         <Animated.View entering={FadeInDown.duration(450)} style={styles.profileHeader}>
           <View style={styles.avatarWrap}>
-            <View style={styles.avatar}><Text style={styles.avatarText}>{profile.initials}</Text></View>
+            <Avatar
+              backgroundColor={darkColors.primarySoft}
+              initials={profile.initials}
+              name={profile.name}
+              ringColor={darkColors.accent}
+              size={64}
+              source={avatars.rica}
+            />
             <View style={styles.onlineDot} />
           </View>
           <View style={styles.profileCopy}>
@@ -198,7 +207,7 @@ export function ProfileScreen() {
       )}
       <PauseSharingModal onClose={() => setPauseOpen(false)} onConfirm={(duration) => setSharingPause(duration)} visible={pauseOpen} />
       <LogoutConfirmationModal onClose={() => setLogoutOpen(false)} onConfirm={() => showFeedback(t('profile.feedbackLogout'))} visible={logoutOpen} />
-    </>
+    </AppBackground>
   );
 }
 
@@ -238,7 +247,7 @@ function PermissionChip({ enabled, label, short }: { enabled: boolean; label: st
 }
 
 const styles = StyleSheet.create({
-  scrollView: { flex: 1, backgroundColor: darkColors.background },
+  scrollView: { flex: 1 },
   content: { paddingHorizontal: spacing[4], paddingTop: spacing[3], paddingBottom: spacing[10], gap: spacing[5] },
   topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 48 },
   topBarTitle: { ...typography.titleLarge, color: darkColors.textPrimary },
@@ -252,8 +261,6 @@ const styles = StyleSheet.create({
   positionDisabledButtonText: { ...typography.labelMedium, color: darkColors.textInverse },
   profileHeader: { minHeight: 112, flexDirection: 'row', alignItems: 'center', gap: spacing[3], padding: spacing[4], borderRadius: radius.extraLarge, borderWidth: 1, borderColor: alpha.primary32, backgroundColor: darkColors.surface },
   avatarWrap: { width: 66, height: 66 },
-  avatar: { width: 66, height: 66, alignItems: 'center', justifyContent: 'center', borderRadius: radius.circle, borderWidth: 2, borderColor: darkColors.accent, backgroundColor: darkColors.primarySoft },
-  avatarText: { ...typography.titleMedium, color: darkColors.textPrimary },
   onlineDot: { position: 'absolute', right: 1, bottom: 2, width: 15, height: 15, borderRadius: radius.circle, borderWidth: 3, borderColor: darkColors.surface, backgroundColor: darkColors.live },
   profileCopy: { flex: 1, minWidth: 0 },
   profileName: { ...typography.titleMedium, color: darkColors.textPrimary },

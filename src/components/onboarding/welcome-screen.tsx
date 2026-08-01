@@ -1,6 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   Easing,
   FadeIn,
@@ -16,24 +16,24 @@ import Animated, {
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '@/contexts/language-context';
-import { radius, spacing, typography } from '@/theme';
+import { darkColors, logos, radius, spacing, typography } from '@/theme';
 
 type WelcomeScreenProps = { onOpenDemo: () => void };
 
 const COLORS = {
-  background: '#06142B',
-  deep: '#071424',
-  glass: 'rgba(12, 33, 71, 0.70)',
-  surfaceHigh: '#292B1F',
-  outline: '#8F937B',
-  outlineVariant: '#444935',
-  text: '#D7E3FA',
-  textSecondary: '#C5C9AF',
-  white: '#FFFFFF',
-  green: '#3EE09D',
-  cyan: '#38D6E8',
-  blue: '#4F8CFF',
-  paleBlue: '#AFC6FF',
+  background: darkColors.background,
+  deep: darkColors.background,
+  glass: 'rgba(9, 26, 55, 0.70)',
+  surfaceHigh: darkColors.surfaceElevated,
+  outline: darkColors.textMuted,
+  outlineVariant: darkColors.border,
+  text: darkColors.textPrimary,
+  textSecondary: darkColors.textSecondary,
+  white: darkColors.textPrimary,
+  green: darkColors.success,
+  cyan: darkColors.accent,
+  blue: darkColors.primary,
+  paleBlue: darkColors.accent,
 } as const;
 
 export function WelcomeScreen({ onOpenDemo }: WelcomeScreenProps) {
@@ -48,13 +48,7 @@ export function WelcomeScreen({ onOpenDemo }: WelcomeScreenProps) {
       <SafeAreaView edges={['top']} style={styles.safeArea}>
         <View style={styles.header}>
           <View style={styles.brand}>
-            <SymbolView
-              name={{ ios: 'heart.text.square.fill', android: 'shield_with_heart', web: 'shield_with_heart' }}
-              size={31}
-              tintColor={COLORS.paleBlue}
-              weight="bold"
-            />
-            <Text style={styles.brandName}>Miaraka</Text>
+            <Image accessibilityLabel="Miaraka" source={logos.mark} style={styles.brandMark} />
           </View>
           <Pressable
             accessibilityLabel={copy.changeLanguage}
@@ -242,7 +236,7 @@ const styles = StyleSheet.create({
   ambientGlowBottom: { backgroundColor: 'rgba(62, 224, 157, 0.07)', bottom: -180, right: -170 },
   header: { alignItems: 'center', backgroundColor: 'rgba(18, 20, 10, 0.40)', flexDirection: 'row', justifyContent: 'space-between', minHeight: 64, paddingHorizontal: spacing[5], zIndex: 20 },
   brand: { alignItems: 'center', flexDirection: 'row', gap: spacing[2] },
-  brandName: { ...typography.titleLarge, color: COLORS.green, fontSize: 28, fontWeight: '800', lineHeight: 34 },
+  brandMark: { width: 40, height: 40, borderRadius: radius.medium, overflow: 'hidden' },
   languageButton: { alignItems: 'center', borderRadius: radius.pill, flexDirection: 'row', gap: spacing[2], justifyContent: 'center', minHeight: 48, minWidth: 72 },
   languageCode: { ...typography.labelMedium, color: COLORS.textSecondary },
   scrollContent: { flexGrow: 1, paddingHorizontal: spacing[5] },

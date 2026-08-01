@@ -1,8 +1,10 @@
 import { SymbolView } from 'expo-symbols';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated';
 
+import { AppBackground } from '@/components/ui/app-background';
 import { Avatar } from '@/components/ui/avatar';
-import { alpha, darkColors, radius, spacing, typography } from '@/theme';
+import { alpha, avatars, darkColors, radius, spacing, typography } from '@/theme';
 import { useLanguage } from '@/contexts/language-context';
 
 import { getActiveMemberCount, SPACES, Space } from './spaces-data';
@@ -15,72 +17,89 @@ type SpacesScreenProps = {
 
 export function SpacesScreen({ onCreateSpace, onInviteMember, onSelectSpace }: SpacesScreenProps) {
   const { t } = useLanguage();
+  const reduceMotion = useReducedMotion();
+  const enter = (delay: number) => (reduceMotion ? FadeInDown.duration(1) : FadeInDown.delay(delay).duration(420));
+
   return (
-    <ScrollView
-      style={styles.scrollView}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}>
-      <View style={styles.topBar}>
-        <View style={styles.topBarIdentity}>
-          <Avatar backgroundColor="#253B63" initials="M" name={t('common.me')} ringColor={alpha.white24} size={32} />
-          <Text accessibilityRole="header" style={styles.topBarTitle}>{t('spaces.title')}</Text>
+    <AppBackground variant="dashboard">
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.topBar}>
+          <View style={styles.topBarIdentity}>
+            <Avatar backgroundColor="#253B63" name={t('common.me')} ringColor={alpha.white24} size={32} source={avatars.moi} />
+            <Text accessibilityRole="header" style={styles.topBarTitle}>{t('spaces.title')}</Text>
+          </View>
+          <Pressable
+            accessibilityLabel={t('common.notifications')}
+            accessibilityRole="button"
+            style={({ pressed }) => [styles.notificationButton, pressed && styles.pressed]}>
+            <SymbolView
+              name={{ ios: 'bell.fill', android: 'notifications', web: 'notifications' }}
+              size={20}
+              tintColor={darkColors.primary}
+              weight="medium"
+            />
+          </Pressable>
         </View>
-        <Pressable
-          accessibilityLabel={t('common.notifications')}
-          accessibilityRole="button"
-          style={({ pressed }) => [styles.notificationButton, pressed && styles.pressed]}>
-          <SymbolView
-            name={{ ios: 'bell.fill', android: 'notifications', web: 'notifications' }}
-            size={20}
-            tintColor={darkColors.primary}
-            weight="medium"
-          />
-        </Pressable>
-      </View>
 
-      <View style={styles.headerCopy}>
-        <Text style={styles.eyebrow}>{t('spaces.eyebrow')}</Text>
-        <Text style={styles.subtitle}>{t('spaces.subtitle')}</Text>
-      </View>
+        <Animated.View entering={enter(60)} style={styles.headerCopy}>
+          <Text style={styles.eyebrow}>{t('spaces.eyebrow')}</Text>
+          <Text style={styles.subtitle}>{t('spaces.subtitle')}</Text>
+        </Animated.View>
 
-      <View style={styles.actionRow}>
-        <Pressable
-          accessibilityLabel={t('spaces.create')}
-          accessibilityRole="button"
-          onPress={onCreateSpace}
-          style={({ pressed }) => [styles.actionButtonPrimary, pressed && styles.pressed]}>
-          <Text style={styles.actionButtonPlus}>＋</Text>
-          <Text style={styles.actionButtonPrimaryText}>{t('spaces.create')}</Text>
-        </Pressable>
-        <Pressable
-          accessibilityLabel={t('spaces.inviteMember')}
-          accessibilityRole="button"
-          onPress={onInviteMember}
-          style={({ pressed }) => [styles.actionButtonSecondary, pressed && styles.pressed]}>
-          <SymbolView
-            name={{ ios: 'person.badge.plus', android: 'person_add', web: 'person_add' }}
-            size={18}
-            tintColor={darkColors.accent}
-            weight="medium"
-          />
-          <Text style={styles.actionButtonSecondaryText}>{t('spaces.inviteMember')}</Text>
-        </Pressable>
-      </View>
+        <Animated.View entering={enter(120)} style={styles.streakBanner}>
+          <View style={styles.streakIcon}>
+            <SymbolView name={{ ios: 'flame.fill', android: 'local_fire_department', web: 'local_fire_department' }} size={22} tintColor="#FFFFFF" weight="bold" />
+          </View>
+          <View style={styles.streakCopy}>
+            <Text style={styles.streakTitle}>{t('spaces.streakTitle')}</Text>
+            <Text style={styles.streakSubtitle}>{t('spaces.streakSubtitle')}</Text>
+          </View>
+        </Animated.View>
 
-      <View style={styles.summary}>
-        <SummaryItem value="3" label={t('nav.spaces').toLocaleLowerCase()} />
-        <View style={styles.summaryDivider} />
-        <SummaryItem value="14" label={t('common.members')} />
-        <View style={styles.summaryDivider} />
-        <SummaryItem value="6" label={t('common.active')} live />
-      </View>
+        <Animated.View entering={enter(180)} style={styles.actionRow}>
+          <Pressable
+            accessibilityLabel={t('spaces.create')}
+            accessibilityRole="button"
+            onPress={onCreateSpace}
+            style={({ pressed }) => [styles.actionButtonPrimary, pressed && styles.pressed]}>
+            <Text style={styles.actionButtonPlus}>＋</Text>
+            <Text style={styles.actionButtonPrimaryText}>{t('spaces.create')}</Text>
+          </Pressable>
+          <Pressable
+            accessibilityLabel={t('spaces.inviteMember')}
+            accessibilityRole="button"
+            onPress={onInviteMember}
+            style={({ pressed }) => [styles.actionButtonSecondary, pressed && styles.pressed]}>
+            <SymbolView
+              name={{ ios: 'person.badge.plus', android: 'person_add', web: 'person_add' }}
+              size={18}
+              tintColor={darkColors.accent}
+              weight="medium"
+            />
+            <Text style={styles.actionButtonSecondaryText}>{t('spaces.inviteMember')}</Text>
+          </Pressable>
+        </Animated.View>
 
-      <View style={styles.cards}>
-        {SPACES.map((space) => (
-          <SpaceCard key={space.id} space={space} onPress={() => onSelectSpace(space)} />
-        ))}
-      </View>
-    </ScrollView>
+        <Animated.View entering={enter(240)} style={styles.summary}>
+          <SummaryItem value="3" label={t('nav.spaces').toLocaleLowerCase()} />
+          <View style={styles.summaryDivider} />
+          <SummaryItem value="14" label={t('common.members')} />
+          <View style={styles.summaryDivider} />
+          <SummaryItem value="6" label={t('common.active')} live />
+        </Animated.View>
+
+        <View style={styles.cards}>
+          {SPACES.map((space, index) => (
+            <Animated.View entering={enter(300 + index * 90)} key={space.id}>
+              <SpaceCard space={space} onPress={() => onSelectSpace(space)} />
+            </Animated.View>
+          ))}
+        </View>
+      </ScrollView>
+    </AppBackground>
   );
 }
 
@@ -98,6 +117,9 @@ function SpaceCard({ space, onPress }: { space: Space; onPress: () => void }) {
   const activeCount = getActiveMemberCount(space);
   const name = t(space.type === 'famille' ? 'groups.family' : space.type === 'amis' ? 'groups.friends' : 'groups.team');
   const sharing = t(space.sharingLevel === 'Position précise' ? 'spaces.precise' : space.sharingLevel === 'Zone approximative' ? 'spaces.approximate' : 'spaces.activityOnly');
+  const glowShadow = Platform.OS === 'web'
+    ? { boxShadow: `0 12px 32px ${space.color}26` }
+    : { shadowColor: space.color, shadowOpacity: 0.22, shadowRadius: 18, shadowOffset: { width: 0, height: 8 }, elevation: 6 };
 
   return (
     <Pressable
@@ -105,7 +127,7 @@ function SpaceCard({ space, onPress }: { space: Space; onPress: () => void }) {
       accessibilityLabel={`${name}, ${space.members.length} ${t('common.members')}, ${activeCount} ${t('common.active')}`}
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => [styles.card, { borderColor: `${space.color}52` }, pressed && styles.cardPressed]}>
+      style={({ pressed }) => [styles.card, glowShadow, { borderColor: `${space.color}52` }, pressed && styles.cardPressed]}>
       <View style={[styles.accent, { backgroundColor: space.color }]} />
       <View style={styles.cardHeader}>
         <View style={[styles.spaceIcon, { backgroundColor: `${space.color}24` }]}>
@@ -157,7 +179,7 @@ function SpaceCard({ space, onPress }: { space: Space; onPress: () => void }) {
 }
 
 const styles = StyleSheet.create({
-  scrollView: { flex: 1, backgroundColor: darkColors.background },
+  scrollView: { flex: 1 },
   content: { paddingHorizontal: spacing[4], paddingTop: spacing[3], paddingBottom: spacing[10], gap: spacing[4] },
   topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 48 },
   topBarIdentity: { flexDirection: 'row', alignItems: 'center', gap: spacing[3] },
@@ -166,6 +188,31 @@ const styles = StyleSheet.create({
   headerCopy: { marginTop: -spacing[2] },
   eyebrow: { ...typography.caption, color: darkColors.accent, fontWeight: '700', letterSpacing: 1.1 },
   subtitle: { ...typography.caption, color: darkColors.textMuted, marginTop: 2 },
+  streakBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing[3],
+    minHeight: 72,
+    padding: spacing[3],
+    borderRadius: radius.extraLarge,
+    backgroundColor: '#3A1220',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 101, 119, 0.35)',
+    overflow: 'hidden',
+    ...(Platform.OS === 'web' ? { boxShadow: '0 10px 28px rgba(255, 101, 119, 0.22)' } : { shadowColor: darkColors.error, shadowOpacity: 0.28, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } }),
+  },
+  streakIcon: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: radius.circle,
+    backgroundColor: darkColors.error,
+    experimental_backgroundImage: `linear-gradient(135deg, ${darkColors.error} 0%, ${darkColors.warning} 100%)`,
+  },
+  streakCopy: { flex: 1 },
+  streakTitle: { ...typography.titleMedium, color: darkColors.textPrimary },
+  streakSubtitle: { ...typography.caption, color: 'rgba(255, 220, 220, 0.82)', marginTop: 2 },
   actionRow: { flexDirection: 'row', gap: spacing[3] },
   actionButtonPrimary: { flex: 1, minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: spacing[3], borderRadius: radius.pill, backgroundColor: darkColors.primary },
   actionButtonPlus: { color: darkColors.textInverse, fontSize: 18, fontWeight: '700' },

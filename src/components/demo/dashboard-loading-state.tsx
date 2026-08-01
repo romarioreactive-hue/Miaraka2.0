@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AppBackground } from '@/components/ui/app-background';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useLanguage } from '@/contexts/language-context';
 import { darkColors, radius, spacing, typography } from '@/theme';
@@ -26,7 +27,7 @@ export function DashboardLoadingState({ activeTab, onChangeTab, onPressMia }: Da
   const { t } = useLanguage();
 
   return (
-    <View style={styles.root}>
+    <AppBackground style={styles.root} variant="dashboard">
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.topBar}>
           <View style={styles.topBarIdentity}>
@@ -62,7 +63,7 @@ export function DashboardLoadingState({ activeTab, onChangeTab, onPressMia }: Da
 
         <DemoTabBar activeTab={activeTab} onChangeTab={onChangeTab} onPressMia={onPressMia} />
       </SafeAreaView>
-    </View>
+    </AppBackground>
   );
 }
 
@@ -116,7 +117,7 @@ function ChallengeSkeletonCard() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: darkColors.background },
+  root: { flex: 1 },
   safeArea: { flex: 1 },
   topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 48, paddingHorizontal: spacing[4], paddingTop: spacing[2] },
   topBarIdentity: { flexDirection: 'row', alignItems: 'center', gap: spacing[3] },

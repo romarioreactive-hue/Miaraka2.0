@@ -13,9 +13,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AppBackground } from '@/components/ui/app-background';
 import { Avatar } from '@/components/ui/avatar';
 import { useLanguage } from '@/contexts/language-context';
-import { alpha, darkColors, radius, spacing, typography } from '@/theme';
+import { alpha, avatars, darkColors, radius, spacing, typography } from '@/theme';
 
 import { DemoTab, DemoTabBar } from './demo-tab-bar';
 
@@ -72,11 +73,11 @@ export function MiaAssistantScreen({ activeTab, onNavigate, onClose }: MiaAssist
   }
 
   return (
-    <View style={styles.root}>
+    <AppBackground style={styles.root} variant="default">
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.topBar}>
           <View style={styles.topBarIdentity}>
-            <Avatar backgroundColor="#253B63" initials="M" name={t('common.me')} ringColor={alpha.white24} size={32} />
+            <Avatar backgroundColor="#253B63" name={t('common.me')} ringColor={alpha.white24} size={32} source={avatars.moi} />
             <Text accessibilityRole="header" style={styles.title}>{t('mia.title')}</Text>
           </View>
           <Pressable
@@ -154,7 +155,7 @@ export function MiaAssistantScreen({ activeTab, onNavigate, onClose }: MiaAssist
           onPressMia={onClose}
         />
       </SafeAreaView>
-    </View>
+    </AppBackground>
   );
 }
 
@@ -206,7 +207,7 @@ function WaveBar({ baseHeight, delay, active }: { baseHeight: number; delay: num
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: darkColors.background },
+  root: { flex: 1 },
   safeArea: { flex: 1 },
   topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 48, paddingHorizontal: spacing[4], paddingTop: spacing[2] },
   topBarIdentity: { flexDirection: 'row', alignItems: 'center', gap: spacing[3] },

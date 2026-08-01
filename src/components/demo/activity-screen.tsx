@@ -11,32 +11,41 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import type { ImageSourcePropType } from 'react-native';
+
+import { AppBackground } from '@/components/ui/app-background';
 import { Avatar } from '@/components/ui/avatar';
 import { useLanguage } from '@/contexts/language-context';
-import { radius, spacing, typography } from '@/theme';
+import { avatars, darkColors, radius, spacing, typography } from '@/theme';
+
+const PERSON_AVATARS: Partial<Record<string, ImageSourcePropType>> = {
+  me: avatars.moi,
+  rica: avatars.rica,
+  mario: avatars.mario,
+};
 
 type Period = 'today' | 'week' | 'month';
 
 const COLORS = {
-  background: '#071424',
-  glass: 'rgba(12, 33, 71, 0.70)',
-  glassBorder: 'rgba(255, 255, 255, 0.05)',
-  surface: '#1E2115',
-  surfaceLow: '#1A1D11',
-  surfaceHigh: '#292B1F',
-  surfaceHighest: '#333629',
-  outline: '#8F937B',
-  outlineVariant: '#444935',
-  text: '#D7E3FA',
-  textSecondary: '#C5C9AF',
-  white: '#FFFFFF',
-  green: '#3EE09D',
-  blue: '#4F8CFF',
-  paleBlue: '#AFC6FF',
-  lime: '#C9F23B',
-  onPrimary: '#576C00',
-  error: '#FF6577',
-  warning: '#F6BE4F',
+  background: darkColors.background,
+  glass: 'rgba(9, 26, 55, 0.70)',
+  glassBorder: darkColors.border,
+  surface: darkColors.surface,
+  surfaceLow: darkColors.backgroundElevated,
+  surfaceHigh: darkColors.surfaceElevated,
+  surfaceHighest: darkColors.surfaceInteractive,
+  outline: darkColors.textMuted,
+  outlineVariant: darkColors.border,
+  text: darkColors.textPrimary,
+  textSecondary: darkColors.textSecondary,
+  white: darkColors.textPrimary,
+  green: darkColors.success,
+  blue: darkColors.primary,
+  paleBlue: darkColors.accent,
+  lime: darkColors.accent,
+  onPrimary: darkColors.textInverse,
+  error: darkColors.error,
+  warning: darkColors.warning,
 } as const;
 
 const PEOPLE = [
@@ -72,10 +81,10 @@ export function ActivityScreen() {
   const progress = Math.min(displaySteps / (period === 'today' ? 10000 : period === 'week' ? 70000 : 300000), 1);
 
   return (
-    <View style={styles.root}>
+    <AppBackground style={styles.root} variant="dashboard">
       <View style={styles.header}>
         <View style={styles.headerIdentity}>
-          <Avatar backgroundColor="#253B63" initials="M" name={t('common.me')} ringColor="rgba(255, 255, 255, 0.20)" size={48} />
+          <Avatar backgroundColor="#253B63" name={t('common.me')} ringColor="rgba(255, 255, 255, 0.20)" size={48} source={avatars.moi} />
           <Text accessibilityRole="header" style={styles.headerTitle}>{t('nav.activity')}</Text>
         </View>
         <Pressable
@@ -134,7 +143,7 @@ export function ActivityScreen() {
 
         {feedback ? <Animated.Text entering={FadeInDown.duration(250)} style={styles.feedback}>{feedback}</Animated.Text> : null}
       </ScrollView>
-    </View>
+    </AppBackground>
   );
 }
 
@@ -181,7 +190,7 @@ function PeopleSelector({ copy, language, onInvite, onSelect, selectedId }: { co
               onPress={() => onSelect(person.id)}
               style={({ pressed }) => [styles.personButton, !selected && styles.personMuted, pressed && styles.pressed]}>
               <View style={styles.personAvatarWrap}>
-                <Avatar backgroundColor={person.color} initials={person.initials} name={person.name} ringColor={selected ? COLORS.paleBlue : COLORS.surfaceHighest} size={64} />
+                <Avatar backgroundColor={person.color} initials={person.initials} name={person.name} ringColor={selected ? COLORS.paleBlue : COLORS.surfaceHighest} size={64} source={PERSON_AVATARS[person.id]} />
                 {selected ? <View style={styles.activePersonDot}><View style={styles.activePersonDotCore} /></View> : null}
               </View>
               <Text style={[styles.personName, selected && styles.personNameActive]}>{person.id === 'me' ? (language === 'fr' ? 'Moi' : 'Izaho') : person.name}</Text>
@@ -313,8 +322,8 @@ function getCopy(language: 'fr' | 'mg') {
 }
 
 const styles = StyleSheet.create({
-  root: { backgroundColor: COLORS.background, flex: 1 },
-  header: { alignItems: 'center', backgroundColor: 'rgba(30, 33, 21, 0.82)', borderBottomColor: 'rgba(255,255,255,0.05)', borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between', minHeight: 64, paddingHorizontal: spacing[5], paddingVertical: spacing[2] },
+  root: { flex: 1 },
+  header: { alignItems: 'center', backgroundColor: 'rgba(9, 26, 55, 0.82)', borderBottomColor: darkColors.border, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between', minHeight: 64, paddingHorizontal: spacing[5], paddingVertical: spacing[2] },
   headerIdentity: { alignItems: 'center', flexDirection: 'row', gap: spacing[3] },
   headerTitle: { ...typography.titleLarge, color: COLORS.green, fontSize: 24, fontWeight: '800' },
   notificationButton: { alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: radius.circle, height: 48, justifyContent: 'center', width: 48 },
