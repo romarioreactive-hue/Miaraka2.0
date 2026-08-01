@@ -1,3 +1,4 @@
+import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -49,6 +50,21 @@ export function ProfileScreen() {
   return (
     <>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.topBar}>
+          <Text accessibilityRole="header" style={styles.topBarTitle}>{t('nav.profile')}</Text>
+          <Pressable
+            accessibilityLabel={t('common.notifications')}
+            accessibilityRole="button"
+            style={({ pressed }) => [styles.notificationButton, pressed && styles.pressed]}>
+            <SymbolView
+              name={{ ios: 'bell.fill', android: 'notifications', web: 'notifications' }}
+              size={20}
+              tintColor={darkColors.textSecondary}
+              weight="medium"
+            />
+          </Pressable>
+        </View>
+
         <Animated.View entering={FadeInDown.duration(450)} style={styles.profileHeader}>
           <View style={styles.avatarWrap}>
             <View style={styles.avatar}><Text style={styles.avatarText}>{profile.initials}</Text></View>
@@ -92,10 +108,30 @@ export function ProfileScreen() {
 
         <Section icon="⌖" title={t('profile.location')} delay={100}>
           <ToggleRow label={t('profile.sharePosition')} description={t('profile.visibleBySpace')} value={location.share} onValueChange={(share) => setLocation((current) => ({ ...current, share }))} />
-          <ToggleRow label={t('profile.backgroundLocation')} description={t('profile.simulationActive')} value={location.background} onValueChange={(background) => setLocation((current) => ({ ...current, background }))} />
-          <ToggleRow label={t('profile.lastKnown')} value={location.lastKnown} onValueChange={(lastKnown) => setLocation((current) => ({ ...current, lastKnown }))} />
-          <ToggleRow label={t('profile.batterySaver')} description={t('profile.lessFrequent')} value={location.batterySaver} onValueChange={(batterySaver) => setLocation((current) => ({ ...current, batterySaver }))} />
-          <View style={styles.gpsCard}><View><Text style={styles.gpsLabel}>{t('profile.gpsAccuracy')}</Text><Text style={styles.gpsValue}>{t('profile.excellent')}</Text></View><View style={styles.signalBars}>{[12, 18, 24, 30].map((height) => <View key={height} style={[styles.signalBar, { height }]} />)}</View></View>
+          {location.share ? (
+            <>
+              <ToggleRow label={t('profile.backgroundLocation')} description={t('profile.simulationActive')} value={location.background} onValueChange={(background) => setLocation((current) => ({ ...current, background }))} />
+              <ToggleRow label={t('profile.lastKnown')} value={location.lastKnown} onValueChange={(lastKnown) => setLocation((current) => ({ ...current, lastKnown }))} />
+              <ToggleRow label={t('profile.batterySaver')} description={t('profile.lessFrequent')} value={location.batterySaver} onValueChange={(batterySaver) => setLocation((current) => ({ ...current, batterySaver }))} />
+              <View style={styles.gpsCard}><View><Text style={styles.gpsLabel}>{t('profile.gpsAccuracy')}</Text><Text style={styles.gpsValue}>{t('profile.excellent')}</Text></View><View style={styles.signalBars}>{[12, 18, 24, 30].map((height) => <View key={height} style={[styles.signalBar, { height }]} />)}</View></View>
+            </>
+          ) : (
+            <View style={styles.positionDisabledCard}>
+              <View style={styles.positionDisabledIcon}>
+                <SymbolView name={{ ios: 'eye.slash.fill', android: 'visibility_off', web: 'visibility_off' }} size={22} tintColor={darkColors.error} weight="medium" />
+              </View>
+              <View style={styles.positionDisabledCopy}>
+                <Text style={styles.positionDisabledTitle}>{t('states.positionDisabledTitle')}</Text>
+                <Text style={styles.positionDisabledText}>{t('states.positionDisabledDescription')}</Text>
+              </View>
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => setLocation((current) => ({ ...current, share: true }))}
+                style={({ pressed }) => [styles.positionDisabledButton, pressed && styles.pressed]}>
+                <Text style={styles.positionDisabledButtonText}>{t('states.activateSharing')}</Text>
+              </Pressable>
+            </View>
+          )}
         </Section>
 
         <Section icon="◎" title={t('profile.spaceVisibility')} delay={140}>
@@ -204,6 +240,16 @@ function PermissionChip({ enabled, label, short }: { enabled: boolean; label: st
 const styles = StyleSheet.create({
   scrollView: { flex: 1, backgroundColor: darkColors.background },
   content: { paddingHorizontal: spacing[4], paddingTop: spacing[3], paddingBottom: spacing[10], gap: spacing[5] },
+  topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 48 },
+  topBarTitle: { ...typography.titleLarge, color: darkColors.textPrimary },
+  notificationButton: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: radius.circle, backgroundColor: darkColors.surfaceElevated },
+  positionDisabledCard: { flexDirection: 'row', alignItems: 'center', gap: spacing[3], marginVertical: spacing[3], padding: spacing[3], borderRadius: radius.large, borderWidth: 1, borderColor: alpha.error16, backgroundColor: darkColors.errorSoft },
+  positionDisabledIcon: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: radius.circle, backgroundColor: darkColors.surface },
+  positionDisabledCopy: { flex: 1 },
+  positionDisabledTitle: { ...typography.labelLarge, color: darkColors.textPrimary },
+  positionDisabledText: { ...typography.caption, color: darkColors.textSecondary, marginTop: 2 },
+  positionDisabledButton: { minHeight: 40, justifyContent: 'center', paddingHorizontal: spacing[3], borderRadius: radius.pill, backgroundColor: darkColors.error },
+  positionDisabledButtonText: { ...typography.labelMedium, color: darkColors.textInverse },
   profileHeader: { minHeight: 112, flexDirection: 'row', alignItems: 'center', gap: spacing[3], padding: spacing[4], borderRadius: radius.extraLarge, borderWidth: 1, borderColor: alpha.primary32, backgroundColor: darkColors.surface },
   avatarWrap: { width: 66, height: 66 },
   avatar: { width: 66, height: 66, alignItems: 'center', justifyContent: 'center', borderRadius: radius.circle, borderWidth: 2, borderColor: darkColors.accent, backgroundColor: darkColors.primarySoft },

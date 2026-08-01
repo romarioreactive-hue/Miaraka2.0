@@ -6,6 +6,11 @@ import { alpha, darkColors, radius, spacing, typography } from '@/theme';
 import { useLanguage } from '@/contexts/language-context';
 import type { TranslationKey } from '@/i18n';
 
+import { OnboardingChallengesScreen } from './onboarding-challenges-screen';
+import { OnboardingConnectionsScreen } from './onboarding-connections-screen';
+import { OnboardingLocationScreen } from './onboarding-location-screen';
+import { OnboardingMiaScreen } from './onboarding-mia-screen';
+import { OnboardingPrivacyControlScreen } from './onboarding-privacy-control-screen';
 import { ChallengeVisual, ConnectedPeopleVisual, MapVisual, MiaVisual, PrivacyVisual } from './onboarding-visuals';
 
 type OnboardingScreenProps = {
@@ -45,6 +50,27 @@ const STEPS = [
 
 export function OnboardingScreen({ step, onBack, onContinue, onSkip }: OnboardingScreenProps) {
   const { t } = useLanguage();
+
+  if (step === 0) {
+    return <OnboardingConnectionsScreen onContinue={onContinue} onSkip={onSkip} />;
+  }
+
+  if (step === 1) {
+    return <OnboardingLocationScreen onBack={onBack} onContinue={onContinue} onSkip={onSkip} />;
+  }
+
+  if (step === 2) {
+    return <OnboardingChallengesScreen onBack={onBack} onContinue={onContinue} onSkip={onSkip} />;
+  }
+
+  if (step === 3) {
+    return <OnboardingPrivacyControlScreen onBack={onBack} onContinue={onContinue} />;
+  }
+
+  if (step === 4) {
+    return <OnboardingMiaScreen onBack={onBack} onContinue={onContinue} onSkip={onSkip} />;
+  }
+
   const current = STEPS[step];
   const Visual = current.visual;
 

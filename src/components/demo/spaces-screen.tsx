@@ -1,35 +1,69 @@
+import { SymbolView } from 'expo-symbols';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { darkColors, radius, spacing, typography } from '@/theme';
+import { Avatar } from '@/components/ui/avatar';
+import { alpha, darkColors, radius, spacing, typography } from '@/theme';
 import { useLanguage } from '@/contexts/language-context';
 
 import { getActiveMemberCount, SPACES, Space } from './spaces-data';
 
 type SpacesScreenProps = {
   onCreateSpace: () => void;
+  onInviteMember: () => void;
   onSelectSpace: (space: Space) => void;
 };
 
-export function SpacesScreen({ onCreateSpace, onSelectSpace }: SpacesScreenProps) {
+export function SpacesScreen({ onCreateSpace, onInviteMember, onSelectSpace }: SpacesScreenProps) {
   const { t } = useLanguage();
   return (
     <ScrollView
       style={styles.scrollView}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}>
-      <View style={styles.header}>
-        <View style={styles.headerCopy}>
-          <Text style={styles.eyebrow}>{t('spaces.eyebrow')}</Text>
-          <Text accessibilityRole="header" style={styles.title}>{t('spaces.title')}</Text>
-          <Text style={styles.subtitle}>{t('spaces.subtitle')}</Text>
+      <View style={styles.topBar}>
+        <View style={styles.topBarIdentity}>
+          <Avatar backgroundColor="#253B63" initials="M" name={t('common.me')} ringColor={alpha.white24} size={32} />
+          <Text accessibilityRole="header" style={styles.topBarTitle}>{t('spaces.title')}</Text>
         </View>
+        <Pressable
+          accessibilityLabel={t('common.notifications')}
+          accessibilityRole="button"
+          style={({ pressed }) => [styles.notificationButton, pressed && styles.pressed]}>
+          <SymbolView
+            name={{ ios: 'bell.fill', android: 'notifications', web: 'notifications' }}
+            size={20}
+            tintColor={darkColors.primary}
+            weight="medium"
+          />
+        </Pressable>
+      </View>
+
+      <View style={styles.headerCopy}>
+        <Text style={styles.eyebrow}>{t('spaces.eyebrow')}</Text>
+        <Text style={styles.subtitle}>{t('spaces.subtitle')}</Text>
+      </View>
+
+      <View style={styles.actionRow}>
         <Pressable
           accessibilityLabel={t('spaces.create')}
           accessibilityRole="button"
           onPress={onCreateSpace}
-          style={({ pressed }) => [styles.createButton, pressed && styles.pressed]}>
-          <Text style={styles.createPlus}>＋</Text>
-          <Text style={styles.createText}>{t('common.create')}</Text>
+          style={({ pressed }) => [styles.actionButtonPrimary, pressed && styles.pressed]}>
+          <Text style={styles.actionButtonPlus}>＋</Text>
+          <Text style={styles.actionButtonPrimaryText}>{t('spaces.create')}</Text>
+        </Pressable>
+        <Pressable
+          accessibilityLabel={t('spaces.inviteMember')}
+          accessibilityRole="button"
+          onPress={onInviteMember}
+          style={({ pressed }) => [styles.actionButtonSecondary, pressed && styles.pressed]}>
+          <SymbolView
+            name={{ ios: 'person.badge.plus', android: 'person_add', web: 'person_add' }}
+            size={18}
+            tintColor={darkColors.accent}
+            weight="medium"
+          />
+          <Text style={styles.actionButtonSecondaryText}>{t('spaces.inviteMember')}</Text>
         </Pressable>
       </View>
 
@@ -125,14 +159,19 @@ function SpaceCard({ space, onPress }: { space: Space; onPress: () => void }) {
 const styles = StyleSheet.create({
   scrollView: { flex: 1, backgroundColor: darkColors.background },
   content: { paddingHorizontal: spacing[4], paddingTop: spacing[3], paddingBottom: spacing[10], gap: spacing[4] },
-  header: { flexDirection: 'row', alignItems: 'center', gap: spacing[3] },
-  headerCopy: { flex: 1 },
+  topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 48 },
+  topBarIdentity: { flexDirection: 'row', alignItems: 'center', gap: spacing[3] },
+  topBarTitle: { ...typography.titleLarge, color: darkColors.textPrimary },
+  notificationButton: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: radius.circle, backgroundColor: darkColors.surfaceElevated },
+  headerCopy: { marginTop: -spacing[2] },
   eyebrow: { ...typography.caption, color: darkColors.accent, fontWeight: '700', letterSpacing: 1.1 },
-  title: { ...typography.titleLarge, color: darkColors.textPrimary, marginTop: spacing[1] },
   subtitle: { ...typography.caption, color: darkColors.textMuted, marginTop: 2 },
-  createButton: { minHeight: 48, flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing[3], borderRadius: radius.medium, backgroundColor: darkColors.primary },
-  createPlus: { color: darkColors.textPrimary, fontSize: 20, fontWeight: '600' },
-  createText: { ...typography.labelMedium, color: darkColors.textPrimary },
+  actionRow: { flexDirection: 'row', gap: spacing[3] },
+  actionButtonPrimary: { flex: 1, minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: spacing[3], borderRadius: radius.pill, backgroundColor: darkColors.primary },
+  actionButtonPlus: { color: darkColors.textInverse, fontSize: 18, fontWeight: '700' },
+  actionButtonPrimaryText: { ...typography.labelMedium, color: darkColors.textInverse },
+  actionButtonSecondary: { flex: 1, minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: spacing[3], borderRadius: radius.pill, borderWidth: 1, borderColor: darkColors.accent, backgroundColor: darkColors.surface },
+  actionButtonSecondaryText: { ...typography.labelMedium, color: darkColors.accent },
   pressed: { opacity: 0.78 },
   summary: { minHeight: 66, flexDirection: 'row', alignItems: 'center', borderRadius: radius.large, borderWidth: 1, borderColor: darkColors.border, backgroundColor: darkColors.surface },
   summaryItem: { flex: 1, alignItems: 'center' },
