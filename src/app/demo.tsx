@@ -7,16 +7,18 @@ import { ChallengesScreen } from '@/components/demo/challenges-screen';
 import { DemoHeader } from '@/components/demo/demo-header';
 import { DemoMap } from '@/components/demo/demo-map';
 import { DemoTab, DemoTabBar } from '@/components/demo/demo-tab-bar';
+import { CreateSpaceSheet } from '@/components/demo/create-space-sheet';
 import { InvitePersonSheet } from '@/components/demo/invite-person-sheet';
+import { InviteSpaceMemberSheet } from '@/components/demo/invite-space-member-sheet';
 import { PEOPLE, PersonGroup } from '@/components/demo/people-data';
 import { PersonSheet } from '@/components/demo/person-sheet';
+import { SpaceDetailScreen } from '@/components/demo/space-detail-screen';
+import { Space } from '@/components/demo/spaces-data';
+import { SpacesScreen } from '@/components/demo/spaces-screen';
 
 type FilterId = 'tous' | PersonGroup;
 
-const TAB_PLACEHOLDERS: Record<Exclude<DemoTab, 'carte'>, { icon: string; text: string }> = {
-  activite: { icon: '📈', text: "L'écran Activité arrive dans une prochaine étape." },
-  defis: { icon: '🏆', text: "L'écran Défis arrive dans une prochaine étape." },
-  espaces: { icon: '🌐', text: "L'écran Espaces arrive dans une prochaine étape." },
+const TAB_PLACEHOLDERS: Record<Exclude<DemoTab, 'carte' | 'activite' | 'defis' | 'espaces'>, { icon: string; text: string }> = {
   profil: { icon: '👤', text: "L'écran Profil arrive dans une prochaine étape." },
 };
 
@@ -25,6 +27,9 @@ export default function DemoScreen() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<DemoTab>('carte');
   const [isInviteOpen, setIsInviteOpen] = useState(false);
+  const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
+  const [isCreateSpaceOpen, setIsCreateSpaceOpen] = useState(false);
+  const [isSpaceInviteOpen, setIsSpaceInviteOpen] = useState(false);
 
   const visiblePeople = activeFilter === 'tous' ? PEOPLE : PEOPLE.filter((p) => p.group === activeFilter);
   const selectedPerson = PEOPLE.find((p) => p.id === selectedId) ?? null;
@@ -33,6 +38,9 @@ export default function DemoScreen() {
     setActiveTab(tab);
     setSelectedId(null);
     setIsInviteOpen(false);
+    setSelectedSpace(null);
+    setIsCreateSpaceOpen(false);
+    setIsSpaceInviteOpen(false);
   }
 
   function handleOpenInvite() {
@@ -48,6 +56,19 @@ export default function DemoScreen() {
             <ActivityScreen />
           ) : activeTab === 'defis' ? (
             <ChallengesScreen />
+          ) : activeTab === 'espaces' ? (
+            selectedSpace ? (
+              <SpaceDetailScreen
+                onBack={() => setSelectedSpace(null)}
+                onInviteMember={() => setIsSpaceInviteOpen(true)}
+                space={selectedSpace}
+              />
+            ) : (
+              <SpacesScreen
+                onCreateSpace={() => setIsCreateSpaceOpen(true)}
+                onSelectSpace={setSelectedSpace}
+              />
+            )
           ) : (
             <>
               <DemoHeader
@@ -79,6 +100,12 @@ export default function DemoScreen() {
         </View>
 
         <InvitePersonSheet visible={isInviteOpen} onClose={() => setIsInviteOpen(false)} />
+        <CreateSpaceSheet visible={isCreateSpaceOpen} onClose={() => setIsCreateSpaceOpen(false)} />
+        <InviteSpaceMemberSheet
+          space={selectedSpace}
+          visible={isSpaceInviteOpen}
+          onClose={() => setIsSpaceInviteOpen(false)}
+        />
       </View>
     </View>
   );

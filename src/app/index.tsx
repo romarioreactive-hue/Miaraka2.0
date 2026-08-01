@@ -1,280 +1,71 @@
 import { useRouter } from 'expo-router';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Animated, {
-  Easing,
-  FadeIn,
-  FadeInDown,
-  FadeInUp,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Spacing } from '@/constants/theme';
+import { OnboardingScreen, ProgressDots } from '@/components/onboarding/onboarding-screen';
+import { alpha, darkColors, radius, spacing, typography } from '@/theme';
 
-const NAVY = '#060C1F';
-const TEXT_SECONDARY = '#A9B4D0';
-
-const FEATURES: { icon: string; label: string }[] = [
-  { icon: '📍', label: 'Localisation en temps réel' },
-  { icon: '👥', label: 'Famille, amis et équipe' },
-  { icon: '🎯', label: 'Activités et défis' },
-];
+let onboardingFinishedForSession = false;
 
 export default function HomeScreen() {
   const router = useRouter();
-  const floatY = useSharedValue(0);
+  const [step, setStep] = useState(onboardingFinishedForSession ? 5 : 0);
 
-  useEffect(() => {
-    floatY.value = withRepeat(
-      withSequence(
-        withTiming(-10, { duration: 2200, easing: Easing.inOut(Easing.sin) }),
-        withTiming(0, { duration: 2200, easing: Easing.inOut(Easing.sin) }),
-      ),
-      -1,
-      false,
+  function openDemo() {
+    onboardingFinishedForSession = true;
+    router.replace('/demo');
+  }
+
+  if (step < 5) {
+    return (
+      <OnboardingScreen
+        step={step}
+        onBack={() => setStep((current) => Math.max(0, current - 1))}
+        onContinue={() => setStep((current) => Math.min(5, current + 1))}
+        onSkip={() => setStep(5)}
+      />
     );
-  }, [floatY]);
-
-  const logoFloatStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: floatY.value }],
-  }));
+  }
 
   return (
     <View style={styles.root}>
       <View pointerEvents="none" style={[styles.glow, styles.glowBlue]} />
-      <View pointerEvents="none" style={[styles.glow, styles.glowGreen]} />
       <View pointerEvents="none" style={[styles.glow, styles.glowCyan]} />
-
       <SafeAreaView style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
-            <Animated.View entering={FadeIn.duration(700)} style={[styles.logoWrapper, logoFloatStyle]}>
-              <View style={styles.logoCircle}>
-                <Text style={styles.logoLetter}>M</Text>
-              </View>
+            <Animated.View entering={FadeIn.duration(650)} style={styles.logoWrap}>
+              <View style={styles.logoHalo} />
+              <View style={styles.logoCircle}><Text style={styles.logoLetter}>M</Text></View>
             </Animated.View>
-
-            <Animated.Text entering={FadeInDown.delay(150).duration(600)} style={styles.title}>
-              Miaraka
-            </Animated.Text>
-
-            <Animated.Text entering={FadeInDown.delay(300).duration(600)} style={styles.slogan}>
-              Ensemble, partout, à chaque instant.
-            </Animated.Text>
-
-            <Animated.View entering={FadeInUp.delay(450).duration(600)} style={styles.buttonsRow}>
-              <AnimatedButton
-                label="Commencer"
-                variant="primary"
-                onPress={() => router.push('/demo')}
-              />
-              <AnimatedButton
-                label="Voir la démonstration"
-                variant="secondary"
-                onPress={() => router.push('/demo')}
-              />
+            <Animated.Text entering={FadeInDown.delay(120).duration(500)} accessibilityRole="header" style={styles.title}>Bienvenue dans Miaraka</Animated.Text>
+            <Animated.Text entering={FadeInDown.delay(240).duration(500)} style={styles.slogan}>Ensemble, partout, à chaque instant.</Animated.Text>
+            <Animated.View entering={FadeInUp.delay(360).duration(500)} style={styles.trustCard}>
+              <View style={styles.trustIcon}><Text style={styles.trustIconText}>✓</Text></View>
+              <Text style={styles.trustText}>Vos espaces restent privés et sous votre contrôle.</Text>
             </Animated.View>
-
-            <Animated.View entering={FadeInUp.delay(600).duration(600)} style={styles.featuresRow}>
-              {FEATURES.map((feature) => (
-                <View key={feature.label} style={styles.featureItem}>
-                  <View style={styles.featureIconCircle}>
-                    <Text style={styles.featureIcon}>{feature.icon}</Text>
-                  </View>
-                  <Text style={styles.featureLabel}>{feature.label}</Text>
-                </View>
-              ))}
+            <Animated.View entering={FadeInUp.delay(480).duration(500)} style={styles.buttons}>
+              <Pressable accessibilityHint="Ouvre la démonstration avec un utilisateur fictif" accessibilityRole="button" onPress={openDemo} style={({ pressed }) => [styles.googleButton, pressed && styles.pressed]}>
+                <View style={styles.googleMark}><Text style={styles.googleLetter}>G</Text></View><Text style={styles.googleButtonText}>Continuer avec Google</Text>
+              </Pressable>
+              <Pressable accessibilityRole="button" onPress={openDemo} style={({ pressed }) => [styles.demoButton, pressed && styles.pressed]}><Text style={styles.demoButtonText}>Voir la démonstration</Text></Pressable>
             </Animated.View>
           </View>
         </ScrollView>
+        <View style={styles.footer}><ProgressDots activeStep={5} /><Text style={styles.fictionNote}>Connexion Google simulée pour cette démonstration</Text></View>
       </SafeAreaView>
     </View>
   );
 }
 
-type AnimatedButtonProps = {
-  label: string;
-  variant: 'primary' | 'secondary';
-  onPress?: () => void;
-};
-
-function AnimatedButton({ label, variant, onPress }: AnimatedButtonProps) {
-  const scale = useSharedValue(1);
-  const pressStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  return (
-    <Pressable
-      onPress={onPress}
-      onPressIn={() => {
-        scale.value = withTiming(0.96, { duration: 120 });
-      }}
-      onPressOut={() => {
-        scale.value = withTiming(1, { duration: 150 });
-      }}
-      hitSlop={8}>
-      <Animated.View
-        style={[
-          styles.button,
-          variant === 'primary' ? styles.buttonPrimary : styles.buttonSecondary,
-          pressStyle,
-        ]}>
-        <Text style={[styles.buttonText, variant === 'secondary' && styles.buttonTextSecondary]}>
-          {label}
-        </Text>
-      </Animated.View>
-    </Pressable>
-  );
-}
-
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: NAVY,
-    overflow: 'hidden',
-  },
-  glow: {
-    position: 'absolute',
-    width: 340,
-    height: 340,
-    borderRadius: 999,
-  },
-  glowBlue: {
-    top: -60,
-    right: -80,
-    experimental_backgroundImage:
-      'radial-gradient(circle, rgba(59,130,246,0.35) 0%, rgba(59,130,246,0) 70%)',
-  },
-  glowGreen: {
-    top: 220,
-    left: -120,
-    experimental_backgroundImage:
-      'radial-gradient(circle, rgba(34,197,94,0.30) 0%, rgba(34,197,94,0) 70%)',
-  },
-  glowCyan: {
-    bottom: -100,
-    right: -60,
-    experimental_backgroundImage:
-      'radial-gradient(circle, rgba(34,211,238,0.30) 0%, rgba(34,211,238,0) 70%)',
-  },
-  safeArea: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingVertical: Spacing.six,
-  },
-  content: {
-    alignItems: 'center',
-    alignSelf: 'center',
-    width: '100%',
-    maxWidth: 440,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  logoWrapper: {
-    marginBottom: Spacing.two,
-  },
-  logoCircle: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    alignItems: 'center',
-    justifyContent: 'center',
-    experimental_backgroundImage: 'linear-gradient(135deg, #22C55E 0%, #22D3EE 55%, #3B82F6 100%)',
-    shadowColor: '#22D3EE',
-    shadowOpacity: 0.5,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 8 },
-  },
-  logoLetter: {
-    fontSize: 40,
-    fontWeight: '800',
-    color: '#FFFFFF',
-  },
-  title: {
-    fontSize: 42,
-    fontWeight: '800',
-    color: '#F8FAFC',
-    letterSpacing: 0.5,
-    textAlign: 'center',
-  },
-  slogan: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: TEXT_SECONDARY,
-    textAlign: 'center',
-    marginTop: -Spacing.two,
-  },
-  buttonsRow: {
-    width: '100%',
-    gap: Spacing.two,
-    marginTop: Spacing.two,
-  },
-  button: {
-    width: '100%',
-    paddingVertical: 15,
-    borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonPrimary: {
-    experimental_backgroundImage: 'linear-gradient(90deg, #22C55E 0%, #22D3EE 55%, #3B82F6 100%)',
-    shadowColor: '#22D3EE',
-    shadowOpacity: 0.35,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 6 },
-  },
-  buttonSecondary: {
-    backgroundColor: 'transparent',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255,255,255,0.35)',
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  buttonTextSecondary: {
-    color: '#E2E8F0',
-  },
-  featuresRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: Spacing.four,
-    marginTop: Spacing.four,
-  },
-  featureItem: {
-    alignItems: 'center',
-    width: 108,
-    gap: Spacing.one,
-  },
-  featureIconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-  },
-  featureIcon: {
-    fontSize: 20,
-  },
-  featureLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: TEXT_SECONDARY,
-    textAlign: 'center',
-    lineHeight: 16,
-  },
+  root: { flex: 1, backgroundColor: darkColors.background, overflow: 'hidden' }, safeArea: { flex: 1 }, glow: { position: 'absolute', width: 420, height: 420, borderRadius: radius.circle }, glowBlue: { top: -170, right: -170, backgroundColor: darkColors.primarySoft }, glowCyan: { bottom: -220, left: -180, backgroundColor: alpha.cyan16 },
+  scrollContent: { flexGrow: 1, justifyContent: 'center', paddingVertical: spacing[6] }, content: { width: '100%', maxWidth: 440, alignItems: 'center', alignSelf: 'center', gap: spacing[4], paddingHorizontal: spacing[5] },
+  logoWrap: { width: 150, height: 150, alignItems: 'center', justifyContent: 'center', marginBottom: spacing[2] }, logoHalo: { position: 'absolute', width: 148, height: 148, borderRadius: radius.circle, backgroundColor: alpha.cyan16 }, logoCircle: { width: 96, height: 96, alignItems: 'center', justifyContent: 'center', borderRadius: 32, backgroundColor: darkColors.primary, shadowColor: darkColors.accent, shadowOpacity: 0.42, shadowRadius: 24, shadowOffset: { width: 0, height: 8 } }, logoLetter: { color: darkColors.textPrimary, fontSize: 40, fontWeight: '800' },
+  title: { ...typography.titleLarge, maxWidth: 340, color: darkColors.textPrimary, textAlign: 'center' }, slogan: { ...typography.bodyLarge, color: darkColors.textSecondary, textAlign: 'center', marginTop: -spacing[2] },
+  trustCard: { flexDirection: 'row', alignItems: 'center', gap: spacing[2], paddingHorizontal: spacing[3], paddingVertical: spacing[2], borderRadius: radius.pill, backgroundColor: darkColors.successSoft }, trustIcon: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: radius.circle, backgroundColor: darkColors.success }, trustIconText: { color: darkColors.textInverse, fontSize: 12, fontWeight: '800' }, trustText: { flexShrink: 1, ...typography.caption, color: darkColors.success },
+  buttons: { width: '100%', gap: spacing[3], marginTop: spacing[3] }, googleButton: { minHeight: 54, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing[3], borderRadius: radius.pill, backgroundColor: darkColors.textPrimary }, googleMark: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: radius.circle, backgroundColor: darkColors.background }, googleLetter: { color: darkColors.textPrimary, fontSize: 14, fontWeight: '800' }, googleButtonText: { ...typography.labelLarge, color: darkColors.textInverse }, demoButton: { minHeight: 52, alignItems: 'center', justifyContent: 'center', borderRadius: radius.pill, borderWidth: 1, borderColor: darkColors.borderStrong, backgroundColor: darkColors.surface }, demoButtonText: { ...typography.labelLarge, color: darkColors.textPrimary }, pressed: { opacity: 0.76, transform: [{ scale: 0.98 }] },
+  footer: { gap: spacing[1], paddingHorizontal: spacing[4], paddingBottom: spacing[4] }, fictionNote: { ...typography.caption, color: darkColors.textMuted, textAlign: 'center' },
 });
