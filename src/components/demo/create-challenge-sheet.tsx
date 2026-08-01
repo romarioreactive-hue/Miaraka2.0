@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLanguage } from '@/contexts/language-context';
 import {
   KeyboardAvoidingView,
   Modal,
@@ -41,6 +42,7 @@ type CreateChallengeSheetProps = {
 };
 
 export function CreateChallengeSheet({ visible, onClose }: CreateChallengeSheetProps) {
+  const { t } = useLanguage();
   const [title, setTitle] = useState('Défi marche du mois');
   const [group, setGroup] = useState<Group>('Équipe');
   const [startDate, setStartDate] = useState('03/08/2026');
@@ -66,27 +68,27 @@ export function CreateChallengeSheet({ visible, onClose }: CreateChallengeSheetP
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.modalRoot}>
-        <Pressable accessibilityLabel="Fermer la création du défi" onPress={resetAndClose} style={styles.backdrop} />
+        <Pressable accessibilityLabel={t('common.close')} onPress={resetAndClose} style={styles.backdrop} />
 
         <View style={styles.sheet}>
           <View style={styles.handle} />
           {created ? (
             <View style={styles.confirmation}>
               <View style={styles.confirmationIcon}><Text style={styles.confirmationIconText}>✓</Text></View>
-              <Text accessibilityRole="header" style={styles.confirmationTitle}>Défi créé !</Text>
-              <Text style={styles.confirmationText}>{title} est prêt pour {selectedPeople.length} participants.</Text>
+              <Text accessibilityRole="header" style={styles.confirmationTitle}>{t('challenges.created')}</Text>
+              <Text style={styles.confirmationText}>{t('challenges.createdMessage', { name: title })}</Text>
               <Pressable onPress={resetAndClose} style={styles.primaryButton}>
-                <Text style={styles.primaryButtonText}>Terminer</Text>
+                <Text style={styles.primaryButtonText}>{t('common.finish')}</Text>
               </Pressable>
             </View>
           ) : (
             <>
               <View style={styles.header}>
                 <View>
-                  <Text style={styles.eyebrow}>NOUVEAU</Text>
-                  <Text accessibilityRole="header" style={styles.title}>Créer un défi</Text>
+                  <Text style={styles.eyebrow}>{t('challenges.new')}</Text>
+                  <Text accessibilityRole="header" style={styles.title}>{t('challenges.createTitle')}</Text>
                 </View>
-                <Pressable accessibilityLabel="Fermer" onPress={resetAndClose} style={styles.closeButton}>
+                <Pressable accessibilityLabel={t('common.close')} onPress={resetAndClose} style={styles.closeButton}>
                   <Text style={styles.closeText}>×</Text>
                 </Pressable>
               </View>
@@ -95,24 +97,24 @@ export function CreateChallengeSheet({ visible, onClose }: CreateChallengeSheetP
                 contentContainerStyle={styles.form}
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}>
-                <Field label="Titre du défi" value={title} onChangeText={setTitle} />
+                <Field label={t('challenges.titleField')} value={title} onChangeText={setTitle} />
 
-                <ChoiceBlock label="Groupe">
+                <ChoiceBlock label={t('challenges.group')}>
                   {GROUPS.map((item) => (
-                    <ChoiceButton key={item} label={item} selected={item === group} onPress={() => setGroup(item)} />
+                    <ChoiceButton key={item} label={t(item === 'Famille' ? 'groups.family' : item === 'Amis' ? 'groups.friends' : 'groups.team')} selected={item === group} onPress={() => setGroup(item)} />
                   ))}
                 </ChoiceBlock>
 
                 <View style={styles.dateRow}>
-                  <View style={styles.halfField}><Field label="Date de début" value={startDate} onChangeText={setStartDate} /></View>
-                  <View style={styles.halfField}><Field label="Date de fin" value={endDate} onChangeText={setEndDate} /></View>
+                  <View style={styles.halfField}><Field label={t('challenges.startDate')} value={startDate} onChangeText={setStartDate} /></View>
+                  <View style={styles.halfField}><Field label={t('challenges.endDate')} value={endDate} onChangeText={setEndDate} /></View>
                 </View>
 
                 <View>
-                  <Text style={styles.label}>Objectif en kilomètres</Text>
+                  <Text style={styles.label}>{t('challenges.kmGoal')}</Text>
                   <View style={styles.goalInputRow}>
                     <TextInput
-                      accessibilityLabel="Objectif en kilomètres"
+                      accessibilityLabel={t('challenges.kmGoal')}
                       keyboardType="decimal-pad"
                       onChangeText={setGoal}
                       style={styles.goalInput}
@@ -122,14 +124,14 @@ export function CreateChallengeSheet({ visible, onClose }: CreateChallengeSheetP
                   </View>
                 </View>
 
-                <ChoiceBlock label="Type de défi">
+                <ChoiceBlock label={t('challenges.type')}>
                   {TYPES.map((item) => (
-                    <ChoiceButton key={item} label={item} selected={item === type} onPress={() => setType(item)} compact />
+                    <ChoiceButton key={item} label={item === 'Individuel' ? t('challenges.individual') : item === 'Collectif' ? t('challenges.collective') : t('challenges.ranking')} selected={item === type} onPress={() => setType(item)} compact />
                   ))}
                 </ChoiceBlock>
 
                 <View>
-                  <Text style={styles.label}>Participants fictifs</Text>
+                  <Text style={styles.label}>{t('challenges.participants')}</Text>
                   <View style={styles.peopleRow}>
                     {PEOPLE.map((person) => {
                       const selected = selectedPeople.includes(person.name);
@@ -144,7 +146,7 @@ export function CreateChallengeSheet({ visible, onClose }: CreateChallengeSheetP
                             <Text style={[styles.personInitials, selected && styles.personInitialsSelected]}>{person.initials}</Text>
                             {selected && <View style={styles.check}><Text style={styles.checkText}>✓</Text></View>}
                           </View>
-                          <Text style={[styles.personName, selected && styles.personNameSelected]}>{person.name}</Text>
+                          <Text style={[styles.personName, selected && styles.personNameSelected]}>{person.name === 'Moi' ? t('common.me') : person.name}</Text>
                         </Pressable>
                       );
                     })}
@@ -156,7 +158,7 @@ export function CreateChallengeSheet({ visible, onClose }: CreateChallengeSheetP
                 accessibilityRole="button"
                 onPress={() => setCreated(true)}
                 style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}>
-                <Text style={styles.primaryButtonText}>Créer</Text>
+                <Text style={styles.primaryButtonText}>{t('common.create')}</Text>
                 <Text style={styles.primaryButtonArrow}>→</Text>
               </Pressable>
             </>

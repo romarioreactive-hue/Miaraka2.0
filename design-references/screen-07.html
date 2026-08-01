@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --glass-bg: rgba(7, 20, 36, 0.8);
+            --glass-blur: blur(20px);
+        }
+        body {
+            background-color: #06142B;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .marker-pulse {
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+        @keyframes pulse-glow {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(175, 198, 255, 0.4); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(175, 198, 255, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(175, 198, 255, 0); }
+        }
+        .mia-pulse {
+            animation: mia-pulse-glow 3s infinite;
+        }
+        @keyframes mia-pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(79, 140, 255, 0.5); }
+            100% { box-shadow: 0 0 0 20px rgba(79, 140, 255, 0); }
+        }
+        .map-gradient-overlay {
+            background: radial-gradient(circle at center, transparent 0%, rgba(6, 20, 43, 0.4) 100%);
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-fixed": "#b6f393", "on-background": "#e2e4d1", "on-primary-fixed": "#171e00", "surface-container": "#1e2115", "tertiary-container": "#b6f393", "inverse-primary": "#516600", "on-primary-fixed-variant": "#3c4d00", "primary-container": "#c9f23b", "on-tertiary": "#123800", outline: "#8f937b", "error-container": "#93000a", "outline-variant": "#444935", "on-tertiary-container": "#3c7121", "surface-container-high": "#292b1f", "surface-container-highest": "#333629", "surface-dim": "#12140a", primary: "#ffffff", "on-primary-container": "#576c00", "on-error": "#690005", "surface-variant": "#333629", "secondary-fixed": "#d6ec90", "on-secondary-fixed": "#171e00", "on-tertiary-fixed": "#072100", "secondary-container": "#3c4d00", "primary-fixed": "#c9f23b", "on-surface": "#e2e4d1", surface: "#12140a", "tertiary-fixed-dim": "#9bd679", secondary: "#bad077", "inverse-on-surface": "#2f3225", "on-primary": "#293500", "on-tertiary-fixed-variant": "#1e5101", tertiary: "#ffffff", "secondary-fixed-dim": "#bad077", "on-secondary-container": "#a9be68", "on-error-container": "#ffdad6", "on-secondary-fixed-variant": "#3c4d00", "surface-tint": "#aed518", "surface-container-lowest": "#0d0f06", "primary-fixed-dim": "#aed518", "inverse-surface": "#e2e4d1", "surface-container-low": "#1a1d11", "on-surface-variant": "#c5c9af", "on-secondary": "#293500", background: "#12140a", error: "#ffb4ab", "surface-bright": "#383a2d"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}, spacing: {"margin-mobile": "20px", md: "24px", lg: "32px", xl: "48px", xs: "8px", gutter: "16px", unit: "4px", "touch-target": "44px", sm: "16px"}, fontFamily: {"display-lg": ["Inter"], "body-lg": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-md": ["Inter"], "stat-xl": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"display-lg": ["48px", {lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "label-md": ["14px", {lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600"}], "label-sm": ["12px", {lineHeight: "16px", fontWeight: "500"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "stat-xl": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "600"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700"}], "headline-lg-mobile": ["28px", {lineHeight: "34px", fontWeight: "700"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background">
+<!-- Edge-to-Edge Map Layer -->
+<div class="fixed inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center opacity-80" data-alt="A highly detailed dark-themed digital map showing the city of Antananarivo at night. The landmasses are deep navy blue, with roads glowing in electric cyan and bioluminescent purple. Subtle neon light trails suggest movement along main thoroughfares. The overall aesthetic is high-tech, premium, and secure, with a minimalist UI overlay." data-location="Antananarivo, Madagascar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDrWjNoJnitHtkEbdmESM54hxQ77D2_hJXkzEhck9zkksh0EWZINzkDWpOAjMm40fNzles0_p9NK1g2aKMqcRZhJD4HydFV6BkdA-4e0YjHVkFbCB3zpcArAmHyZgIDL9NYQrmSaxIAOE9AsHeTv5MAnsZEIHWVafBnHlmVZcrDesCsIoe714vZW2Ba5tqCfh_ds_7LMkV_7QtJJe-HP4VUXZrzDCyHlOLDrC18WOVOtK6Mo7COLtddzg')">
+</div>
+<div class="absolute inset-0 map-gradient-overlay pointer-events-none"></div>
+</div>
+<!-- Top Navigation Bar & Filters -->
+<header class="fixed top-0 w-full z-50 flex flex-col gap-4 pt-6 px-margin-mobile">
+<!-- Top Search Bar Shell -->
+<div class="flex items-center gap-3 w-full bg-surface-container/60 backdrop-blur-xl rounded-full px-4 py-2 shadow-sm border border-white/5">
+<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A high-quality studio portrait of a modern young professional user, with soft cinematic lighting and a neutral, tech-focused background. The image has a clean, premium feel consistent with a high-end social application profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2Em8Zan-i0zeFFMWpSA_AmF4C7UA86OfGnShZeMw7PPpbAvDF3c8a79JfKrnggKE69FF0oLCrE_3i8WIiywG992E82dLy49mRJ-MY_W8i3-SonMWREIo_QaHubcpdTHMKxDZrAUvKn8mmwH2MF8rSUl0ml7XTNEZNgaaj3wUkuhuCv47PYMrjN1LBrPqJpOF2zQVmsS78OTERmidU18vpLLO6FSbkaII_GMkB5Eaa0C-fLJBR-x2JpQ"/>
+</div>
+<div class="flex-1 flex items-center bg-surface/40 rounded-full px-4 py-2 border border-outline-variant/30">
+<span class="material-symbols-outlined text-outline text-xl mr-2">search</span>
+<input class="bg-transparent border-none outline-none text-on-surface-variant font-body-md w-full placeholder:text-outline-variant" placeholder="Rechercher..." type="text"/>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-highest/40 hover:bg-surface-container-highest transition-colors relative">
+<span class="material-symbols-outlined text-primary">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-tertiary rounded-full border-2 border-background"></span>
+</button>
+</div>
+<!-- Filter Tabs -->
+<div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+<button class="px-6 py-2 rounded-full bg-primary text-on-primary font-label-md whitespace-nowrap shadow-md shadow-primary/20">Tous</button>
+<button class="px-6 py-2 rounded-full bg-surface-container/80 backdrop-blur-md text-on-surface-variant font-label-md whitespace-nowrap border border-outline-variant/20">Famille</button>
+<button class="px-6 py-2 rounded-full bg-surface-container/80 backdrop-blur-md text-on-surface-variant font-label-md whitespace-nowrap border border-outline-variant/20">Amis</button>
+<button class="px-6 py-2 rounded-full bg-surface-container/80 backdrop-blur-md text-on-surface-variant font-label-md whitespace-nowrap border border-outline-variant/20">Équipe</button>
+</div>
+</header>
+<!-- Map Markers (Positioned Absolutely for Mockup) -->
+<main class="relative w-full h-full pointer-events-none">
+<!-- Marker: Moi -->
+<div class="absolute top-[45%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-auto group">
+<div class="relative">
+<div class="w-14 h-14 rounded-full border-4 border-primary bg-surface overflow-hidden shadow-xl marker-pulse">
+<img class="w-full h-full object-cover" data-alt="Close up face of a young tech-savvy user in a dark room with subtle blue ambient light reflecting on their skin." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS4VQQKtma-YJnTDtLBM1ZvR31akzYlL5GykvUdzVrBw2ck3JNWDNRcmSZuXyb5S1XyMrP6JD9IJT5Onr2GrGz_QG02v4CpZEXytZPdAGoSAqVbg1cwFpuoVIFX6Nq8ZqfvEUtwyetcRIA3VNj9SAJIz1TGXQ-i0FHcMO8r422NcOqr_tDX2Qs2MJiOW3X_6cPiBIJR403btkx9ZOEQbZIW4fxIXvsA32WgBPBJFBcrsCNz-H5YNDHwA"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-primary w-4 h-4 rounded-full border-2 border-surface"></div>
+</div>
+<div class="mt-2 bg-primary/90 backdrop-blur-md px-3 py-1 rounded-lg">
+<span class="text-on-primary font-label-md">Moi</span>
+</div>
+</div>
+<!-- Marker: Rica -->
+<div class="absolute top-[30%] left-[25%] flex flex-col items-center pointer-events-auto">
+<div class="w-12 h-12 rounded-full border-2 border-secondary-container bg-surface overflow-hidden shadow-lg">
+<img class="w-full h-full object-cover" data-alt="Portrait of Rica, a young woman with a friendly smile, photographed in an outdoor urban setting with soft bokeh background and warm lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTpIpSKeqTH-qmlip8ni-xV4c5bOvIazPwKauBr5NUwPCLAHEpPPZ7U__M1_6eVm4JZHjmRDz65X6zq-rfr6ultUFS7vpjczbO8D-7XUM4H0dEoolIcS0FUtC3jmDe5MfPeVm1Pgp4-g6AY_NkOuiVGfU1SgU_vEv5K4wwR7OCmneg7PA43h5jsw9cj57Tz9Pe1iGEEjbJEVcDDdglEkmbJ-eFnqU1TUxgK1NlVKE9tM1fjnha-TjZww"/>
+</div>
+<div class="mt-2 bg-surface-container-high/90 backdrop-blur-md px-3 py-1 rounded-lg border border-outline-variant/20">
+<p class="text-on-surface font-label-md leading-none">Rica</p>
+<p class="text-[10px] text-on-surface-variant mt-0.5">Jumbo Score Ankorondrano</p>
+</div>
+</div>
+<!-- Marker: Mario -->
+<div class="absolute top-[60%] left-[20%] flex flex-col items-center pointer-events-auto">
+<div class="w-12 h-12 rounded-full border-2 border-tertiary-fixed-dim bg-surface overflow-hidden shadow-lg">
+<img class="w-full h-full object-cover" data-alt="A portrait of Mario, a cheerful man in his 30s wearing stylish glasses, in a workspace environment with cool blue lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBePkmJFzT8hsDxGTV-ZFuF3YzqGdtuay4E0bEI2N3y8HJLzDEW9Ns8B6KPIgGwMHQJCQtnymyeHag1cs7PNeDM91I_BcFta8Q9IE2D4Qv53_SXrlKRuKXFx5gyNyKZUA7enHKm0H1cKoly34Vrz6wX5Ni0Ak40gZhlb0mvhjtMIoCfIsO0h6eelp0FqDHCMI93aKYcUzXFaBzJifoqq1nSeRByq3s_VNF0l8p1eACXnZcFsjL5u1H8wA"/>
+</div>
+<div class="mt-2 bg-surface-container-high/90 backdrop-blur-md px-3 py-1 rounded-lg border border-outline-variant/20">
+<p class="text-on-surface font-label-md leading-none">Mario</p>
+<p class="text-[10px] text-on-surface-variant mt-0.5">En route vers le bureau</p>
+</div>
+</div>
+<!-- Marker: Taratra -->
+<div class="absolute top-[25%] right-[20%] flex flex-col items-center pointer-events-auto">
+<div class="w-12 h-12 rounded-full border-2 border-primary-container bg-surface overflow-hidden shadow-lg">
+<img class="w-full h-full object-cover" data-alt="Professional portrait of Taratra, a focused male designer in a high-tech studio with glowing screen light in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAE4FPBZiD6TAtWeEdMQwAANHy_cEXiXkSnoOGuckBsHIurOwMWHDPjv3P8pTJWc83YgQCDtA4AUgNLS7RbCWiHwlkPR9zSTLYVJayBYMMp00DRiN6X4Qm6Ev_oMiiv0r3FU_FmS-142PLbx8lgP9FEGO0n2UDvHBIDuGAJl6eD4E13fkckpaHBbgKM3xxVDM3C9NPC3muYU4HJA8DG8nZ-knQusa9XkWVmTCUHDBP35fqMNp8V7oDCCQ"/>
+</div>
+<div class="mt-2 bg-surface-container-high/90 backdrop-blur-md px-3 py-1 rounded-lg border border-outline-variant/20">
+<p class="text-on-surface font-label-md leading-none">Taratra</p>
+<p class="text-[10px] text-on-surface-variant mt-0.5">Bureau XR Technologies</p>
+</div>
+</div>
+<!-- Marker: Papa & Maman (Cluster) -->
+<div class="absolute bottom-[40%] right-[15%] flex flex-col items-center pointer-events-auto">
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full border-2 border-outline bg-surface overflow-hidden shadow-lg z-10">
+<img class="w-full h-full object-cover" data-alt="Portrait of an older distinguished gentleman, warm smile, soft natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYYaCoTma6mkGFKddCD2cQFhAYRc_rYFzB8cqjgCjfxzf_z961xarpKZyj0CtgmgOzhZ4kk2YA2nprVWyisVh-1iFkhgY-ls-WP5MmHQqBxVcsab52Kur6o4iSSAfDh23j4OAu57w1yGM0dmDzA-8b9KeqKVCUw2kCqyMmv_eQUQR0QBJYzlR0xtYSOUCwlThCM_LAq8FnEythDtErkI9jFY_iHXEldTywllPpGFxyRTxqLm4rM9aFxw"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-outline bg-surface overflow-hidden shadow-lg">
+<img class="w-full h-full object-cover" data-alt="Portrait of a kind older lady with elegant gray hair, wearing a vibrant scarf, in a garden setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5HJt4dcQ7zoifAzzOlFN5WJxxjHajHiZ5qNJzrNYFB9rm3DhjTj5e7v8A1aBqQKUabTUMKlDTtGU6s2fccQq2h1uyk_7D452q0kHD5MctvMvDhf8wxzw02thL4qGSiVDF8t6Y76J8SfYv5hREmOlcLiI65lQqDblgyHqoTOXqLis9qzZabz4f_jnwivF7UzsPtSNe4g5n-DVOSEJ8vPf_uWE1fqaR-HhHXMlCuxcDZy9uUREOc7fZXA"/>
+</div>
+</div>
+<div class="mt-2 bg-surface-container-high/90 backdrop-blur-md px-3 py-1 rounded-lg border border-outline-variant/20">
+<span class="text-on-surface font-label-md">Papa, Maman</span>
+</div>
+</div>
+</main>
+<!-- Map Floating Controls -->
+<div class="fixed right-margin-mobile bottom-[140px] flex flex-col gap-3 z-40">
+<button class="w-12 h-12 rounded-full bg-surface-container/90 backdrop-blur-md border border-outline-variant/30 flex items-center justify-center text-primary shadow-xl active:scale-95 transition-transform">
+<span class="material-symbols-outlined">center_focus_strong</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-surface-container/90 backdrop-blur-md border border-outline-variant/30 flex items-center justify-center text-primary shadow-xl active:scale-95 transition-transform">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-primary shadow-[0_0_20px_rgba(175,198,255,0.4)] flex items-center justify-center text-on-primary active:scale-95 transition-transform">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex flex-col">
+<!-- Floating MIA Button -->
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 flex flex-col items-center">
+<button class="w-16 h-16 rounded-full bg-gradient-to-tr from-[#29D391] to-[#4F8CFF] shadow-2xl flex items-center justify-center mia-pulse active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-white text-3xl font-bold">mic</span>
+</button>
+</div>
+<!-- Bottom Bar Content -->
+<div class="bg-surface/90 backdrop-blur-2xl border-t border-surface-container-high flex justify-around items-center px-4 pb-8 pt-4 w-full">
+<!-- Active Tab: Carte -->
+<div class="flex flex-col items-center justify-center text-primary font-bold relative after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-primary after:rounded-full after:shadow-[0_0_8px_#afc6ff]">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-sm text-label-sm mt-1">Carte</span>
+</div>
+<div class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined">switch_account</span>
+<span class="font-label-sm text-label-sm mt-1">Activité</span>
+</div>
+<!-- Spacer for MIA Button -->
+<div class="w-16"></div>
+<div class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined">emoji_events</span>
+<span class="font-label-sm text-label-sm mt-1">Défis</span>
+</div>
+<div class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profil</span>
+</div>
+</div>
+</nav>
+<!-- Micro-interaction Scripts -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.classList.add('scale-95');
+                    setTimeout(() => this.classList.remove('scale-95'), 100);
+                });
+            });
+
+            // Prevent scroll on mobile for immersive map feel
+            document.body.addEventListener('touchmove', function(e) {
+                if (e.target.closest('header') || e.target.closest('nav') || e.target.closest('.fixed')) {
+                    // allow
+                } else {
+                    e.preventDefault();
+                }
+            }, {passive: false});
+        });
+    </script>
+</body></html>

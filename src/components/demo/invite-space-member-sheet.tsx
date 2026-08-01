@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { darkColors, radius, spacing, typography } from '@/theme';
+import { useLanguage } from '@/contexts/language-context';
 
 import { Space } from './spaces-data';
 
@@ -15,6 +16,8 @@ const CONTACTS: Contact[] = [
 ];
 
 export function InviteSpaceMemberSheet({ space, visible, onClose }: InviteSpaceMemberSheetProps) {
+  const { t } = useLanguage();
+  const spaceName = space ? t(space.type === 'famille' ? 'groups.family' : space.type === 'amis' ? 'groups.friends' : 'groups.team') : '';
   const [query, setQuery] = useState('');
   const [invited, setInvited] = useState<Contact | null>(null);
   const results = useMemo(() => {
@@ -27,33 +30,33 @@ export function InviteSpaceMemberSheet({ space, visible, onClose }: InviteSpaceM
   return (
     <Modal animationType="fade" transparent visible={visible} onRequestClose={close}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.modalRoot}>
-        <Pressable accessibilityLabel="Fermer l’invitation" onPress={close} style={styles.backdrop} />
+        <Pressable accessibilityLabel={t('common.close')} onPress={close} style={styles.backdrop} />
         <View style={styles.sheet}>
           <View style={styles.handle} />
           {invited ? (
             <View style={styles.confirmation}>
               <View style={[styles.confirmationIcon, { borderColor: space?.color ?? darkColors.success }]}><Text style={styles.confirmationIconText}>✓</Text></View>
-              <Text accessibilityRole="header" style={styles.title}>Invitation envoyée</Text>
-              <Text style={styles.subtitle}>{invited.name} pourra rejoindre l’espace {space?.name ?? ''}.</Text>
-              <Pressable onPress={close} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Terminer</Text></Pressable>
+              <Text accessibilityRole="header" style={styles.title}>{t('map.invitationSent')}</Text>
+              <Text style={styles.subtitle}>{t('spaces.memberInvited', { name: invited.name, space: spaceName })}</Text>
+              <Pressable onPress={close} style={styles.primaryButton}><Text style={styles.primaryButtonText}>{t('common.finish')}</Text></Pressable>
             </View>
           ) : (
             <>
               <View style={styles.header}>
-                <View style={styles.headerCopy}><Text accessibilityRole="header" style={styles.title}>Inviter un membre</Text><Text style={styles.subtitle}>Ajoutez une personne à l’espace {space?.name ?? ''}.</Text></View>
-                <Pressable accessibilityLabel="Fermer" onPress={close} style={styles.closeButton}><Text style={styles.closeText}>×</Text></Pressable>
+                <View style={styles.headerCopy}><Text accessibilityRole="header" style={styles.title}>{t('spaces.inviteMember')}</Text><Text style={styles.subtitle}>{t('spaces.inviteSubtitle', { space: spaceName })}</Text></View>
+                <Pressable accessibilityLabel={t('common.close')} onPress={close} style={styles.closeButton}><Text style={styles.closeText}>×</Text></Pressable>
               </View>
-              <View style={styles.searchBox}><Text style={styles.searchIcon}>⌕</Text><TextInput accessibilityLabel="Rechercher un membre" autoCapitalize="none" onChangeText={setQuery} placeholder="Nom ou adresse e-mail" placeholderTextColor={darkColors.textMuted} style={styles.searchInput} value={query} /></View>
-              <Text style={styles.sectionLabel}>CONTACTS FICTIFS</Text>
+              <View style={styles.searchBox}><Text style={styles.searchIcon}>⌕</Text><TextInput accessibilityLabel={t('spaces.searchMember')} autoCapitalize="none" onChangeText={setQuery} placeholder={t('spaces.searchMember')} placeholderTextColor={darkColors.textMuted} style={styles.searchInput} value={query} /></View>
+              <Text style={styles.sectionLabel}>{t('spaces.contacts')}</Text>
               <ScrollView contentContainerStyle={styles.results} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
                 {results.map((contact) => (
                   <View key={contact.id} style={styles.contactRow}>
                     <View style={[styles.avatar, { backgroundColor: `${space?.color ?? darkColors.primary}26` }]}><Text style={[styles.avatarText, { color: space?.color ?? darkColors.primary }]}>{contact.initials}</Text></View>
                     <View style={styles.contactCopy}><Text style={styles.contactName}>{contact.name}</Text><Text numberOfLines={1} style={styles.contactEmail}>{contact.email}</Text></View>
-                    <Pressable accessibilityLabel={`Inviter ${contact.name}`} onPress={() => setInvited(contact)} style={({ pressed }) => [styles.inviteButton, pressed && styles.pressed]}><Text style={styles.inviteText}>Inviter</Text></Pressable>
+                    <Pressable accessibilityLabel={`${t('common.invite')} ${contact.name}`} onPress={() => setInvited(contact)} style={({ pressed }) => [styles.inviteButton, pressed && styles.pressed]}><Text style={styles.inviteText}>{t('common.invite')}</Text></Pressable>
                   </View>
                 ))}
-                {results.length === 0 && <View style={styles.empty}><Text style={styles.emptyTitle}>Aucun contact</Text><Text style={styles.subtitle}>Essayez un autre nom ou une autre adresse.</Text></View>}
+                {results.length === 0 && <View style={styles.empty}><Text style={styles.emptyTitle}>{t('spaces.noContact')}</Text><Text style={styles.subtitle}>{t('spaces.tryContact')}</Text></View>}
               </ScrollView>
             </>
           )}

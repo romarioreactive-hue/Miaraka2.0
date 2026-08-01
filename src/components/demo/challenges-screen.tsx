@@ -11,6 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { CreateChallengeSheet } from './create-challenge-sheet';
+import { useLanguage } from '@/contexts/language-context';
 
 const COLORS = {
   background: '#060C1F',
@@ -49,6 +50,7 @@ const CHALLENGE_TYPES: ChallengeTypeCard[] = [
 ];
 
 export function ChallengesScreen() {
+  const { t } = useLanguage();
   const [activeFilter, setActiveFilter] = useState<ChallengeFilter>('En cours');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
@@ -60,15 +62,15 @@ export function ChallengesScreen() {
         showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View>
-            <Text style={styles.eyebrow}>BOUGEONS ENSEMBLE</Text>
-            <Text accessibilityRole="header" style={styles.title}>Défis</Text>
+            <Text style={styles.eyebrow}>{t('onboarding.3.title').toLocaleUpperCase()}</Text>
+            <Text accessibilityRole="header" style={styles.title}>{t('challenges.title')}</Text>
           </View>
           <Pressable
             accessibilityRole="button"
             onPress={() => setIsCreateOpen(true)}
             style={({ pressed }) => [styles.createButton, pressed && styles.pressed]}>
             <Text style={styles.createButtonPlus}>＋</Text>
-            <Text style={styles.createButtonText}>Créer un défi</Text>
+            <Text style={styles.createButtonText}>{t('challenges.createTitle')}</Text>
           </Pressable>
         </View>
 
@@ -82,7 +84,7 @@ export function ChallengesScreen() {
                 key={filter}
                 onPress={() => setActiveFilter(filter)}
                 style={[styles.filter, selected && styles.filterActive]}>
-                <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filter}</Text>
+                <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filter === 'En cours' ? t('challenges.inProgress') : filter === 'Terminés' ? t('challenges.finished') : t('nav.spaces')}</Text>
               </Pressable>
             );
           })}
@@ -92,13 +94,13 @@ export function ChallengesScreen() {
           <View style={styles.heroTopRow}>
             <View style={styles.teamBadge}>
               <View style={styles.teamDot} />
-              <Text style={styles.teamBadgeText}>ÉQUIPE</Text>
+              <Text style={styles.teamBadgeText}>{t('groups.team').toLocaleUpperCase()}</Text>
             </View>
             <Text style={styles.period}>Lun. → Dim.</Text>
           </View>
 
-          <Text style={styles.challengeName}>Défi XR de la semaine</Text>
-          <Text style={styles.challengeSubtitle}>Objectif collectif</Text>
+          <Text style={styles.challengeName}>{t('challenges.heroName')}</Text>
+          <Text style={styles.challengeSubtitle}>{t('spaces.collectiveGoal')}</Text>
 
           <View style={styles.totalRow}>
             <View style={styles.totalNumbers}>
@@ -107,13 +109,13 @@ export function ChallengesScreen() {
             </View>
             <View style={styles.daysBlock}>
               <Text style={styles.daysValue}>3</Text>
-              <Text style={styles.daysLabel}>jours restants</Text>
+              <Text style={styles.daysLabel}>{t('challenges.daysLeft')}</Text>
             </View>
           </View>
 
           <ProgressBar progress={53.5} color={COLORS.green} height={10} delay={100} />
           <View style={styles.progressFooter}>
-            <Text style={styles.progressHint}>Toute l’équipe avance</Text>
+            <Text style={styles.progressHint}>{t('challenges.teamMoving')}</Text>
             <Text style={styles.progressPercent}>54 %</Text>
           </View>
         </View>
@@ -121,9 +123,9 @@ export function ChallengesScreen() {
         <View style={styles.sectionHeader}>
           <View>
             <Text style={styles.sectionEyebrow}>4 PARTICIPANTS</Text>
-            <Text style={styles.sectionTitle}>Classement</Text>
+            <Text style={styles.sectionTitle}>{t('challenges.ranking')}</Text>
           </View>
-          <Text style={styles.updated}>Mis à jour maintenant</Text>
+          <Text style={styles.updated}>{t('challenges.updated')}</Text>
         </View>
 
         <View style={styles.rankingCard}>
@@ -138,8 +140,8 @@ export function ChallengesScreen() {
 
         <View style={styles.sectionHeader}>
           <View>
-            <Text style={styles.sectionEyebrow}>À CHACUN SON RYTHME</Text>
-            <Text style={styles.sectionTitle}>Types de défi</Text>
+            <Text style={styles.sectionEyebrow}>{t('challenges.eachPace')}</Text>
+            <Text style={styles.sectionTitle}>{t('challenges.types')}</Text>
           </View>
         </View>
 
@@ -151,8 +153,8 @@ export function ChallengesScreen() {
                   {type.icon}
                 </Text>
               </View>
-              <Text style={styles.typeLabel}>{type.label}</Text>
-              <Text numberOfLines={2} style={styles.typeDetail}>{type.detail}</Text>
+              <Text style={styles.typeLabel}>{type.label === 'Individuel' ? t('challenges.individual') : type.label === 'Collectif' ? t('challenges.collective') : t('challenges.ranking')}</Text>
+              <Text numberOfLines={2} style={styles.typeDetail}>{type.detail === 'Objectif atteint' ? t('challenges.goalReached') : type.detail === 'Un objectif commun' ? t('challenges.commonGoal') : t('challenges.bestWins')}</Text>
               {type.complete && <AchievementPulse />}
             </View>
           ))}
@@ -167,6 +169,7 @@ export function ChallengesScreen() {
 type ParticipantRowProps = (typeof PARTICIPANTS)[number] & { isLast: boolean };
 
 function ParticipantRow({ rank, name, initials, distance, goal, color, isLast }: ParticipantRowProps) {
+  const { t } = useLanguage();
   const percentage = Math.round((distance / goal) * 100);
 
   return (
@@ -177,10 +180,10 @@ function ParticipantRow({ rank, name, initials, distance, goal, color, isLast }:
           <Text style={[styles.avatarText, { color }]}>{initials}</Text>
         </View>
         <View style={styles.participantNameBlock}>
-          <Text style={styles.participantName}>{name}</Text>
+          <Text style={styles.participantName}>{name === 'Moi' ? t('common.me') : name}</Text>
           <Text style={styles.participantDistance}>
             <Text style={styles.distanceStrong}>{distance.toLocaleString('fr-FR')} km</Text>
-            {' '}sur {goal} km
+            {' '}{t('challenges.ofGoal', { goal })}
           </Text>
         </View>
         <Text style={[styles.participantPercent, { color }]}>{percentage} %</Text>
@@ -200,6 +203,7 @@ type ProgressBarProps = {
 };
 
 function ProgressBar({ progress, color, height, delay = 0 }: ProgressBarProps) {
+  const { t } = useLanguage();
   const animatedProgress = useSharedValue(0);
 
   useEffect(() => {
@@ -216,7 +220,7 @@ function ProgressBar({ progress, color, height, delay = 0 }: ProgressBarProps) {
   return (
     <View
       accessible
-      accessibilityLabel={`Progression ${Math.round(progress)} pour cent`}
+      accessibilityLabel={t('challenges.progressA11y', { progress: Math.round(progress) })}
       style={[styles.progressTrack, { height }]}>
       <Animated.View style={[styles.progressFill, { backgroundColor: color }, animatedStyle]} />
     </View>
@@ -224,6 +228,7 @@ function ProgressBar({ progress, color, height, delay = 0 }: ProgressBarProps) {
 }
 
 function AchievementPulse() {
+  const { t } = useLanguage();
   const scale = useSharedValue(1);
 
   useEffect(() => {
@@ -242,8 +247,8 @@ function AchievementPulse() {
   }));
 
   return (
-    <Animated.View accessibilityLabel="Objectif atteint" style={[styles.achievement, animatedStyle]}>
-      <Text style={styles.achievementText}>✓ ATTEINT</Text>
+    <Animated.View accessibilityLabel={t('challenges.goalReached')} style={[styles.achievement, animatedStyle]}>
+      <Text style={styles.achievementText}>{t('challenges.achieved')}</Text>
     </Animated.View>
   );
 }

@@ -4,17 +4,16 @@ import Animated, { Easing, SlideInDown, SlideOutDown } from 'react-native-reanim
 import { GROUP_COLORS, GROUP_LABELS, PALETTE, Person } from './people-data';
 
 import { Spacing } from '@/constants/theme';
+import { useLanguage } from '@/contexts/language-context';
 
 type PersonSheetProps = {
   person: Person;
   onClose: () => void;
 };
 
-const QUICK_ACTIONS: { icon: string; label: string }[] = [
-  { icon: '🧭', label: 'Itinéraire' },
-  { icon: '📞', label: 'Appeler' },
-  { icon: '💬', label: 'Message' },
-  { icon: '⋯', label: 'Plus' },
+const QUICK_ACTIONS = [
+  { icon: '🧭', key: 'map.route' as const }, { icon: '📞', key: 'map.call' as const },
+  { icon: '💬', key: 'map.message' as const }, { icon: '⋯', key: 'map.more' as const },
 ];
 
 function batteryColor(level: number) {
@@ -24,8 +23,10 @@ function batteryColor(level: number) {
 }
 
 export function PersonSheet({ person, onClose }: PersonSheetProps) {
+  const { language, t } = useLanguage();
   const battColor = batteryColor(person.battery);
   const groupColor = GROUP_COLORS[person.group];
+  const movementStatus = t(person.movementStatus === 'En ville' ? 'map.inTown' : person.movementStatus === 'En route' ? 'map.onTheWay' : person.movementStatus === "À l'école" ? 'map.atSchool' : person.movementStatus === 'Au bureau' ? 'map.atOffice' : 'map.atHome');
 
   return (
     <>
@@ -44,15 +45,15 @@ export function PersonSheet({ person, onClose }: PersonSheetProps) {
 
           <View style={styles.headerInfo}>
             <View style={styles.nameRow}>
-              <Text style={styles.name}>{person.isMe ? `${person.name} (toi)` : person.name}</Text>
+              <Text style={styles.name}>{person.isMe ? `${person.name} (${t('map.youInformal')})` : person.name}</Text>
               <View style={[styles.groupBadge, { backgroundColor: `${groupColor}26` }]}>
                 <Text style={[styles.groupBadgeText, { color: groupColor }]}>
-                  {GROUP_LABELS[person.group]}
+                  {t(person.group === 'famille' ? 'groups.family' : person.group === 'amis' ? 'groups.friends' : 'groups.team')}
                 </Text>
               </View>
             </View>
             <Text style={styles.subtitle} numberOfLines={1}>
-              {person.movementStatus} · {person.location}
+              {movementStatus} · {person.location}
             </Text>
           </View>
 
@@ -82,15 +83,15 @@ export function PersonSheet({ person, onClose }: PersonSheetProps) {
 
         <View style={styles.actionsRow}>
           {QUICK_ACTIONS.map((action) => (
-            <Pressable key={action.label} style={styles.actionButton}>
+            <Pressable key={action.key} style={styles.actionButton}>
               <Text style={styles.actionIcon}>{action.icon}</Text>
-              <Text style={styles.actionLabel}>{action.label}</Text>
+              <Text style={styles.actionLabel}>{t(action.key)}</Text>
             </Pressable>
           ))}
         </View>
 
         <View style={styles.timelineBlock}>
-          <Text style={styles.sectionLabel}>Aujourd&apos;hui</Text>
+          <Text style={styles.sectionLabel}>{t('common.today')}</Text>
           {person.timeline.map((event, index) => (
             <View key={`${event.time}-${index}`} style={styles.timelineRow}>
               <View
@@ -109,11 +110,11 @@ export function PersonSheet({ person, onClose }: PersonSheetProps) {
 
         <View style={styles.statsGrid}>
           <View style={styles.statTile}>
-            <Text style={styles.statLabel}>Pas aujourd&apos;hui</Text>
-            <Text style={styles.statValue}>{person.steps.toLocaleString('fr-FR')}</Text>
+            <Text style={styles.statLabel}>{t('map.stepsToday')}</Text>
+            <Text style={styles.statValue}>{person.steps.toLocaleString(language === 'fr' ? 'fr-FR' : 'mg-MG')}</Text>
           </View>
           <View style={styles.statTile}>
-            <Text style={styles.statLabel}>Cette semaine</Text>
+            <Text style={styles.statLabel}>{t('common.thisWeek')}</Text>
             <Text style={styles.statValue}>
               {person.weeklyKm.toLocaleString('fr-FR')}&nbsp;km
             </Text>

@@ -1,13 +1,15 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { useLanguage } from '@/contexts/language-context';
+
 export type DemoTab = 'carte' | 'activite' | 'defis' | 'espaces' | 'profil';
 
-const TABS: { id: DemoTab; label: string; icon: string }[] = [
-  { id: 'carte', label: 'Carte', icon: '🗺️' },
-  { id: 'activite', label: 'Activité', icon: '📈' },
-  { id: 'defis', label: 'Défis', icon: '🏆' },
-  { id: 'espaces', label: 'Espaces', icon: '🌐' },
-  { id: 'profil', label: 'Profil', icon: '👤' },
+const TABS: { id: DemoTab; labelKey: 'nav.map' | 'nav.activity' | 'nav.challenges' | 'nav.spaces' | 'nav.profile'; icon: string }[] = [
+  { id: 'carte', labelKey: 'nav.map', icon: '🗺️' },
+  { id: 'activite', labelKey: 'nav.activity', icon: '📈' },
+  { id: 'defis', labelKey: 'nav.challenges', icon: '🏆' },
+  { id: 'espaces', labelKey: 'nav.spaces', icon: '🌐' },
+  { id: 'profil', labelKey: 'nav.profile', icon: '👤' },
 ];
 
 type DemoTabBarProps = {
@@ -17,6 +19,7 @@ type DemoTabBarProps = {
 };
 
 export function DemoTabBar({ activeTab, onChangeTab, onPressMia }: DemoTabBarProps) {
+  const { t } = useLanguage();
   return (
     <View style={styles.wrapper}>
       <Pressable onPress={onPressMia} style={styles.fab} hitSlop={8}>
@@ -33,7 +36,7 @@ export function DemoTabBar({ activeTab, onChangeTab, onPressMia }: DemoTabBarPro
               style={styles.tabButton}
               hitSlop={6}>
               <Text style={[styles.tabIcon, isActive && styles.tabIconActive]}>{tab.icon}</Text>
-              <Text style={[styles.tabLabel, isActive && styles.tabLabelActive]}>{tab.label}</Text>
+              <Text style={[styles.tabLabel, isActive && styles.tabLabelActive]}>{t(tab.labelKey)}</Text>
               {isActive && <View style={styles.activeDot} />}
             </Pressable>
           );

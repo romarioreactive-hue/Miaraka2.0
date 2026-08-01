@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Miaraka - Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-fixed": "#b6f393", "on-background": "#e2e4d1", "on-primary-fixed": "#171e00", "surface-container": "#1e2115", "tertiary-container": "#b6f393", "inverse-primary": "#516600", "on-primary-fixed-variant": "#3c4d00", "primary-container": "#c9f23b", "on-tertiary": "#123800", outline: "#8f937b", "error-container": "#93000a", "outline-variant": "#444935", "on-tertiary-container": "#3c7121", "surface-container-high": "#292b1f", "surface-container-highest": "#333629", "surface-dim": "#12140a", primary: "#ffffff", "on-primary-container": "#576c00", "on-error": "#690005", "surface-variant": "#333629", "secondary-fixed": "#d6ec90", "on-secondary-fixed": "#171e00", "on-tertiary-fixed": "#072100", "secondary-container": "#3c4d00", "primary-fixed": "#c9f23b", "on-surface": "#e2e4d1", surface: "#12140a", "tertiary-fixed-dim": "#9bd679", secondary: "#bad077", "inverse-on-surface": "#2f3225", "on-primary": "#293500", "on-tertiary-fixed-variant": "#1e5101", tertiary: "#ffffff", "secondary-fixed-dim": "#bad077", "on-secondary-container": "#a9be68", "on-error-container": "#ffdad6", "on-secondary-fixed-variant": "#3c4d00", "surface-tint": "#aed518", "surface-container-lowest": "#0d0f06", "primary-fixed-dim": "#aed518", "inverse-surface": "#e2e4d1", "surface-container-low": "#1a1d11", "on-surface-variant": "#c5c9af", "on-secondary": "#293500", background: "#12140a", error: "#ffb4ab", "surface-bright": "#383a2d"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}, spacing: {"margin-mobile": "20px", md: "24px", lg: "32px", xl: "48px", xs: "8px", gutter: "16px", unit: "4px", "touch-target": "44px", sm: "16px"}, fontFamily: {"display-lg": ["Inter"], "body-lg": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-md": ["Inter"], "stat-xl": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"display-lg": ["48px", {lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "label-md": ["14px", {lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600"}], "label-sm": ["12px", {lineHeight: "16px", fontWeight: "500"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "stat-xl": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "600"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700"}], "headline-lg-mobile": ["28px", {lineHeight: "34px", fontWeight: "700"}]}}}};</script>
+<style>
+        body {
+            background-color: #071424;
+            color: #d7e3fa;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #3ee09d, #afc6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-gradient-bg {
+            background: linear-gradient(135deg, #29D391 0%, #4F8CFF 100%);
+        }
+
+        .glass-panel {
+            background: rgba(20, 32, 49, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(175, 198, 255, 0.1);
+        }
+
+        .pulse-glow {
+            animation: pulse-animation 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse-animation {
+            0% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.15); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 0.2; }
+        }
+
+        .float-animation {
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .connection-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 3s ease-in-out forwards;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .avatar-pop {
+            animation: pop-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        @keyframes pop-in {
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Placeholder (Suppressed as per "Linear/Transactional" rule) -->
+<main class="flex-grow flex flex-col items-center justify-center px-margin-mobile relative overflow-hidden">
+<!-- Background Atmospheric Glows -->
+<div class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-primary/10 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-tertiary/10 rounded-full blur-[120px]"></div>
+<!-- Visual Core Section -->
+<div class="w-full max-w-md aspect-square relative flex items-center justify-center mb-lg">
+<!-- Central Pin with Glow -->
+<div class="relative z-20 avatar-pop" style="animation-delay: 0.1s;">
+<div class="absolute inset-0 bg-primary/40 blur-2xl pulse-glow rounded-full"></div>
+<div class="w-20 h-20 brand-gradient-bg rounded-full flex items-center justify-center shadow-2xl relative">
+<span class="material-symbols-outlined text-white text-[40px]" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+<!-- SVG Connection Lines Layer -->
+<svg class="absolute inset-0 w-full h-full z-10 pointer-events-none" viewbox="0 0 400 400">
+<!-- Lines radiating from center -->
+<path class="connection-line" d="M200,200 L100,100" fill="none" stroke="url(#lineGrad)" stroke-width="2" style="animation-delay: 0.5s;"></path>
+<path class="connection-line" d="M200,200 L300,80" fill="none" stroke="url(#lineGrad)" stroke-width="2" style="animation-delay: 0.7s;"></path>
+<path class="connection-line" d="M200,200 L320,280" fill="none" stroke="url(#lineGrad)" stroke-width="2" style="animation-delay: 0.9s;"></path>
+<path class="connection-line" d="M200,200 L80,260" fill="none" stroke="url(#lineGrad)" stroke-width="2" style="animation-delay: 1.1s;"></path>
+<defs>
+<lineargradient id="lineGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#29D391;stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:#4F8CFF;stop-opacity:1"></stop>
+</lineargradient>
+</defs>
+</svg>
+<!-- Floating Avatars -->
+<!-- Top Left: Family -->
+<div class="absolute top-[15%] left-[15%] z-20 avatar-pop float-animation" style="animation-delay: 1.2s;">
+<div class="w-14 h-14 rounded-full border-2 border-surface-container-highest overflow-hidden shadow-lg bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A portrait of a smiling elderly man with grey hair, captured in warm, natural lighting. He wears a casual blue shirt. The image has a clean, high-end photography aesthetic with a soft bokeh background that blends into deep navy tones consistent with a premium dark-mode UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeGGlG2DcLVpkR7Y24HbOI4qMqLPMBfxKQaJHPpe_zHsCddhNZiqitLr9w395vY0KLQ3xxihTmWHrFdVuTXgNO8759R3KwUtLjr43TVwG5MsGglmH8GMzrC7B1AFZCAjrldmLWavCnpxzdds0jqP2hSd54DM2ozW6TMFCCkLqbgAB1ajnCmCPff670XTalR9-tHDjDSivJYv_0CMeZiFNqRcVoArx8Bpi2efVqD85rWy_aoGHSOvTuqA"/>
+</div>
+</div>
+<!-- Top Right: Friend -->
+<div class="absolute top-[10%] right-[20%] z-20 avatar-pop float-animation" style="animation-delay: 1.4s; animation-duration: 7s;">
+<div class="w-12 h-12 rounded-full border-2 border-surface-container-highest overflow-hidden shadow-lg bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a young woman with curly hair laughing, lit with bioluminescent cyan and emerald green highlights against a dark background. The style is modern and vibrant, echoing a secure social app's connected protection theme with deep blues and vivid neon accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvTslcdseFAm0FvhY777lClvnVZgCNTJpHPs92bUXxYDc4qGJ75AZHUC89m2EjBnVN7i6RBb4-Rbi_RmcOBIYody3HT5yy6UIudCPilhhBGx6cv8-HkIb0b44PGmLtX1Ya1sUIDZrICx54hFT-qa0aWvUBniQ-T9mhw-zS18ceGUU4L7jxkSgp1kON9RF9s6u7bQlOD3GNeGnjNdjoIpXYiLjZdEOXBrG2c8MJkki09mRa9K8GstLDjw"/>
+</div>
+</div>
+<!-- Bottom Right: Team -->
+<div class="absolute bottom-[25%] right-[15%] z-20 avatar-pop float-animation" style="animation-delay: 1.6s; animation-duration: 5s;">
+<div class="w-16 h-16 rounded-full border-2 border-surface-container-highest overflow-hidden shadow-lg bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A diverse group of professional colleagues seen in a blurred, stylish office setting with high-tech glowing screens. The lighting is sophisticated, using deep navy foundations and cool blue tones. This represents a team environment for a private social platform, emphasizing security and modern minimalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQSZb4orhH7ilW8QPTUsK96n3xFbqV-xizmj7VcIfrBoV4iU7vjC6DIVu7_iToKB17aTlhgjksvdZYGcqNfQhp0rpGPEF0DngLXtQzErhs11X3fFtf532G7c4Fk0N7kDuosh3Q_EzLg2Hq6dxMtxzAFB9wscAkhTlkoIHe83sNFb1e9plyu3NvQC7Ruyo0hXfjqFgrL_JLMRS4lIyZldh8BSquhGpYSyTV_i0Lbkh34TzlWh_vyBx_qA"/>
+</div>
+</div>
+<!-- Bottom Left: Partner -->
+<div class="absolute bottom-[30%] left-[10%] z-20 avatar-pop float-animation" style="animation-delay: 1.8s; animation-duration: 8s;">
+<div class="w-14 h-14 rounded-full border-2 border-surface-container-highest overflow-hidden shadow-lg bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Portrait of a person with a thoughtful expression, wearing glasses, illuminated by a soft bioluminescent glow from a side light source. The color palette consists of rich blacks and electric blues, fitting a premium, high-tech warmth aesthetic for a secure messaging and location-sharing interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAorh7-wsihKayBmUPYeEty30kVNAtdIXB_CNm4Zlh3G2VRurTl60SbM1oPIoUyp3wUTXVrnkr2OnwClcjwesnwtnOa1N3YVZteU03BtA4C0lzoTukTfeFa9G3newYvY7apY8Ciy2yTVlzM5hX3ROuyoqyihWcYVFQwP2AJBCTGyXVmR9gyrmfiKb2HAkA_ra7gah0wyVTRrAD5wi7eUWNuRRzeeKRyvwWNv3PMfUkUSPgM8cqeFI1emA"/>
+</div>
+</div>
+</div>
+<!-- Text Content -->
+<div class="text-center w-full max-w-sm z-30">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg mb-sm tracking-tight text-on-background">
+                Restez proche de <span class="gradient-text font-extrabold">ceux qui comptent.</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed px-4">
+                Retrouvez votre famille, vos amis et votre équipe dans des espaces privés.
+            </p>
+</div>
+</main>
+<!-- Navigation / CTA Section -->
+<footer class="px-margin-mobile pb-xl pt-lg z-30">
+<div class="flex flex-col gap-gutter max-w-md mx-auto">
+<!-- Pagination Dots (Visual Guide) -->
+<div class="flex justify-center gap-2 mb-2">
+<div class="w-8 h-1.5 rounded-full brand-gradient-bg shadow-[0_0_8px_rgba(79,140,255,0.4)]"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-surface-container-highest"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-surface-container-highest"></div>
+</div>
+<button class="w-full h-touch-target rounded-full brand-gradient-bg text-white font-label-md text-label-md shadow-lg shadow-primary/20 active:scale-95 transition-transform duration-200">
+                Continuer
+            </button>
+<button class="w-full h-touch-target rounded-full bg-transparent border border-outline-variant/30 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+                Passer
+            </button>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('touchstart', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('touchend', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Initialize connection lines sequentially if SVG exists
+        window.addEventListener('load', () => {
+            const lines = document.querySelectorAll('.connection-line');
+            lines.forEach((line, index) => {
+                const length = line.getTotalLength();
+                line.style.strokeDasharray = length;
+                line.style.strokeDashoffset = length;
+            });
+        });
+    </script>
+</body></html>

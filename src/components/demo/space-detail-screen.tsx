@@ -1,6 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { darkColors, radius, spacing, typography } from '@/theme';
+import { useLanguage } from '@/contexts/language-context';
 
 import { getActiveMemberCount, MemberStatus, Space, SpaceMember } from './spaces-data';
 
@@ -17,16 +18,21 @@ const STATUS_COLORS: Record<MemberStatus, string> = {
 };
 
 export function SpaceDetailScreen({ space, onBack, onInviteMember }: SpaceDetailScreenProps) {
+  const { t } = useLanguage();
+  const spaceName = t(space.type === 'famille' ? 'groups.family' : space.type === 'amis' ? 'groups.friends' : 'groups.team');
+  const sharing = t(space.sharingLevel === 'Position précise' ? 'spaces.precise' : space.sharingLevel === 'Zone approximative' ? 'spaces.approximate' : 'spaces.activityOnly');
+  const weeklyActivity = t(space.type === 'famille' ? 'spaces.familyActivity' : space.type === 'amis' ? 'spaces.friendsActivity' : 'spaces.teamActivity');
+  const challengeName = t(space.type === 'famille' ? 'spaces.familyChallenge' : space.type === 'amis' ? 'spaces.friendsChallenge' : 'spaces.teamChallenge');
   return (
     <ScrollView
       style={styles.scrollView}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}>
       <View style={styles.topBar}>
-        <Pressable accessibilityLabel="Retour aux espaces" accessibilityRole="button" onPress={onBack} style={styles.backButton}>
+        <Pressable accessibilityLabel={t('common.back')} accessibilityRole="button" onPress={onBack} style={styles.backButton}>
           <Text style={styles.backIcon}>‹</Text>
         </Pressable>
-        <Text style={styles.topTitle}>Détail de l’espace</Text>
+        <Text style={styles.topTitle}>{t('spaces.detail')}</Text>
         <View style={styles.topSpacer} />
       </View>
 
@@ -35,11 +41,11 @@ export function SpaceDetailScreen({ space, onBack, onInviteMember }: SpaceDetail
           <Text style={[styles.heroIconText, { color: space.color }]}>{space.icon}</Text>
         </View>
         <View style={styles.heroCopy}>
-          <Text accessibilityRole="header" style={styles.title}>{space.name}</Text>
-          <Text style={styles.heroMeta}>{space.members.length} membres · {getActiveMemberCount(space)} actifs</Text>
+          <Text accessibilityRole="header" style={styles.title}>{spaceName}</Text>
+          <Text style={styles.heroMeta}>{space.members.length} {t('common.members')} · {getActiveMemberCount(space)} {t('common.active')}</Text>
         </View>
         <View style={[styles.typeBadge, { backgroundColor: `${space.color}18` }]}>
-          <Text style={[styles.typeBadgeText, { color: space.color }]}>{space.sharingLevel}</Text>
+          <Text style={[styles.typeBadgeText, { color: space.color }]}>{sharing}</Text>
         </View>
       </View>
 
@@ -48,12 +54,12 @@ export function SpaceDetailScreen({ space, onBack, onInviteMember }: SpaceDetail
         onPress={onInviteMember}
         style={({ pressed }) => [styles.inviteButton, pressed && styles.pressed]}>
         <Text style={styles.invitePlus}>＋</Text>
-        <Text style={styles.inviteText}>Inviter un membre</Text>
+        <Text style={styles.inviteText}>{t('spaces.inviteMember')}</Text>
       </Pressable>
 
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Membres</Text>
-        <Text style={styles.sectionMeta}>{space.members.length} personnes</Text>
+        <Text style={styles.sectionTitle}>{t('common.members')}</Text>
+        <Text style={styles.sectionMeta}>{t('spaces.people', { count: space.members.length })}</Text>
       </View>
 
       <View style={styles.memberList}>
@@ -62,19 +68,21 @@ export function SpaceDetailScreen({ space, onBack, onInviteMember }: SpaceDetail
             key={member.id}
             member={member}
             color={space.color}
+            statusLabel={member.status === 'En direct' ? t('map.live') : member.status === 'Dernière position' ? t('map.lastKnown') : t('map.offline')}
+            weekLabel={t('common.thisWeek').toLocaleLowerCase()}
             withDivider={index < space.members.length - 1}
           />
         ))}
       </View>
 
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Cette semaine</Text>
+        <Text style={styles.sectionTitle}>{t('common.thisWeek')}</Text>
       </View>
       <View style={styles.activityCard}>
         <View>
-          <Text style={styles.cardEyebrow}>ACTIVITÉ DE L’ESPACE</Text>
-          <Text style={styles.activityValue}>{space.weeklyActivity}</Text>
-          <Text style={styles.activityHint}>Mise à jour avec les données fictives des membres</Text>
+          <Text style={styles.cardEyebrow}>{t('spaces.activity')}</Text>
+          <Text style={styles.activityValue}>{weeklyActivity}</Text>
+          <Text style={styles.activityHint}>{t('spaces.activityHint')}</Text>
         </View>
         <View style={styles.activityBars}>
           {[52, 76, 61, 88, 72, 94, 68].map((height, index) => (
@@ -86,17 +94,17 @@ export function SpaceDetailScreen({ space, onBack, onInviteMember }: SpaceDetail
       </View>
 
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Défi en cours</Text>
+        <Text style={styles.sectionTitle}>{t('spaces.currentChallenge')}</Text>
       </View>
       <View style={styles.challengeCard}>
         <View style={styles.challengeTop}>
           <View style={styles.challengeCopy}>
-            <Text style={styles.cardEyebrow}>OBJECTIF COLLECTIF</Text>
-            <Text style={styles.challengeName}>{space.challenge.name}</Text>
+            <Text style={styles.cardEyebrow}>{t('spaces.collectiveGoal')}</Text>
+            <Text style={styles.challengeName}>{challengeName}</Text>
           </View>
           <Text style={[styles.challengePercent, { color: space.color }]}>{space.challenge.progress} %</Text>
         </View>
-        <View accessibilityLabel={`Progression du défi : ${space.challenge.progress} pour cent`} style={styles.progressTrack}>
+        <View accessibilityLabel={t('challenges.progressA11y', { progress: space.challenge.progress })} style={styles.progressTrack}>
           <View style={[styles.progressFill, { width: `${space.challenge.progress}%`, backgroundColor: space.color }]} />
         </View>
         <Text style={styles.challengeDetail}>{space.challenge.detail}</Text>
@@ -105,7 +113,7 @@ export function SpaceDetailScreen({ space, onBack, onInviteMember }: SpaceDetail
   );
 }
 
-function MemberRow({ member, color, withDivider }: { member: SpaceMember; color: string; withDivider: boolean }) {
+function MemberRow({ member, color, statusLabel, weekLabel, withDivider }: { member: SpaceMember; color: string; statusLabel: string; weekLabel: string; withDivider: boolean }) {
   const statusColor = STATUS_COLORS[member.status];
   return (
     <View style={[styles.memberRow, withDivider && styles.memberDivider]}>
@@ -116,13 +124,13 @@ function MemberRow({ member, color, withDivider }: { member: SpaceMember; color:
       <View style={styles.memberCopy}>
         <View style={styles.memberTitleRow}>
           <Text style={styles.memberName}>{member.name}</Text>
-          <Text style={[styles.statusText, { color: statusColor }]}>{member.status}</Text>
+          <Text style={[styles.statusText, { color: statusColor }]}>{statusLabel}</Text>
         </View>
         <Text numberOfLines={1} style={styles.position}>⌖  {member.position} · {member.updatedAt}</Text>
       </View>
       <View style={styles.memberActivity}>
         <Text style={styles.memberActivityValue}>{member.weeklyActivity}</Text>
-        <Text style={styles.memberActivityLabel}>cette semaine</Text>
+        <Text style={styles.memberActivityLabel}>{weekLabel}</Text>
       </View>
     </View>
   );

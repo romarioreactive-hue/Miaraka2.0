@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Miaraka - MIA Assistant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .mic-pulse {
+            animation: pulse-glow 2.5s infinite;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0px rgba(79, 140, 255, 0.4); }
+            70% { box-shadow: 0 0 0 30px rgba(79, 140, 255, 0); }
+            100% { box-shadow: 0 0 0 0px rgba(79, 140, 255, 0); }
+        }
+        .waveform-bar {
+            animation: wave 1.2s ease-in-out infinite;
+        }
+        @keyframes wave {
+            0%, 100% { height: 10px; }
+            50% { height: 40px; }
+        }
+        .glass-panel {
+            background: rgba(12, 33, 71, 0.6);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-fixed": "#b6f393", "on-background": "#e2e4d1", "on-primary-fixed": "#171e00", "surface-container": "#1e2115", "tertiary-container": "#b6f393", "inverse-primary": "#516600", "on-primary-fixed-variant": "#3c4d00", "primary-container": "#c9f23b", "on-tertiary": "#123800", outline: "#8f937b", "error-container": "#93000a", "outline-variant": "#444935", "on-tertiary-container": "#3c7121", "surface-container-high": "#292b1f", "surface-container-highest": "#333629", "surface-dim": "#12140a", primary: "#ffffff", "on-primary-container": "#576c00", "on-error": "#690005", "surface-variant": "#333629", "secondary-fixed": "#d6ec90", "on-secondary-fixed": "#171e00", "on-tertiary-fixed": "#072100", "secondary-container": "#3c4d00", "primary-fixed": "#c9f23b", "on-surface": "#e2e4d1", surface: "#12140a", "tertiary-fixed-dim": "#9bd679", secondary: "#bad077", "inverse-on-surface": "#2f3225", "on-primary": "#293500", "on-tertiary-fixed-variant": "#1e5101", tertiary: "#ffffff", "secondary-fixed-dim": "#bad077", "on-secondary-container": "#a9be68", "on-error-container": "#ffdad6", "on-secondary-fixed-variant": "#3c4d00", "surface-tint": "#aed518", "surface-container-lowest": "#0d0f06", "primary-fixed-dim": "#aed518", "inverse-surface": "#e2e4d1", "surface-container-low": "#1a1d11", "on-surface-variant": "#c5c9af", "on-secondary": "#293500", background: "#12140a", error: "#ffb4ab", "surface-bright": "#383a2d"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}, spacing: {"margin-mobile": "20px", md: "24px", lg: "32px", xl: "48px", xs: "8px", gutter: "16px", unit: "4px", "touch-target": "44px", sm: "16px"}, fontFamily: {"display-lg": ["Inter"], "body-lg": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-md": ["Inter"], "stat-xl": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"display-lg": ["48px", {lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "label-md": ["14px", {lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600"}], "label-sm": ["12px", {lineHeight: "16px", fontWeight: "500"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "stat-xl": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "600"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700"}], "headline-lg-mobile": ["28px", {lineHeight: "34px", fontWeight: "700"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md overflow-hidden select-none">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-sm flex justify-between items-center px-margin-mobile py-xs">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of a user with a friendly expression. The lighting is soft and cinematic with a deep navy background, reflecting a premium dark-mode aesthetic with subtle cyan rim lighting on the hair and shoulders." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5_6wzXVB7i8wBrS-MLaImBJq6_fE_VrEIThd9gXnaflHNgA0Wf8VGzzI3YGJDFH0J6yusccXC8XPsar2GhC_kfhld7EIl07pQyBBjdrMwo6h3InDUweEe9tFJtKvJlPPUlkOZQJk4vaBDaOfDhhDmpst_7i7-vH39fe7qcIjG3uRhEVMhaj6Szb1AXgsoVNszFCcnjSB7YtKq9SdhQx8a84-mtEkLFkNfcNeONt9s-JknPAclqdMUiw"/>
+</div>
+<span class="font-display-lg text-display-lg bg-clip-text text-transparent bg-gradient-to-r from-tertiary to-primary">MIA</span>
+</div>
+<button class="text-primary hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-[28px]">notifications</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="relative h-screen flex flex-col items-center justify-center pt-24 pb-32 px-margin-mobile">
+<!-- Atmospheric Background Layer -->
+<div class="absolute inset-0 z-0 opacity-40">
+<div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-tertiary/10 blur-[100px] rounded-full"></div>
+</div>
+<!-- Assistant Status / Response Area -->
+<div class="z-10 w-full max-w-lg mb-12 flex flex-col items-center gap-6">
+<div class="glass-panel p-6 rounded-lg text-center transform transition-all duration-500 hover:scale-[1.02]">
+<p class="font-body-lg text-body-lg text-on-surface leading-relaxed">
+                    "Rica est actuellement près de <span class="text-secondary font-bold">Jumbo Score Ankorondrano</span>. Sa position a été mise à jour il y a 20 secondes."
+                </p>
+<div class="mt-4 flex items-center justify-center gap-2 text-outline text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">history</span>
+<span>Analyse en temps réel terminée</span>
+</div>
+</div>
+</div>
+<!-- Central Voice Visualizer -->
+<div class="z-10 relative flex flex-col items-center justify-center py-8">
+<!-- Pulsing Rings -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-48 h-48 rounded-full border border-primary/20 animate-ping opacity-20"></div>
+<div class="absolute w-64 h-64 rounded-full border border-secondary/10 animate-pulse"></div>
+</div>
+<!-- Voice Waveform -->
+<div class="flex items-center gap-1.5 h-16 mb-8">
+<div class="waveform-bar w-1.5 bg-tertiary rounded-full" style="animation-delay: 0.1s"></div>
+<div class="waveform-bar w-1.5 bg-primary rounded-full" style="animation-delay: 0.3s"></div>
+<div class="waveform-bar w-1.5 bg-secondary rounded-full" style="animation-delay: 0.2s"></div>
+<div class="waveform-bar w-1.5 bg-tertiary rounded-full" style="animation-delay: 0.5s"></div>
+<div class="waveform-bar w-1.5 bg-primary rounded-full" style="animation-delay: 0.4s"></div>
+<div class="waveform-bar w-1.5 bg-secondary rounded-full" style="animation-delay: 0.6s"></div>
+<div class="waveform-bar w-1.5 bg-tertiary rounded-full" style="animation-delay: 0.1s"></div>
+</div>
+<!-- Big Mic Button -->
+<button class="relative w-24 h-24 rounded-full bg-gradient-to-br from-tertiary to-primary flex items-center justify-center shadow-[0_0_40px_rgba(79,140,255,0.4)] mic-pulse active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[48px] text-on-primary-container" style="font-variation-settings: 'FILL' 1;">mic</span>
+</button>
+<span class="mt-6 font-label-md text-label-md text-primary tracking-widest uppercase">Je vous écoute...</span>
+</div>
+<!-- Sample Questions / Quick Actions -->
+<div class="z-10 w-full max-w-md mt-auto mb-8 grid grid-cols-1 gap-3">
+<p class="text-outline font-label-sm text-label-sm mb-1 px-2 uppercase tracking-tighter">Suggestions</p>
+<button class="flex items-center justify-between p-4 rounded-full bg-surface-container-high/40 border border-outline-variant/30 hover:bg-surface-container-highest transition-colors group">
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">"Où est Rica ?"</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary">arrow_forward_ios</span>
+</button>
+<button class="flex items-center justify-between p-4 rounded-full bg-surface-container-high/40 border border-outline-variant/30 hover:bg-surface-container-highest transition-colors group">
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">"Qui est déjà au bureau ?"</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary">arrow_forward_ios</span>
+</button>
+<button class="flex items-center justify-between p-4 rounded-full bg-surface-container-high/40 border border-outline-variant/30 hover:bg-surface-container-highest transition-colors group">
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">"Qui est premier du défi ?"</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary">arrow_forward_ios</span>
+</button>
+</div>
+</main>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-2xl border-t border-surface-container-high flex justify-around items-center px-4 pb-8 pt-4">
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-sm text-label-sm">Carte</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">switch_account</span>
+<span class="font-label-sm text-label-sm">Activité</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">emoji_events</span>
+<span class="font-label-sm text-label-sm">Défis</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-sm text-label-sm">Espaces</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profil</span>
+</a>
+<!-- Active Indicator logic for MIA usually maps to a specialized central hub or its own mode, 
+             but here it overlays the primary flow. No specific tab is marked active since it's an overlay state. -->
+</nav>
+<script>
+        // Simple micro-interaction for suggestion buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.add('scale-95');
+                setTimeout(() => btn.classList.remove('scale-95'), 100);
+            });
+        });
+
+        // Randomize waveform animation slightly for realism
+        const bars = document.querySelectorAll('.waveform-bar');
+        bars.forEach(bar => {
+            setInterval(() => {
+                const randomHeight = Math.floor(Math.random() * 30) + 10;
+                bar.style.height = `${randomHeight}px`;
+            }, 150);
+        });
+    </script>
+</body></html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Miaraka - Espaces</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #06142B;
+            color: #d7e3fa;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(12, 33, 71, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .bioluminescent-glow {
+            box-shadow: 0 0 20px rgba(79, 140, 255, 0.15);
+        }
+        .pulse-animation {
+            animation: pulse 3s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+        }
+        .active-dot {
+            box-shadow: 0 0 8px #29D391;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-fixed": "#b6f393", "on-background": "#e2e4d1", "on-primary-fixed": "#171e00", "surface-container": "#1e2115", "tertiary-container": "#b6f393", "inverse-primary": "#516600", "on-primary-fixed-variant": "#3c4d00", "primary-container": "#c9f23b", "on-tertiary": "#123800", outline: "#8f937b", "error-container": "#93000a", "outline-variant": "#444935", "on-tertiary-container": "#3c7121", "surface-container-high": "#292b1f", "surface-container-highest": "#333629", "surface-dim": "#12140a", primary: "#ffffff", "on-primary-container": "#576c00", "on-error": "#690005", "surface-variant": "#333629", "secondary-fixed": "#d6ec90", "on-secondary-fixed": "#171e00", "on-tertiary-fixed": "#072100", "secondary-container": "#3c4d00", "primary-fixed": "#c9f23b", "on-surface": "#e2e4d1", surface: "#12140a", "tertiary-fixed-dim": "#9bd679", secondary: "#bad077", "inverse-on-surface": "#2f3225", "on-primary": "#293500", "on-tertiary-fixed-variant": "#1e5101", tertiary: "#ffffff", "secondary-fixed-dim": "#bad077", "on-secondary-container": "#a9be68", "on-error-container": "#ffdad6", "on-secondary-fixed-variant": "#3c4d00", "surface-tint": "#aed518", "surface-container-lowest": "#0d0f06", "primary-fixed-dim": "#aed518", "inverse-surface": "#e2e4d1", "surface-container-low": "#1a1d11", "on-surface-variant": "#c5c9af", "on-secondary": "#293500", background: "#12140a", error: "#ffb4ab", "surface-bright": "#383a2d"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}, spacing: {"margin-mobile": "20px", md: "24px", lg: "32px", xl: "48px", xs: "8px", gutter: "16px", unit: "4px", "touch-target": "44px", sm: "16px"}, fontFamily: {"display-lg": ["Inter"], "body-lg": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-md": ["Inter"], "stat-xl": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"display-lg": ["48px", {lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "label-md": ["14px", {lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600"}], "label-sm": ["12px", {lineHeight: "16px", fontWeight: "500"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "stat-xl": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "600"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700"}], "headline-lg-mobile": ["28px", {lineHeight: "34px", fontWeight: "700"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col pb-24">
+<!-- Top AppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl shadow-sm flex justify-between items-center px-margin-mobile py-xs">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A portrait of a sophisticated tech-savvy user with high-quality soft cinematic lighting, against a blurred dark navy technological background. The style is premium and professional, with a focus on sharp detail and cool color tones of the Miaraka brand palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvGd7W28JCCBmcU-_IE3yt5e8-q93liRzzXuOn-BXA7dnTsS7hzfzPaCh3m5ArHejLZFq_Mg2e3gbsWtfwgoANUQX3wd9cId6K4hcSKcL60hOF0NCxVFcwHu5QScSS0HFaVicmVwSoeH-7tzn_5mKm_RqIVS4tz7QNn1AJo0ZYsCfwxescH6Ff3QEtCwsoqNYhwYLU7p8hAunx88UgXHNJK1fYZi87lifsAbxtev2SMXUs3ub4Iw1HOw"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile bg-clip-text text-transparent bg-gradient-to-r from-tertiary to-primary">Espaces</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="mt-20 px-margin-mobile flex-1">
+<!-- Action Buttons Section -->
+<div class="flex gap-4 mb-lg">
+<button class="flex-1 py-3 px-4 rounded-full bg-gradient-to-r from-tertiary-container to-primary-container text-on-primary-container font-label-md text-label-md flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-lg">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+                Créer un espace
+            </button>
+<button class="flex-1 py-3 px-4 rounded-full bg-surface-container-high border border-secondary text-secondary font-label-md text-label-md flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+                Inviter un membre
+            </button>
+</div>
+<!-- Premium Space Cards -->
+<div class="space-y-gutter">
+<!-- Card: Famille -->
+<div class="glass-card rounded-lg p-md bioluminescent-glow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-40 transition-opacity">
+<span class="material-symbols-outlined text-6xl">family_restroom</span>
+</div>
+<div class="flex justify-between items-start mb-sm">
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Famille</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">location_on</span> Maison Centrale
+                        </p>
+</div>
+<span class="bg-tertiary/20 text-tertiary px-3 py-1 rounded-full text-label-sm font-label-sm">Privé</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-md">
+<div class="bg-surface-container-low rounded-md p-3">
+<p class="text-label-sm text-outline mb-1">Membres</p>
+<p class="text-headline-lg-mobile font-headline-lg-mobile text-on-background">4</p>
+</div>
+<div class="bg-surface-container-low rounded-md p-3">
+<p class="text-label-sm text-outline mb-1">Actifs</p>
+<p class="text-headline-lg-mobile font-headline-lg-mobile text-tertiary flex items-center gap-2">
+                            2 <span class="w-2 h-2 rounded-full bg-tertiary active-dot animate-pulse"></span>
+</p>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full border-2 border-[#0C2147] overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A profile headshot of a smiling young woman with a warm, friendly expression. The background is a soft-focus interior with bioluminescent blue accents. High-quality portrait photography with a professional, safe, and secure aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN3k9kOZOfJ4UwpFDgEmDoodqd7o1X_CuYVLbG7g3-uIWrM9_rkOnEs5Lhy4YummmWWIefegmeSBZhVTSxHzQeWVCn-OIQu5z4heq8kO1mwRtDDYtg6waXr7oZh_AEjCLOs_uexb30qscILN8N_OC5SyAOddbYXFGFyvRUP1n69GeTZgDAL5ncNAr4hZ0koqEJugPlQhgO6m0o1ig2OrF7F8msiqwuwF5JzjzX1BU-MIAOusr_FTsp5A"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-[#0C2147] overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A profile headshot of an older man with kind eyes and a grey beard, wearing a casual sweater. The lighting is soft and natural with subtle deep navy shadows to match the Miaraka dark mode theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTV1uCx43jiCpTjckhshwddTQGDiPVeJBW-EMP0f9_Qq_tBijcVUlnWHjayvgcUC8_nERxkGL3TK7QPzrupSx8fVFvyNoTi8pEnBndshFWAZmZk-M1WcjjgqmqV4IKM2Z1Kbvx-JJ9V3RjPV-FVhiY-lD3QwcDSA9xl3ep_Wxyw5gH0bA_8YgmjdCILLoEKiR351oxv6ozel8JK8vq7TqebVL8fHPCACy7krj4RkybL8npoj-LQHQgiw"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-[#0C2147] overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A profile headshot of a young boy with a cheerful face. The image is crisp, clear, and fits a high-end family-focused app module. The color palette incorporates soft cyan highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqh0Ckry-rYKyjvMoH3RvEI_Hhgbfd2wW_1Q0If_CqVKtBlSOts8gSdUZJgU1gDUEOU5M4f75rXmQ12mnNkMj0qBYkLrSTwBGU5zX4Eyyyh79m-s4wgO_S7ZEsKr0xlY3t8l6fX3mUmsUBxqEWq48iQqlJ0WDP94xkt3jazgpSmIShfdXlXzRRBnzneesMcurzdlPbErQjWuIRtZmYkd_WpACV34Mv2VzsRdG3UNESVnlviFK2WyUR5g"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-[#0C2147] bg-surface-container-highest flex items-center justify-center text-label-sm font-bold text-primary">
+                            +1
+                        </div>
+</div>
+<div class="text-right">
+<p class="text-label-sm text-outline">Partage</p>
+<p class="text-label-md font-label-md text-secondary">Intégral (Temps Réel)</p>
+</div>
+</div>
+</div>
+<!-- Card: Amis -->
+<div class="glass-card rounded-lg p-md bioluminescent-glow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-40 transition-opacity">
+<span class="material-symbols-outlined text-6xl">groups</span>
+</div>
+<div class="flex justify-between items-start mb-sm">
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Amis</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">map</span> Centre-Ville
+                        </p>
+</div>
+<span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-label-sm font-label-sm">Semi-privé</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-md">
+<div class="bg-surface-container-low rounded-md p-3">
+<p class="text-label-sm text-outline mb-1">Membres</p>
+<p class="text-headline-lg-mobile font-headline-lg-mobile text-on-background">12</p>
+</div>
+<div class="bg-surface-container-low rounded-md p-3">
+<p class="text-label-sm text-outline mb-1">Actifs</p>
+<p class="text-headline-lg-mobile font-headline-lg-mobile text-tertiary flex items-center gap-2">
+                            5 <span class="w-2 h-2 rounded-full bg-tertiary active-dot animate-pulse"></span>
+</p>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full border-2 border-[#0C2147] overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a young man with a modern hairstyle, looking confident. Background features blurry urban neon lights in electric blue and magenta. High-end, vibrant digital lifestyle style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwxvbbNuUl--HWmtyZM3xJ18KWvwqRwaI5m6nZTPJXhFSOYczwGxnVbhtkJV4V8gMeG3TGuphxAsyVmtkaZvyxehNrsus_EBwePEdwjO8nGiEY3WzPV5qw3wsDSHEP84gLLzE8caNfKaohu-fDH3VqNzBPqOIR0KfH5OF9TL9ojbskaHc8zagStodf_lwOssNuBouprHxi-t9xUXdTiaTtf7wNi_Aycbgal0Jf30EYNT7BxwJ19oDn9g"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-[#0C2147] overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a woman with dark hair and bright eyes, wearing a tech-inspired jacket. Lighting is dramatic with a cyan edge light, emphasizing a premium social connection feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgpG-OwiraoUGT1dGzq-V_cdQ6C-a_8FNekwDr349jCVX2a9xcOy7CyC3gZA0cmV0IMplNX0tk7AANKIEU7q-cwbYJ1qKhjoz6UsWNd4icDrDhFOXxyWU53r3JXjKAna-tbHg6j9TLezzZ6PJfioZbtEwCyxRs3U9TRfa_Y3h1pC5Tp5U9ZZINysRRHHa8nl2qsFqA4mKXrd3MZKUKgQiUKqwaMe67pzLV2Eu3M98EdXwam45c_Uzj_A"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-[#0C2147] overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A energetic young person with a bright smile, set against a dark navy background with subtle glowing data points. Modern social app avatar aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5Q76LQcg7UvV_86C4rk_SGW_6941KavmiWlDy5BqapxajQnkh8vLH8D_wrYlYJcUD-8UyqdVOn89wI_yeRnvgkqvyD1taoPVa02_xi0VwCCDVsxXPyT6QRtHD9FwH36TOelXIxFAI5ZKd0s19hvgy2-bB2Tq7LCYcEC5vMy5CHWG-ZgQqGaglS1Vw2W4t8lGX4RHARKGexL1IcEHJv4LuLIMZWWaoukdrTGEZW6xuuD61WolHQsvgoA"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-[#0C2147] bg-surface-container-highest flex items-center justify-center text-label-sm font-bold text-primary">
+                            +9
+                        </div>
+</div>
+<div class="text-right">
+<p class="text-label-sm text-outline">Partage</p>
+<p class="text-label-md font-label-md text-secondary">Proximité (Flou)</p>
+</div>
+</div>
+</div>
+<!-- Card: Équipe XR -->
+<div class="glass-card rounded-lg p-md bioluminescent-glow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-40 transition-opacity">
+<span class="material-symbols-outlined text-6xl">architecture</span>
+</div>
+<div class="flex justify-between items-start mb-sm">
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Équipe XR</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">business</span> Hub Innovation
+                        </p>
+</div>
+<span class="bg-primary/20 text-primary px-3 py-1 rounded-full text-label-sm font-label-sm">Pro</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-md">
+<div class="bg-surface-container-low rounded-md p-3">
+<p class="text-label-sm text-outline mb-1">Membres</p>
+<p class="text-headline-lg-mobile font-headline-lg-mobile text-on-background">8</p>
+</div>
+<div class="bg-surface-container-low rounded-md p-3">
+<p class="text-label-sm text-outline mb-1">Actifs</p>
+<p class="text-headline-lg-mobile font-headline-lg-mobile text-tertiary flex items-center gap-2">
+                            8 <span class="w-2 h-2 rounded-full bg-tertiary active-dot animate-pulse"></span>
+</p>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full border-2 border-[#0C2147] overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a female professional in a minimalist creative studio setting. The lighting is clean and high-key, with subtle corporate tech navy tones. Modern workforce professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnizm5av_LUaGFzOuUeukGE0rOqZzwwlA3kcBVS_XFzJSzjXG1Pgn_JXIgGZvPnhfB-Se9eCSAfgvLLhY_cjP5YP0dBmcHyBu_ufHvp6OPAsiOSuVmSEkBFHfUHG1OgWiZ-WM7d3G7lntXfnJvc4NRmLYSleLCFyjxiM2Bm0EIXVn-CnjjsaPTQ4TqmKkM2laGmudkAuJHqoezAy9IIOueDPEgFWGsyxf3rNhfJs_88VM4ZcAeWJumgQ"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-[#0C2147] overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a male engineer wearing glasses, looking focused. The background has faint blue circuit-like patterns. High-tech professional vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhGaq_9aewkOpdJzBAM6Vy2LNzKpGcBH4h0Nj4mBoW0CD_7ePhKkuznT5c4h9JmbaRErWRba8jkT9L5REPEKr3mMcERcb5t_39riV11fBPfNZ-CLghC51OPTmwO1FctF4HjG5XsYEwHLY73nYqINmC_ZOwLDXvc2Wu4_wN3NwGT_TOChMkWUl90XTW_NsxmuplJkZl-xo8_MWv_oXEY4P1ymXRDartpObC1q9n7VBkT3KJbgrw5nhlsQ"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-[#0C2147] overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young executive with a confident posture. Lighting is professional and sleek, using the Miaraka brand colors of deep navy and electric blue." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4t0F4uUgUg8Qw7yu1CKEjZ-V_peh1CSgie9H5-zCkpNt9vd6JaLHC_Dmo2VmPkbLhuLum0n_uLLHm-AL7GaQYjyVIr2vphNIgVWKq1pET9pGnK5O_z6k0prpPkWmMkWWU15QtirHbtw2eCBGC243gV1lDrmsds2tgbcOg9qP0DXu0IcOVAGzviiorM4xVMadg4FFnI6W4n9Qy4ys_r9KZ__XRd1kNxKB1cxNhoRKA65WBabraFCbd1g"/>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-[#0C2147] bg-surface-container-highest flex items-center justify-center text-label-sm font-bold text-primary">
+                            +5
+                        </div>
+</div>
+<div class="text-right">
+<p class="text-label-sm text-outline">Partage</p>
+<p class="text-label-md font-label-md text-secondary">Horaire Bureau</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-2xl border-t border-surface-container-high flex justify-around items-center px-4 pb-8 pt-4 shadow-lg rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-sm text-label-sm mt-1">Carte</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">switch_account</span>
+<span class="font-label-sm text-label-sm mt-1">Activité</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">emoji_events</span>
+<span class="font-label-sm text-label-sm mt-1">Défis</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary font-bold relative after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-primary after:rounded-full after:shadow-[0_0_8px_#afc6ff] scale-110 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-sm text-label-sm mt-1">Espaces</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profil</span>
+</a>
+</nav>
+<!-- Floating MIA Button -->
+<button class="fixed bottom-24 right-6 w-16 h-16 rounded-full bg-gradient-to-tr from-secondary-container to-primary-container flex items-center justify-center shadow-[0_0_20px_rgba(2,195,212,0.4)] z-40 active:scale-90 transition-transform">
+<div class="absolute inset-0 rounded-full border-2 border-primary-container pulse-animation"></div>
+<span class="material-symbols-outlined text-white text-3xl" style="font-variation-settings: 'FILL' 1;">mic</span>
+</button>
+<script>
+        // Micro-interactions and atmospheric effects
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98)';
+                card.style.transition = 'transform 0.2s ease-out';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1)';
+            });
+            
+            // Subtle parallax/tilt effect on mouse move for desktop
+            card.addEventListener('mousemove', (e) => {
+                if (window.innerWidth > 768) {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                }
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+            });
+        });
+    </script>
+</body></html>

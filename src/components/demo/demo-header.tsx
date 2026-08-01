@@ -3,15 +3,11 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { GROUP_COLORS, PALETTE, PEOPLE, PersonGroup } from './people-data';
 
 import { Spacing } from '@/constants/theme';
+import { useLanguage } from '@/contexts/language-context';
 
 type FilterId = 'tous' | PersonGroup;
 
-const FILTERS: { id: FilterId; label: string }[] = [
-  { id: 'tous', label: 'Tous' },
-  { id: 'famille', label: 'Famille' },
-  { id: 'amis', label: 'Amis' },
-  { id: 'equipe', label: 'Équipe' },
-];
+const FILTERS: FilterId[] = ['tous', 'famille', 'amis', 'equipe'];
 
 const STACK_PEOPLE = PEOPLE.slice(0, 4);
 
@@ -22,6 +18,7 @@ type DemoHeaderProps = {
 };
 
 export function DemoHeader({ activeFilter, onChangeFilter, onPressAddPerson }: DemoHeaderProps) {
+  const { t } = useLanguage();
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
@@ -41,8 +38,8 @@ export function DemoHeader({ activeFilter, onChangeFilter, onPressAddPerson }: D
 
       <View style={styles.statusCard}>
         <View style={styles.statusTextBlock}>
-          <Text style={styles.statusTitle}>Tout le monde est bien</Text>
-          <Text style={styles.statusSubtitle}>Dernière position il y a 2 min</Text>
+          <Text style={styles.statusTitle}>{t('map.everyoneSafe')}</Text>
+          <Text style={styles.statusSubtitle}>{t('map.positionTwoMinutes')}</Text>
         </View>
 
         <View style={styles.avatarStack}>
@@ -62,30 +59,30 @@ export function DemoHeader({ activeFilter, onChangeFilter, onPressAddPerson }: D
       {onPressAddPerson && (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Ajouter une personne"
+          accessibilityLabel={t('map.addPerson')}
           onPress={onPressAddPerson}
           style={({ pressed }) => [styles.addPersonButton, pressed && styles.buttonPressed]}
           hitSlop={6}>
           <View style={styles.addPersonIcon}>
             <Text style={styles.addPersonIconText}>+</Text>
           </View>
-          <Text style={styles.addPersonLabel}>Ajouter une personne</Text>
+          <Text style={styles.addPersonLabel}>{t('map.addPerson')}</Text>
         </Pressable>
       )}
 
       <View style={styles.filtersRow}>
         {FILTERS.map((filter) => {
-          const isActive = filter.id === activeFilter;
-          const dotColor = filter.id === 'tous' ? PALETTE.mist : GROUP_COLORS[filter.id];
+          const isActive = filter === activeFilter;
+          const dotColor = filter === 'tous' ? PALETTE.mist : GROUP_COLORS[filter];
           return (
             <Pressable
-              key={filter.id}
-              onPress={() => onChangeFilter(filter.id)}
+              key={filter}
+              onPress={() => onChangeFilter(filter)}
               style={[styles.filterPill, isActive && styles.filterPillActive]}
               hitSlop={6}>
               <View style={[styles.filterDot, { backgroundColor: dotColor }]} />
               <Text style={[styles.filterLabel, isActive && styles.filterLabelActive]}>
-                {filter.label}
+                {t(filter === 'tous' ? 'groups.all' : filter === 'famille' ? 'groups.family' : filter === 'amis' ? 'groups.friends' : 'groups.team')}
               </Text>
             </Pressable>
           );

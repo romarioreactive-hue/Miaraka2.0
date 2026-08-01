@@ -3,6 +3,8 @@ import Animated, { FadeIn, FadeInDown, FadeOut, LinearTransition } from 'react-n
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { alpha, darkColors, radius, spacing, typography } from '@/theme';
+import { useLanguage } from '@/contexts/language-context';
+import type { TranslationKey } from '@/i18n';
 
 import { ChallengeVisual, ConnectedPeopleVisual, MapVisual, MiaVisual, PrivacyVisual } from './onboarding-visuals';
 
@@ -15,33 +17,34 @@ type OnboardingScreenProps = {
 
 const STEPS = [
   {
-    title: 'Restez proche de ceux qui comptent.',
-    text: 'Retrouvez votre famille, vos amis et votre équipe dans des espaces privés.',
+    title: 'onboarding.1.title',
+    text: 'onboarding.1.text',
     visual: ConnectedPeopleVisual,
   },
   {
-    title: 'Voyez les déplacements autorisés en temps réel.',
-    text: 'Une carte claire, la dernière position connue et le temps d’arrivée estimé.',
+    title: 'onboarding.2.title',
+    text: 'onboarding.2.text',
     visual: MapVisual,
   },
   {
-    title: 'Bougez ensemble.',
-    text: 'Créez des défis de marche avec vos proches et votre équipe.',
+    title: 'onboarding.3.title',
+    text: 'onboarding.3.text',
     visual: ChallengeVisual,
   },
   {
-    title: 'Demandez simplement à MIA.',
-    text: 'Où est Rica ? Qui est au bureau ? Qui est premier du défi ?',
+    title: 'onboarding.4.title',
+    text: 'onboarding.4.text',
     visual: MiaVisual,
   },
   {
-    title: 'Vous gardez le contrôle.',
-    text: 'Chaque personne choisit qui peut voir sa position et quand la partager.',
+    title: 'onboarding.5.title',
+    text: 'onboarding.5.text',
     visual: PrivacyVisual,
   },
-] as const;
+] as const satisfies readonly { title: TranslationKey; text: TranslationKey; visual: React.ComponentType }[];
 
 export function OnboardingScreen({ step, onBack, onContinue, onSkip }: OnboardingScreenProps) {
+  const { t } = useLanguage();
   const current = STEPS[step];
   const Visual = current.visual;
 
@@ -54,7 +57,7 @@ export function OnboardingScreen({ step, onBack, onContinue, onSkip }: Onboardin
           <View style={styles.brand}><View style={styles.brandMark}><Text style={styles.brandLetter}>M</Text></View><Text style={styles.brandName}>Miaraka</Text></View>
           {step < 4 ? (
             <Pressable accessibilityRole="button" hitSlop={8} onPress={onSkip} style={({ pressed }) => [styles.skipButton, pressed && styles.pressed]}>
-              <Text style={styles.skipText}>Passer</Text>
+              <Text style={styles.skipText}>{t('common.skip')}</Text>
             </Pressable>
           ) : <View style={styles.topPlaceholder} />}
         </View>
@@ -64,8 +67,8 @@ export function OnboardingScreen({ step, onBack, onContinue, onSkip }: Onboardin
             <Visual />
           </Animated.View>
           <Animated.View key={`copy-${step}`} entering={FadeInDown.delay(100).duration(450)} style={styles.copy}>
-            <Text accessibilityRole="header" style={styles.title}>{current.title}</Text>
-            <Text style={styles.description}>{current.text}</Text>
+            <Text accessibilityRole="header" style={styles.title}>{t(current.title)}</Text>
+            <Text style={styles.description}>{t(current.text)}</Text>
           </Animated.View>
         </ScrollView>
 
@@ -74,11 +77,11 @@ export function OnboardingScreen({ step, onBack, onContinue, onSkip }: Onboardin
           <View style={styles.buttons}>
             {step > 0 && (
               <Pressable accessibilityRole="button" onPress={onBack} style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed]}>
-                <Text style={styles.secondaryButtonText}>Retour</Text>
+                <Text style={styles.secondaryButtonText}>{t('common.back')}</Text>
               </Pressable>
             )}
             <Pressable accessibilityRole="button" onPress={onContinue} style={({ pressed }) => [styles.primaryButton, step > 0 && styles.primaryButtonFlexible, pressed && styles.pressed]}>
-              <Text style={styles.primaryButtonText}>Continuer</Text><Text style={styles.arrow}>→</Text>
+              <Text style={styles.primaryButtonText}>{t('common.continue')}</Text><Text style={styles.arrow}>→</Text>
             </Pressable>
           </View>
         </View>
@@ -88,8 +91,9 @@ export function OnboardingScreen({ step, onBack, onContinue, onSkip }: Onboardin
 }
 
 export function ProgressDots({ activeStep }: { activeStep: number }) {
+  const { t } = useLanguage();
   return (
-    <View accessibilityLabel={`Étape ${activeStep + 1} sur 6`} style={styles.dots}>
+    <View accessibilityLabel={t('onboarding.step', { current: activeStep + 1 })} style={styles.dots}>
       {Array.from({ length: 6 }, (_, index) => <View key={index} style={[styles.dot, index === activeStep && styles.dotActive, index < activeStep && styles.dotComplete]} />)}
     </View>
   );

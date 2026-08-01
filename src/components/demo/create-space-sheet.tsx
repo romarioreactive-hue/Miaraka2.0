@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { darkColors, groupColors, radius, spacing, typography } from '@/theme';
+import { useLanguage } from '@/contexts/language-context';
 
 import { SharingLevel, SPACE_TYPE_LABELS, SpaceType } from './spaces-data';
 
@@ -13,6 +14,7 @@ const COLORS = [groupColors.family, groupColors.friends, groupColors.team, darkC
 const SHARING_LEVELS: SharingLevel[] = ['Position précise', 'Zone approximative', 'Activité uniquement'];
 
 export function CreateSpaceSheet({ visible, onClose }: CreateSpaceSheetProps) {
+  const { t } = useLanguage();
   const [name, setName] = useState('');
   const [type, setType] = useState<SpaceType>('famille');
   const [icon, setIcon] = useState(ICONS[0]);
@@ -27,30 +29,30 @@ export function CreateSpaceSheet({ visible, onClose }: CreateSpaceSheetProps) {
   return (
     <Modal animationType="fade" transparent visible={visible} onRequestClose={close}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.modalRoot}>
-        <Pressable accessibilityLabel="Fermer le formulaire" onPress={close} style={styles.backdrop} />
+        <Pressable accessibilityLabel={t('common.close')} onPress={close} style={styles.backdrop} />
         <View style={styles.sheet}>
           <View style={styles.handle} />
           {created ? (
             <View style={styles.confirmation}>
               <View style={[styles.confirmationIcon, { borderColor: color, backgroundColor: `${color}20` }]}><Text style={[styles.confirmationIconText, { color }]}>✓</Text></View>
-              <Text accessibilityRole="header" style={styles.title}>Espace créé</Text>
-              <Text style={styles.subtitle}>« {name.trim()} » est prêt avec des données fictives.</Text>
-              <Pressable onPress={close} style={styles.primaryButton}><Text style={styles.primaryButtonText}>Terminer</Text></Pressable>
+              <Text accessibilityRole="header" style={styles.title}>{t('spaces.created')}</Text>
+              <Text style={styles.subtitle}>{t('spaces.createdMessage', { name: name.trim() })}</Text>
+              <Pressable onPress={close} style={styles.primaryButton}><Text style={styles.primaryButtonText}>{t('common.finish')}</Text></Pressable>
             </View>
           ) : (
             <ScrollView contentContainerStyle={styles.form} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-              <View style={styles.header}><View style={styles.headerCopy}><Text accessibilityRole="header" style={styles.title}>Créer un espace</Text><Text style={styles.subtitle}>Définissez les règles de ce nouveau groupe.</Text></View><Pressable accessibilityLabel="Fermer" onPress={close} style={styles.closeButton}><Text style={styles.closeText}>×</Text></Pressable></View>
-              <FieldLabel text="Nom de l’espace" />
-              <TextInput accessibilityLabel="Nom de l’espace" onChangeText={setName} placeholder="Ex. Les cousins" placeholderTextColor={darkColors.textMuted} style={styles.input} value={name} />
-              <FieldLabel text="Type" />
-              <View style={styles.optionRow}>{TYPES.map((item) => <Choice key={item} label={SPACE_TYPE_LABELS[item]} selected={type === item} onPress={() => setType(item)} />)}</View>
-              <FieldLabel text="Icône" />
+              <View style={styles.header}><View style={styles.headerCopy}><Text accessibilityRole="header" style={styles.title}>{t('spaces.create')}</Text><Text style={styles.subtitle}>{t('spaces.createSubtitle')}</Text></View><Pressable accessibilityLabel={t('common.close')} onPress={close} style={styles.closeButton}><Text style={styles.closeText}>×</Text></Pressable></View>
+              <FieldLabel text={t('spaces.name')} />
+              <TextInput accessibilityLabel={t('spaces.name')} onChangeText={setName} placeholder={t('spaces.namePlaceholder')} placeholderTextColor={darkColors.textMuted} style={styles.input} value={name} />
+              <FieldLabel text={t('spaces.type')} />
+              <View style={styles.optionRow}>{TYPES.map((item) => <Choice key={item} label={t(item === 'famille' ? 'groups.family' : item === 'amis' ? 'groups.friends' : 'groups.team')} selected={type === item} onPress={() => setType(item)} />)}</View>
+              <FieldLabel text={t('spaces.icon')} />
               <View style={styles.iconRow}>{ICONS.map((item) => <Pressable accessibilityRole="radio" accessibilityState={{ checked: icon === item }} key={item} onPress={() => setIcon(item)} style={[styles.iconChoice, icon === item && styles.choiceSelected]}><Text style={[styles.iconText, icon === item && styles.choiceTextSelected]}>{item}</Text></Pressable>)}</View>
-              <FieldLabel text="Couleur" />
+              <FieldLabel text={t('spaces.color')} />
               <View style={styles.colorRow}>{COLORS.map((item) => <Pressable accessibilityLabel={`Choisir la couleur ${item}`} accessibilityRole="radio" accessibilityState={{ checked: color === item }} key={item} onPress={() => setColor(item)} style={[styles.colorChoice, { backgroundColor: item }, color === item && styles.colorSelected]} />)}</View>
-              <FieldLabel text="Partage par défaut" />
-              <View style={styles.sharingList}>{SHARING_LEVELS.map((item) => <Choice key={item} label={item} selected={sharing === item} onPress={() => setSharing(item)} full />)}</View>
-              <Pressable accessibilityState={{ disabled: !name.trim() }} disabled={!name.trim()} onPress={() => setCreated(true)} style={({ pressed }) => [styles.primaryButton, !name.trim() && styles.buttonDisabled, pressed && styles.pressed]}><Text style={styles.primaryButtonText}>Créer l’espace</Text></Pressable>
+              <FieldLabel text={t('spaces.defaultSharing')} />
+              <View style={styles.sharingList}>{SHARING_LEVELS.map((item) => <Choice key={item} label={t(item === 'Position précise' ? 'spaces.precise' : item === 'Zone approximative' ? 'spaces.approximate' : 'spaces.activityOnly')} selected={sharing === item} onPress={() => setSharing(item)} full />)}</View>
+              <Pressable accessibilityState={{ disabled: !name.trim() }} disabled={!name.trim()} onPress={() => setCreated(true)} style={({ pressed }) => [styles.primaryButton, !name.trim() && styles.buttonDisabled, pressed && styles.pressed]}><Text style={styles.primaryButtonText}>{t('spaces.create')}</Text></Pressable>
             </ScrollView>
           )}
         </View>

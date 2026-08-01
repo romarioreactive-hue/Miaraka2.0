@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --primary: #afc6ff;
+            --surface: #071424;
+            --on-surface: #d7e3fa;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #071424;
+            color: #d7e3fa;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+        .glass-card {
+            background: rgba(12, 33, 71, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .bioluminescent-glow {
+            box-shadow: 0 0 20px rgba(79, 140, 255, 0.15);
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #3ee09d 0%, #afc6ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .pulse-animation {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        .route-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 4s linear forwards;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-fixed": "#b6f393", "on-background": "#e2e4d1", "on-primary-fixed": "#171e00", "surface-container": "#1e2115", "tertiary-container": "#b6f393", "inverse-primary": "#516600", "on-primary-fixed-variant": "#3c4d00", "primary-container": "#c9f23b", "on-tertiary": "#123800", outline: "#8f937b", "error-container": "#93000a", "outline-variant": "#444935", "on-tertiary-container": "#3c7121", "surface-container-high": "#292b1f", "surface-container-highest": "#333629", "surface-dim": "#12140a", primary: "#ffffff", "on-primary-container": "#576c00", "on-error": "#690005", "surface-variant": "#333629", "secondary-fixed": "#d6ec90", "on-secondary-fixed": "#171e00", "on-tertiary-fixed": "#072100", "secondary-container": "#3c4d00", "primary-fixed": "#c9f23b", "on-surface": "#e2e4d1", surface: "#12140a", "tertiary-fixed-dim": "#9bd679", secondary: "#bad077", "inverse-on-surface": "#2f3225", "on-primary": "#293500", "on-tertiary-fixed-variant": "#1e5101", tertiary: "#ffffff", "secondary-fixed-dim": "#bad077", "on-secondary-container": "#a9be68", "on-error-container": "#ffdad6", "on-secondary-fixed-variant": "#3c4d00", "surface-tint": "#aed518", "surface-container-lowest": "#0d0f06", "primary-fixed-dim": "#aed518", "inverse-surface": "#e2e4d1", "surface-container-low": "#1a1d11", "on-surface-variant": "#c5c9af", "on-secondary": "#293500", background: "#12140a", error: "#ffb4ab", "surface-bright": "#383a2d"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}, spacing: {"margin-mobile": "20px", md: "24px", lg: "32px", xl: "48px", xs: "8px", gutter: "16px", unit: "4px", "touch-target": "44px", sm: "16px"}, fontFamily: {"display-lg": ["Inter"], "body-lg": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-md": ["Inter"], "stat-xl": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"display-lg": ["48px", {lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "label-md": ["14px", {lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600"}], "label-sm": ["12px", {lineHeight: "16px", fontWeight: "500"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "stat-xl": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "600"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700"}], "headline-lg-mobile": ["28px", {lineHeight: "34px", fontWeight: "700"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="flex flex-col h-screen w-screen overflow-hidden">
+<!-- Hero Map Visualization (Edge-to-edge) -->
+<div class="relative flex-grow w-full overflow-hidden">
+<!-- Interactive Map Mockup -->
+<div class="absolute inset-0 z-0 bg-[#06142B]" data-location="Paris" style="">
+<div class="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,_transparent_0%,_#06142B_100%)]"></div>
+<!-- Map Visualization Placeholder -->
+<div class="w-full h-full relative" data-alt="A sophisticated dark mode digital map of a city at night. The map features deep navy landmasses and electric blue lines for major roads and paths. Small, glowing neon markers indicate safe zones and user locations. The style is futuristic, cinematic, and sleek, with a soft bioluminescent aesthetic that feels secure and premium." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCRBm5DUu3Cb8A7ihObUkIZuSLgKvaAN06F5HnRo-qeLXvBaJ03ZqdHGxVhJQE3oGLCg5FLCD8MiC-t8-MYtY6o_td5WVWCF2vaOJCAceeA2n1PSvC6s2z1L3PWJIJRzUsFZukoJOeetC0KJZSFjhEyX5ddKsBR_Tqx0eqJLlB9suFuFUsdZRnu2b66bA_N5AbbxGFtuVymishk2viaiqjJeLMSxGWAemVqnj9jQEN6FbcZwgkZuutyTQ')">
+<!-- Animated Route Overlay -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" viewbox="0 0 400 800">
+<path class="route-path" d="M100,600 Q150,550 200,500 T300,400" fill="none" filter="drop-shadow(0 0 8px #38D6E8)" stroke="#38D6E8" stroke-linecap="round" stroke-width="4"></path>
+<!-- Destination Marker -->
+<circle class="pulse-animation" cx="300" cy="400" fill="#29D391" r="6"></circle>
+<circle class="animate-ping opacity-75" cx="300" cy="400" fill="none" r="12" stroke="#29D391" stroke-width="2"></circle>
+<!-- Origin Marker -->
+<circle class="bioluminescent-glow" cx="100" cy="600" fill="#4F8CFF" r="8"></circle>
+</svg>
+<!-- ETA Badge Overlay -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 glass-card px-sm py-xs rounded-full flex items-center gap-xs bioluminescent-glow animate-bounce">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">timer</span>
+<span class="font-label-md text-label-md text-on-surface">ETA 15 min</span>
+</div>
+</div>
+</div>
+<!-- Top Controls (Skip) -->
+<div class="absolute top-0 left-0 w-full px-margin-mobile pt-lg flex justify-end z-10">
+<button class="text-on-surface-variant font-label-md text-label-md hover:text-on-surface transition-colors">Passer</button>
+</div>
+</div>
+<!-- Content Panel -->
+<div class="relative z-20 flex flex-col px-margin-mobile pb-xl pt-lg glass-card rounded-t-lg border-t border-surface-container-high -mt-10">
+<!-- Progress Bar -->
+<div class="flex gap-xs mb-lg justify-center"><div class="w-1.5 h-1.5 rounded-full bg-surface-container-highest"></div><div class="w-8 h-1.5 rounded-full brand-gradient-bg shadow-[0_0_8px_rgba(79,140,255,0.4)]"></div><div class="w-1.5 h-1.5 rounded-full bg-surface-container-highest"></div></div>
+<!-- Text Content -->
+<div class="space-y-sm text-center mb-xl">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight">
+                Voyez les déplacements autorisés <span class="gradient-text">en temps réel.</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs mx-auto">
+                Une carte claire, la dernière position connue et le temps d’arrivée estimé.
+            </p>
+</div>
+<!-- Footer Actions -->
+<div class="flex flex-col gap-sm"><button class="w-full h-touch-target rounded-full brand-gradient-bg text-white font-label-md text-label-md shadow-lg shadow-primary/20 active:scale-95 transition-transform duration-200">Continuer</button><button class="w-full h-touch-target rounded-full bg-transparent border border-outline-variant/30 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-low transition-colors active:scale-95 duration-200">Retour</button></div>
+<!-- Bottom Safe Area Spacer -->
+<div class="h-4"></div>
+</div>
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 pointer-events-none z-0">
+<div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-background to-transparent opacity-60"></div>
+</div>
+<script>
+        // Simple Interaction logic for feedback
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Haptic feedback simulation
+                if (window.navigator && window.navigator.vibrate) {
+                    window.navigator.vibrate(10);
+                }
+            });
+        });
+
+        // Dynamic Map Elements Entry Animation
+        window.addEventListener('DOMContentLoaded', () => {
+            const path = document.querySelector('.route-path');
+            if (path) {
+                path.style.opacity = '0';
+                setTimeout(() => {
+                    path.style.opacity = '1';
+                }, 500);
+            }
+        });
+    </script>
+</body></html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Miaraka - Privacy Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bioluminescent-glow {
+            box-shadow: 0 0 20px rgba(79, 140, 255, 0.15);
+        }
+        .glass-card {
+            background: rgba(12, 33, 71, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background: linear-gradient(to right, #29D391, #4F8CFF);
+        }
+        .toggle-checkbox:checked + .toggle-label .toggle-dot {
+            transform: translateX(100%);
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(56, 214, 232, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(56, 214, 232, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(56, 214, 232, 0); }
+        }
+        .pulse-active {
+            animation: pulse-glow 2s infinite;
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-fixed": "#b6f393", "on-background": "#e2e4d1", "on-primary-fixed": "#171e00", "surface-container": "#1e2115", "tertiary-container": "#b6f393", "inverse-primary": "#516600", "on-primary-fixed-variant": "#3c4d00", "primary-container": "#c9f23b", "on-tertiary": "#123800", outline: "#8f937b", "error-container": "#93000a", "outline-variant": "#444935", "on-tertiary-container": "#3c7121", "surface-container-high": "#292b1f", "surface-container-highest": "#333629", "surface-dim": "#12140a", primary: "#ffffff", "on-primary-container": "#576c00", "on-error": "#690005", "surface-variant": "#333629", "secondary-fixed": "#d6ec90", "on-secondary-fixed": "#171e00", "on-tertiary-fixed": "#072100", "secondary-container": "#3c4d00", "primary-fixed": "#c9f23b", "on-surface": "#e2e4d1", surface: "#12140a", "tertiary-fixed-dim": "#9bd679", secondary: "#bad077", "inverse-on-surface": "#2f3225", "on-primary": "#293500", "on-tertiary-fixed-variant": "#1e5101", tertiary: "#ffffff", "secondary-fixed-dim": "#bad077", "on-secondary-container": "#a9be68", "on-error-container": "#ffdad6", "on-secondary-fixed-variant": "#3c4d00", "surface-tint": "#aed518", "surface-container-lowest": "#0d0f06", "primary-fixed-dim": "#aed518", "inverse-surface": "#e2e4d1", "surface-container-low": "#1a1d11", "on-surface-variant": "#c5c9af", "on-secondary": "#293500", background: "#12140a", error: "#ffb4ab", "surface-bright": "#383a2d"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}, spacing: {"margin-mobile": "20px", md: "24px", lg: "32px", xl: "48px", xs: "8px", gutter: "16px", unit: "4px", "touch-target": "44px", sm: "16px"}, fontFamily: {"display-lg": ["Inter"], "body-lg": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-md": ["Inter"], "stat-xl": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"display-lg": ["48px", {lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "label-md": ["14px", {lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600"}], "label-sm": ["12px", {lineHeight: "16px", fontWeight: "500"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "stat-xl": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "600"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700"}], "headline-lg-mobile": ["28px", {lineHeight: "34px", fontWeight: "700"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary/30 min-h-screen flex flex-col">
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+</div>
+<!-- Main Content Container -->
+<main class="relative z-10 flex-1 flex flex-col px-margin-mobile pt-xl pb-32 max-w-lg mx-auto w-full">
+<!-- Header Section -->
+<header class="mb-lg">
+<div class="inline-block p-2 rounded-xl bg-surface-container-high mb-md border border-outline-variant/20">
+<span class="material-symbols-outlined text-secondary text-headline-lg" data-icon="shield_lock" style="font-variation-settings: 'FILL' 1;">shield_lock</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-sm leading-tight">
+                Vous gardez le contrôle.
+            </h1>
+<p class="font-body-md text-on-surface-variant leading-relaxed">
+                Chaque personne choisit qui peut voir sa position et quand la partager. Votre sécurité est notre priorité absolue.
+            </p>
+</header>
+<!-- Permission Cards Bento-like Grid -->
+<div class="space-y-gutter">
+<!-- Localisation -->
+<div class="glass-card p-md rounded-lg flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">Localisation</h3>
+<p class="text-[11px] font-label-sm text-primary uppercase tracking-wider">Indispensable</p>
+</div>
+</div>
+<div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out">
+<input checked="" class="toggle-checkbox absolute block w-0 h-0 opacity-0 cursor-pointer" id="toggle-loc" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-container-highest cursor-pointer transition-colors duration-200" for="toggle-loc">
+<span class="toggle-dot absolute block w-4 h-4 mt-1 ml-1 rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm"></span>
+</label>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant text-sm">
+                    Permet de vous situer sur la carte et de notifier vos proches en cas d'alerte ou de trajet sécurisé.
+                </p>
+<div class="flex items-center gap-xs mt-xs">
+<div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_#3ee09d]"></div>
+<span class="text-[12px] font-label-sm text-tertiary">Toujours autorisé</span>
+</div>
+</div>
+<!-- Notifications -->
+<div class="glass-card p-md rounded-lg flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="notifications" style="font-variation-settings: 'FILL' 1;">notifications</span>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">Notifications</h3>
+<p class="text-[11px] font-label-sm text-on-surface-variant uppercase tracking-wider">Recommandé</p>
+</div>
+</div>
+<div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out">
+<input class="toggle-checkbox absolute block w-0 h-0 opacity-0 cursor-pointer" id="toggle-notif" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-container-highest cursor-pointer transition-colors duration-200" for="toggle-notif">
+<span class="toggle-dot absolute block w-4 h-4 mt-1 ml-1 rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm"></span>
+</label>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant text-sm">
+                    Recevez des alertes immédiates si un membre de votre cercle a besoin d'aide ou termine son trajet.
+                </p>
+<div class="flex items-center gap-xs mt-xs">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<span class="text-[12px] font-label-sm text-outline">Désactivé</span>
+</div>
+</div>
+<!-- Activité Physique -->
+<div class="glass-card p-md rounded-lg flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" data-icon="directions_walk">directions_walk</span>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">Activité physique</h3>
+<p class="text-[11px] font-label-sm text-on-surface-variant uppercase tracking-wider">Optionnel</p>
+</div>
+</div>
+<div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out">
+<input class="toggle-checkbox absolute block w-0 h-0 opacity-0 cursor-pointer" id="toggle-activity" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-container-highest cursor-pointer transition-colors duration-200" for="toggle-activity">
+<span class="toggle-dot absolute block w-4 h-4 mt-1 ml-1 rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm"></span>
+</label>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant text-sm">
+                    Détecte automatiquement quand vous marchez ou courez pour optimiser la précision de votre trajet.
+                </p>
+<div class="flex items-center gap-xs mt-xs">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<span class="text-[12px] font-label-sm text-outline">Désactivé</span>
+</div>
+</div>
+</div>
+<!-- Illustration / Mood Image -->
+<div class="mt-lg rounded-xl overflow-hidden aspect-video relative glass-card group cursor-pointer border-none">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60" data-alt="A stylized, high-tech conceptual visualization of data privacy. It features abstract glowing nodes and safe geometric connections in a dark navy digital space. Soft bioluminescent pulses of blue and cyan light emanate from a central shield icon. The atmosphere is calm, secure, and futuristic, mirroring the premium dark mode aesthetic of Miaraka." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKcfUzhjZi02hM9gABQ-_kUM9aRE9Cz7oT3swl20N9ji3mv7aMWHlropfF_FTjBaKMtAQgHW833xkZY7mz3us3yAZYr_BoZqBpwMe6IPKLZ5Jv8v05zeNQ910WUTxM388-2QJevqa-XN7HmGomKg3BxKpKEoMRXkd48_mGjqGmrnBBFwziGKgDLzJsHGaTnjXcTqZAgnh2Zqlw5WP_ty9HTkt1aMTEVdYceQBBym31Y21lSnpInPsiVg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-[10px] font-label-sm text-on-primary-container bg-primary-container/20 px-2 py-1 rounded-full backdrop-blur-sm">Chiffrement de bout en bout</span>
+</div>
+</div>
+</main>
+<!-- Fixed Footer Actions -->
+<footer class="fixed bottom-0 left-0 w-full p-margin-mobile bg-surface/80 backdrop-blur-xl z-50 flex gap-gutter items-center border-t border-outline-variant/10">
+<button class="flex-1 h-touch-target rounded-full bg-surface-container-high border border-outline-variant text-on-surface font-label-md hover:bg-surface-container-highest transition-colors active:scale-95 transition-transform">
+            Retour
+        </button>
+<button class="flex-[2] h-touch-target rounded-full bg-gradient-to-r from-tertiary to-primary-container text-on-primary-container font-label-md bioluminescent-glow hover:opacity-90 transition-all active:scale-95 transition-transform flex items-center justify-center gap-xs">
+            Continuer
+            <span class="material-symbols-outlined text-[20px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</footer>
+<!-- Micro-interactions Script -->
+<script>
+        document.querySelectorAll('.toggle-checkbox').forEach(toggle => {
+            toggle.addEventListener('change', (e) => {
+                const statusDot = e.target.closest('.glass-card').querySelector('.w-2.h-2');
+                const statusText = e.target.closest('.glass-card').querySelector('.text-\\[12px\\]');
+                
+                if (e.target.checked) {
+                    statusDot.classList.remove('bg-outline');
+                    statusDot.classList.add('bg-tertiary', 'shadow-[0_0_8px_#3ee09d]');
+                    statusText.classList.remove('text-outline');
+                    statusText.classList.add('text-tertiary');
+                    statusText.textContent = 'Autorisé';
+                } else {
+                    statusDot.classList.add('bg-outline');
+                    statusDot.classList.remove('bg-tertiary', 'shadow-[0_0_8px_#3ee09d]');
+                    statusText.add('text-outline');
+                    statusText.classList.remove('text-tertiary');
+                    statusText.textContent = 'Désactivé';
+                }
+            });
+        });
+
+        // Simple button active state visual feedback override
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => btn.classList.add('scale-95'));
+            btn.addEventListener('mouseup', () => btn.classList.remove('scale-95'));
+            btn.addEventListener('mouseleave', () => btn.classList.remove('scale-95'));
+        });
+    </script>
+</body></html>

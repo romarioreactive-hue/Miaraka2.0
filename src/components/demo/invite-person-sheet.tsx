@@ -14,6 +14,7 @@ import {
 import { GROUP_COLORS, GROUP_LABELS, PALETTE, PersonGroup } from './people-data';
 
 import { Spacing } from '@/constants/theme';
+import { useLanguage } from '@/contexts/language-context';
 
 type InvitePersonSheetProps = {
   visible: boolean;
@@ -36,6 +37,7 @@ const SEARCH_RESULTS: SearchResult[] = [
 const GROUPS: PersonGroup[] = ['famille', 'amis', 'equipe'];
 
 export function InvitePersonSheet({ visible, onClose }: InvitePersonSheetProps) {
+  const { t } = useLanguage();
   const [query, setQuery] = useState('');
   const [group, setGroup] = useState<PersonGroup>('amis');
   const [invitedPerson, setInvitedPerson] = useState<SearchResult | null>(null);
@@ -66,7 +68,7 @@ export function InvitePersonSheet({ visible, onClose }: InvitePersonSheetProps) 
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.modalRoot}>
         <Pressable
-          accessibilityLabel="Fermer la fenêtre d'invitation"
+          accessibilityLabel={t('common.close')}
           onPress={resetAndClose}
           style={styles.backdrop}
         />
@@ -80,17 +82,19 @@ export function InvitePersonSheet({ visible, onClose }: InvitePersonSheetProps) 
                 <Text style={styles.confirmationIconText}>✓</Text>
               </View>
               <Text accessibilityRole="header" style={styles.confirmationTitle}>
-                Invitation envoyée
+                {t('map.invitationSent')}
               </Text>
               <Text style={styles.confirmationText}>
-                {invitedPerson.name} recevra une invitation pour rejoindre le groupe{' '}
-                {GROUP_LABELS[group].toLocaleLowerCase('fr-FR')}.
+                {t('map.invitationMessage', {
+                  name: invitedPerson.name,
+                  group: t(group === 'famille' ? 'groups.family' : group === 'amis' ? 'groups.friends' : 'groups.team').toLocaleLowerCase(),
+                })}
               </Text>
               <Pressable
                 accessibilityRole="button"
                 onPress={resetAndClose}
                 style={({ pressed }) => [styles.primaryButton, pressed && styles.buttonPressed]}>
-                <Text style={styles.primaryButtonText}>Terminer</Text>
+                <Text style={styles.primaryButtonText}>{t('common.finish')}</Text>
               </Pressable>
             </View>
           ) : (
@@ -98,12 +102,12 @@ export function InvitePersonSheet({ visible, onClose }: InvitePersonSheetProps) 
               <View style={styles.header}>
                 <View style={styles.headerCopy}>
                   <Text accessibilityRole="header" style={styles.title}>
-                    Ajouter une personne
+                    {t('map.addPerson')}
                   </Text>
-                  <Text style={styles.subtitle}>Recherchez un proche puis choisissez son groupe.</Text>
+                  <Text style={styles.subtitle}>{t('map.searchPlaceholder')}.</Text>
                 </View>
                 <Pressable
-                  accessibilityLabel="Fermer"
+                  accessibilityLabel={t('common.close')}
                   accessibilityRole="button"
                   hitSlop={10}
                   onPress={resetAndClose}
@@ -115,11 +119,11 @@ export function InvitePersonSheet({ visible, onClose }: InvitePersonSheetProps) 
               <View style={styles.searchBox}>
                 <Text style={styles.searchIcon}>⌕</Text>
                 <TextInput
-                  accessibilityLabel="Recherche par nom ou Gmail"
+                  accessibilityLabel={t('map.searchPlaceholder')}
                   autoCapitalize="none"
                   autoCorrect={false}
                   onChangeText={setQuery}
-                  placeholder="Rechercher par nom ou Gmail"
+                  placeholder={t('map.searchPlaceholder')}
                   placeholderTextColor={PALETTE.textSecondary}
                   returnKeyType="search"
                   style={styles.searchInput}
@@ -128,7 +132,7 @@ export function InvitePersonSheet({ visible, onClose }: InvitePersonSheetProps) 
               </View>
 
               <View style={styles.groupBlock}>
-                <Text style={styles.sectionLabel}>Choisir un groupe</Text>
+                <Text style={styles.sectionLabel}>{t('map.chooseGroup')}</Text>
                 <View style={styles.groupRow}>
                   {GROUPS.map((item) => {
                     const isSelected = item === group;
@@ -147,7 +151,7 @@ export function InvitePersonSheet({ visible, onClose }: InvitePersonSheetProps) 
                         ]}>
                         <View style={[styles.groupDot, { backgroundColor: GROUP_COLORS[item] }]} />
                         <Text style={[styles.groupLabel, isSelected && styles.groupLabelSelected]}>
-                          {GROUP_LABELS[item]}
+                          {t(item === 'famille' ? 'groups.family' : item === 'amis' ? 'groups.friends' : 'groups.team')}
                         </Text>
                       </Pressable>
                     );
@@ -155,7 +159,7 @@ export function InvitePersonSheet({ visible, onClose }: InvitePersonSheetProps) 
                 </View>
               </View>
 
-              <Text style={styles.sectionLabel}>Résultats fictifs</Text>
+              <Text style={styles.sectionLabel}>{t('map.results')}</Text>
               <ScrollView
                 contentContainerStyle={styles.results}
                 keyboardShouldPersistTaps="handled"
@@ -172,19 +176,19 @@ export function InvitePersonSheet({ visible, onClose }: InvitePersonSheetProps) 
                       </Text>
                     </View>
                     <Pressable
-                      accessibilityLabel={`Inviter ${person.name}`}
+                      accessibilityLabel={`${t('common.invite')} ${person.name}`}
                       accessibilityRole="button"
                       onPress={() => setInvitedPerson(person)}
                       style={({ pressed }) => [styles.inviteButton, pressed && styles.buttonPressed]}>
-                      <Text style={styles.inviteButtonText}>Inviter</Text>
+                      <Text style={styles.inviteButtonText}>{t('common.invite')}</Text>
                     </Pressable>
                   </View>
                 ))}
 
                 {filteredResults.length === 0 && (
                   <View style={styles.emptyState}>
-                    <Text style={styles.emptyTitle}>Aucun résultat</Text>
-                    <Text style={styles.emptyText}>Essayez un autre nom ou une autre adresse Gmail.</Text>
+                    <Text style={styles.emptyTitle}>{t('map.noResult')}</Text>
+                    <Text style={styles.emptyText}>{t('map.tryAnother')}</Text>
                   </View>
                 )}
               </ScrollView>

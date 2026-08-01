@@ -1,5 +1,7 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { useLanguage } from '@/contexts/language-context';
+
 const COLORS = {
   background: '#060C1F',
   surface: '#0D1933',
@@ -47,6 +49,7 @@ const RANKING: RankingPerson[] = [
 const MAX_STEPS = 12_100;
 
 export function ActivityScreen() {
+  const { language, t } = useLanguage();
   return (
     <ScrollView
       style={styles.scrollView}
@@ -54,22 +57,22 @@ export function ActivityScreen() {
       showsVerticalScrollIndicator={false}>
       <View style={styles.headingRow}>
         <View>
-          <Text style={styles.eyebrow}>AUJOURD’HUI</Text>
-          <Text style={styles.title}>Mon activité</Text>
+          <Text style={styles.eyebrow}>{t('common.today').toLocaleUpperCase(language === 'fr' ? 'fr-FR' : 'mg-MG')}</Text>
+          <Text style={styles.title}>{t('activity.title')}</Text>
         </View>
         <View style={styles.dateBadge}>
           <Text style={styles.dateDay}>01</Text>
-          <Text style={styles.dateMonth}>AOÛT</Text>
+          <Text style={styles.dateMonth}>{t('activity.august')}</Text>
         </View>
       </View>
 
       <View style={styles.goalCard}>
         <View style={styles.goalTopRow}>
           <View>
-            <Text style={styles.cardLabel}>OBJECTIF QUOTIDIEN</Text>
+            <Text style={styles.cardLabel}>{t('activity.dailyGoal')}</Text>
             <View style={styles.stepsRow}>
               <Text style={styles.stepsValue}>8 436</Text>
-              <Text style={styles.stepsUnit}>pas</Text>
+              <Text style={styles.stepsUnit}>{t('common.steps')}</Text>
             </View>
           </View>
           <View style={styles.percentBadge}>
@@ -79,31 +82,31 @@ export function ActivityScreen() {
 
         <View
           accessible
-          accessibilityLabel="Objectif quotidien atteint à 84 pour cent"
+          accessibilityLabel={t('activity.goalA11y')}
           style={styles.progressTrack}>
           <View style={styles.progressFill} />
         </View>
         <View style={styles.goalBottomRow}>
-          <Text style={styles.goalHint}>Encore 1 564 pas, vous y êtes presque !</Text>
+          <Text style={styles.goalHint}>{t('activity.remaining')}</Text>
           <Text style={styles.goalTarget}>10 000</Text>
         </View>
       </View>
 
       <View style={styles.metricsGrid}>
-        <MetricCard icon="↗" value="6,2" unit="km" label="À pied" color={COLORS.green} />
-        <MetricCard icon="▰" value="18,4" unit="km" label="Motorisés" color={COLORS.blue} />
-        <MetricCard icon="◷" value="1 h 12" unit="min" label="Temps de marche" color={COLORS.yellow} />
+        <MetricCard icon="↗" value="6,2" unit="km" label={t('activity.walking')} color={COLORS.green} />
+        <MetricCard icon="▰" value="18,4" unit="km" label={t('activity.motorized')} color={COLORS.blue} />
+        <MetricCard icon="◷" value="1 h 12" unit="min" label={t('activity.walkTime')} color={COLORS.yellow} />
       </View>
 
       <View style={styles.card}>
         <View style={styles.sectionHeader}>
           <View>
-            <Text style={styles.cardLabel}>CETTE SEMAINE</Text>
-            <Text style={styles.sectionTitle}>Pas quotidiens</Text>
+            <Text style={styles.cardLabel}>{t('common.thisWeek').toLocaleUpperCase(language === 'fr' ? 'fr-FR' : 'mg-MG')}</Text>
+            <Text style={styles.sectionTitle}>{t('activity.dailySteps')}</Text>
           </View>
           <View style={styles.weekTotalBlock}>
             <Text style={styles.weekTotal}>62 386</Text>
-            <Text style={styles.weekTotalLabel}>pas au total</Text>
+            <Text style={styles.weekTotalLabel}>{t('activity.totalSteps')}</Text>
           </View>
         </View>
 
@@ -135,15 +138,15 @@ export function ActivityScreen() {
         </View>
         <View style={styles.legendRow}>
           <View style={styles.legendDot} />
-          <Text style={styles.legendText}>Objectif : 10 000 pas</Text>
+          <Text style={styles.legendText}>{t('activity.goal')}</Text>
         </View>
       </View>
 
       <View style={styles.card}>
         <View style={styles.sectionHeader}>
           <View>
-            <Text style={styles.cardLabel}>ENTRE NOUS</Text>
-            <Text style={styles.sectionTitle}>Classement du jour</Text>
+            <Text style={styles.cardLabel}>{t('activity.betweenUs')}</Text>
+            <Text style={styles.sectionTitle}>{t('activity.ranking')}</Text>
           </View>
           <Text style={styles.trophy}>★</Text>
         </View>
@@ -156,12 +159,12 @@ export function ActivityScreen() {
                 <Text style={[styles.avatarText, { color: person.color }]}>{person.initials}</Text>
               </View>
               <View style={styles.rankNameBlock}>
-                <Text style={styles.rankName}>{person.name}</Text>
-                {person.isMe && <Text style={styles.youLabel}>VOUS</Text>}
+                <Text style={styles.rankName}>{person.isMe ? t('common.me') : person.name}</Text>
+                {person.isMe && <Text style={styles.youLabel}>{t('common.you')}</Text>}
               </View>
               <View style={styles.rankStepsBlock}>
                 <Text style={styles.rankSteps}>{person.steps}</Text>
-                <Text style={styles.rankStepsLabel}>pas</Text>
+                <Text style={styles.rankStepsLabel}>{t('common.steps')}</Text>
               </View>
             </View>
           ))}

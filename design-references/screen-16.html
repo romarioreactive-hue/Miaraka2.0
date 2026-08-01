@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Miaraka - Chargement...</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .skeleton-shimmer {
+            background: linear-gradient(90deg, #0C2147 25%, #142031 50%, #0C2147 75%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite linear;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(0.95); opacity: 0.5; box-shadow: 0 0 0 0 rgba(79, 140, 255, 0.4); }
+            70% { transform: scale(1.05); opacity: 0.8; box-shadow: 0 0 0 20px rgba(79, 140, 255, 0); }
+            100% { transform: scale(0.95); opacity: 0.5; box-shadow: 0 0 0 0 rgba(79, 140, 255, 0); }
+        }
+
+        .map-pulse {
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        @keyframes mia-listening {
+            0%, 100% { transform: scaleY(0.5); }
+            50% { transform: scaleY(1.5); }
+        }
+
+        .mia-bar {
+            animation: mia-listening 1.2s infinite ease-in-out;
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-fixed": "#b6f393", "on-background": "#e2e4d1", "on-primary-fixed": "#171e00", "surface-container": "#1e2115", "tertiary-container": "#b6f393", "inverse-primary": "#516600", "on-primary-fixed-variant": "#3c4d00", "primary-container": "#c9f23b", "on-tertiary": "#123800", outline: "#8f937b", "error-container": "#93000a", "outline-variant": "#444935", "on-tertiary-container": "#3c7121", "surface-container-high": "#292b1f", "surface-container-highest": "#333629", "surface-dim": "#12140a", primary: "#ffffff", "on-primary-container": "#576c00", "on-error": "#690005", "surface-variant": "#333629", "secondary-fixed": "#d6ec90", "on-secondary-fixed": "#171e00", "on-tertiary-fixed": "#072100", "secondary-container": "#3c4d00", "primary-fixed": "#c9f23b", "on-surface": "#e2e4d1", surface: "#12140a", "tertiary-fixed-dim": "#9bd679", secondary: "#bad077", "inverse-on-surface": "#2f3225", "on-primary": "#293500", "on-tertiary-fixed-variant": "#1e5101", tertiary: "#ffffff", "secondary-fixed-dim": "#bad077", "on-secondary-container": "#a9be68", "on-error-container": "#ffdad6", "on-secondary-fixed-variant": "#3c4d00", "surface-tint": "#aed518", "surface-container-lowest": "#0d0f06", "primary-fixed-dim": "#aed518", "inverse-surface": "#e2e4d1", "surface-container-low": "#1a1d11", "on-surface-variant": "#c5c9af", "on-secondary": "#293500", background: "#12140a", error: "#ffb4ab", "surface-bright": "#383a2d"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}, spacing: {"margin-mobile": "20px", md: "24px", lg: "32px", xl: "48px", xs: "8px", gutter: "16px", unit: "4px", "touch-target": "44px", sm: "16px"}, fontFamily: {"display-lg": ["Inter"], "body-lg": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-md": ["Inter"], "stat-xl": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"display-lg": ["48px", {lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "label-md": ["14px", {lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600"}], "label-sm": ["12px", {lineHeight: "16px", fontWeight: "500"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "stat-xl": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "600"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700"}], "headline-lg-mobile": ["28px", {lineHeight: "34px", fontWeight: "700"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md overflow-hidden">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile py-xs bg-surface/80 backdrop-blur-xl shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest animate-pulse"></div>
+<span class="font-display-lg text-[24px] bg-clip-text text-transparent bg-gradient-to-r from-tertiary to-primary">Miaraka</span>
+</div>
+<div class="w-10 h-10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</div>
+</header>
+<!-- Main Canvas (Map Background) -->
+<main class="relative w-full h-screen overflow-hidden">
+<!-- Mock Map Background -->
+<div class="absolute inset-0 bg-[#06142B]" data-location="Paris" style="">
+<div class="w-full h-full opacity-30 bg-cover bg-center" data-alt="A cinematic dark-mode map of Paris streets rendered in a futuristic cyberpunk aesthetic. The landmasses are deep navy blue, and the water is pure black. Streets and pathways glow with thin electric blue lines, creating a web of connectivity. Minimalist POIs are represented by subtle bioluminescent dots. The overall atmosphere is secure, private, and high-tech." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC1Pj6F-aBqvHd36BzeuS4nBFKYQOWZucmOtNVic9hNOoQ1K0wqjJ7AWRe3foX4MoZ8DqtQ1czAEzv-0xv9lrAAhxG9NyKbffEcxs4QEsxI3RBCczBixt5cAnef_N4mWq1XJZ-ZZl8l5MdAsI5V64VasIpuVtAHpNaQOqX6LLaWzq2HUF8HiJwB4DoylzxyiPhO8_UZCA5QJHJduOSL4SWo8qbUfTFVoJ72ah_T62xDz28wSEBIjUIB5A')"></div>
+</div>
+<!-- Map Pulse Animation (Center) -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="relative flex items-center justify-center">
+<div class="absolute w-32 h-32 bg-primary/20 rounded-full map-pulse"></div>
+<div class="absolute w-16 h-16 bg-primary/40 rounded-full map-pulse" style="animation-delay: 0.5s"></div>
+<div class="relative w-6 h-6 bg-primary rounded-full shadow-[0_0_15px_rgba(175,198,255,0.8)] z-10"></div>
+</div>
+</div>
+<!-- Content Layers (Overlaying the map) -->
+<div class="absolute inset-0 z-20 flex flex-col pointer-events-none p-margin-mobile pt-32 pb-40">
+<!-- Activity Skeleton Section -->
+<section class="mb-lg pointer-events-auto">
+<div class="flex justify-between items-center mb-sm">
+<div class="w-32 h-6 skeleton-shimmer rounded-md"></div>
+<div class="w-12 h-4 skeleton-shimmer rounded-md"></div>
+</div>
+<div class="flex gap-gutter overflow-hidden">
+<!-- Skeleton Card 1 -->
+<div class="flex-shrink-0 w-64 h-32 bg-surface-container/60 backdrop-blur-md border border-white/5 rounded-lg p-sm shadow-lg">
+<div class="flex items-center gap-3 mb-xs">
+<div class="w-10 h-10 rounded-full skeleton-shimmer"></div>
+<div class="flex-1 space-y-2">
+<div class="w-3/4 h-3 skeleton-shimmer rounded"></div>
+<div class="w-1/2 h-2 skeleton-shimmer rounded opacity-60"></div>
+</div>
+</div>
+<div class="mt-4 w-full h-1 skeleton-shimmer rounded-full overflow-hidden"></div>
+</div>
+<!-- Skeleton Card 2 -->
+<div class="flex-shrink-0 w-64 h-32 bg-surface-container/60 backdrop-blur-md border border-white/5 rounded-lg p-sm shadow-lg opacity-60">
+<div class="flex items-center gap-3 mb-xs">
+<div class="w-10 h-10 rounded-full skeleton-shimmer"></div>
+<div class="flex-1 space-y-2">
+<div class="w-3/4 h-3 skeleton-shimmer rounded"></div>
+<div class="w-1/2 h-2 skeleton-shimmer rounded opacity-60"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Challenges Skeleton Section -->
+<section class="pointer-events-auto">
+<div class="flex justify-between items-center mb-sm">
+<div class="w-40 h-6 skeleton-shimmer rounded-md"></div>
+</div>
+<div class="grid grid-cols-2 gap-gutter">
+<!-- Challenge Skeleton 1 -->
+<div class="bg-surface-container/60 backdrop-blur-md border border-white/5 rounded-lg p-sm h-48 flex flex-col justify-between">
+<div class="w-full h-24 skeleton-shimmer rounded-md mb-xs"></div>
+<div class="space-y-2">
+<div class="w-full h-3 skeleton-shimmer rounded"></div>
+<div class="w-2/3 h-2 skeleton-shimmer rounded"></div>
+</div>
+</div>
+<!-- Challenge Skeleton 2 -->
+<div class="bg-surface-container/60 backdrop-blur-md border border-white/5 rounded-lg p-sm h-48 flex flex-col justify-between">
+<div class="w-full h-24 skeleton-shimmer rounded-md mb-xs"></div>
+<div class="space-y-2">
+<div class="w-full h-3 skeleton-shimmer rounded"></div>
+<div class="w-2/3 h-2 skeleton-shimmer rounded"></div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- MIA Listening Skeleton Overlay -->
+<div class="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-4">
+<div class="bg-surface-container-high/90 backdrop-blur-2xl px-6 py-4 rounded-full border border-primary/20 shadow-[0_0_30px_rgba(175,198,255,0.15)] flex items-center gap-4">
+<!-- MIA Visualizer -->
+<div class="flex items-end gap-1 h-6 w-12">
+<div class="mia-bar w-1.5 h-full bg-primary rounded-full" style="animation-delay: 0.1s"></div>
+<div class="mia-bar w-1.5 h-full bg-secondary rounded-full" style="animation-delay: 0.3s"></div>
+<div class="mia-bar w-1.5 h-full bg-tertiary rounded-full" style="animation-delay: 0.5s"></div>
+<div class="mia-bar w-1.5 h-full bg-primary-container rounded-full" style="animation-delay: 0.2s"></div>
+<div class="mia-bar w-1.5 h-full bg-secondary-container rounded-full" style="animation-delay: 0.4s"></div>
+</div>
+<div class="text-on-surface font-label-md">MIA écoute...</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar (Skeleton Style) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-surface/90 backdrop-blur-2xl border-t border-surface-container-high shadow-lg">
+<div class="flex flex-col items-center justify-center text-primary font-bold relative after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-primary after:rounded-full after:shadow-[0_0_8px_#afc6ff]">
+<span class="material-symbols-outlined text-[24px]">map</span>
+<span class="text-[10px] mt-1">Carte</span>
+</div>
+<div class="flex flex-col items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[24px]">switch_account</span>
+<span class="text-[10px] mt-1">Activité</span>
+</div>
+<div class="flex flex-col items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[24px]">emoji_events</span>
+<span class="text-[10px] mt-1">Défis</span>
+</div>
+<div class="flex flex-col items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[24px]">groups</span>
+<span class="text-[10px] mt-1">Espaces</span>
+</div>
+<div class="flex flex-col items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="text-[10px] mt-1">Profil</span>
+</div>
+</nav>
+<!-- FAB for MIA (Optional but keeping brand identity) -->
+<button class="fixed right-6 bottom-32 w-14 h-14 bg-gradient-to-tr from-primary to-secondary rounded-full flex items-center justify-center text-on-primary-container shadow-2xl active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1">mic</span>
+<div class="absolute inset-0 rounded-full border-4 border-primary/30 animate-ping"></div>
+</button>
+</body></html>

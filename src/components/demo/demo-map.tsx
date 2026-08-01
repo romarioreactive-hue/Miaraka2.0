@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { PALETTE, Person } from './people-data';
+import { useLanguage } from '@/contexts/language-context';
 
 type DemoMapProps = {
   people: Person[];
@@ -18,6 +19,7 @@ type DemoMapProps = {
 };
 
 export function DemoMap({ people, selectedId, onSelectPerson }: DemoMapProps) {
+  const { t } = useLanguage();
   return (
     <View style={styles.mapContainer}>
       <View pointerEvents="none" style={styles.mapBase} />
@@ -28,7 +30,7 @@ export function DemoMap({ people, selectedId, onSelectPerson }: DemoMapProps) {
       <View pointerEvents="none" style={styles.routeLine} />
 
       <View pointerEvents="none" style={styles.cityLabel}>
-        <Text style={styles.cityLabelText}>Antananarivo · carte fictive</Text>
+        <Text style={styles.cityLabelText}>{t('map.fictionalCity')}</Text>
       </View>
 
       {people.map((person, index) => (
@@ -52,6 +54,7 @@ type MapMarkerProps = {
 };
 
 function MapMarker({ person, isSelected, delay, onPress }: MapMarkerProps) {
+  const { t } = useLanguage();
   const pulse = useSharedValue(0);
   const color = person.color;
 
@@ -91,7 +94,7 @@ function MapMarker({ person, isSelected, delay, onPress }: MapMarkerProps) {
         </View>
         <View style={styles.markerLabelPill}>
           <Text style={styles.markerLabelText} numberOfLines={1}>
-            {person.isMe ? 'Toi' : person.name}
+            {person.isMe ? t('map.youInformal') : person.name}
           </Text>
         </View>
       </Pressable>

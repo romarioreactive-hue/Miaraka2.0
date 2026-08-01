@@ -12,15 +12,12 @@ import { InvitePersonSheet } from '@/components/demo/invite-person-sheet';
 import { InviteSpaceMemberSheet } from '@/components/demo/invite-space-member-sheet';
 import { PEOPLE, PersonGroup } from '@/components/demo/people-data';
 import { PersonSheet } from '@/components/demo/person-sheet';
+import { ProfileScreen } from '@/components/demo/profile-screen';
 import { SpaceDetailScreen } from '@/components/demo/space-detail-screen';
 import { Space } from '@/components/demo/spaces-data';
 import { SpacesScreen } from '@/components/demo/spaces-screen';
 
 type FilterId = 'tous' | PersonGroup;
-
-const TAB_PLACEHOLDERS: Record<Exclude<DemoTab, 'carte' | 'activite' | 'defis' | 'espaces'>, { icon: string; text: string }> = {
-  profil: { icon: '👤', text: "L'écran Profil arrive dans une prochaine étape." },
-};
 
 export default function DemoScreen() {
   const [activeFilter, setActiveFilter] = useState<FilterId>('tous');
@@ -69,6 +66,8 @@ export default function DemoScreen() {
                 onSelectSpace={setSelectedSpace}
               />
             )
+          ) : activeTab === 'profil' ? (
+            <ProfileScreen />
           ) : (
             <>
               <DemoHeader
@@ -83,12 +82,7 @@ export default function DemoScreen() {
                   selectedId={selectedId}
                   onSelectPerson={setSelectedId}
                 />
-              ) : (
-                <View style={styles.placeholder}>
-                  <Text style={styles.placeholderIcon}>{TAB_PLACEHOLDERS[activeTab].icon}</Text>
-                  <Text style={styles.placeholderText}>{TAB_PLACEHOLDERS[activeTab].text}</Text>
-                </View>
-              )}
+              ) : null}
             </>
           )}
 
@@ -128,26 +122,5 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-  },
-  placeholder: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    marginHorizontal: 12,
-    borderRadius: 28,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-    backgroundColor: 'rgba(255,255,255,0.03)',
-  },
-  placeholderIcon: {
-    fontSize: 32,
-  },
-  placeholderText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#A9B4D0',
-    textAlign: 'center',
-    maxWidth: 240,
   },
 });

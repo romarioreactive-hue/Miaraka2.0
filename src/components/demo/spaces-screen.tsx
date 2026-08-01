@@ -1,6 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { darkColors, radius, spacing, typography } from '@/theme';
+import { useLanguage } from '@/contexts/language-context';
 
 import { getActiveMemberCount, SPACES, Space } from './spaces-data';
 
@@ -10,6 +11,7 @@ type SpacesScreenProps = {
 };
 
 export function SpacesScreen({ onCreateSpace, onSelectSpace }: SpacesScreenProps) {
+  const { t } = useLanguage();
   return (
     <ScrollView
       style={styles.scrollView}
@@ -17,26 +19,26 @@ export function SpacesScreen({ onCreateSpace, onSelectSpace }: SpacesScreenProps
       showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
         <View style={styles.headerCopy}>
-          <Text style={styles.eyebrow}>VOS PROCHES, BIEN ORGANISÉS</Text>
-          <Text accessibilityRole="header" style={styles.title}>Espaces</Text>
-          <Text style={styles.subtitle}>Choisissez qui peut voir quoi, groupe par groupe.</Text>
+          <Text style={styles.eyebrow}>{t('spaces.eyebrow')}</Text>
+          <Text accessibilityRole="header" style={styles.title}>{t('spaces.title')}</Text>
+          <Text style={styles.subtitle}>{t('spaces.subtitle')}</Text>
         </View>
         <Pressable
-          accessibilityLabel="Créer un espace"
+          accessibilityLabel={t('spaces.create')}
           accessibilityRole="button"
           onPress={onCreateSpace}
           style={({ pressed }) => [styles.createButton, pressed && styles.pressed]}>
           <Text style={styles.createPlus}>＋</Text>
-          <Text style={styles.createText}>Créer</Text>
+          <Text style={styles.createText}>{t('common.create')}</Text>
         </Pressable>
       </View>
 
       <View style={styles.summary}>
-        <SummaryItem value="3" label="espaces" />
+        <SummaryItem value="3" label={t('nav.spaces').toLocaleLowerCase()} />
         <View style={styles.summaryDivider} />
-        <SummaryItem value="14" label="membres" />
+        <SummaryItem value="14" label={t('common.members')} />
         <View style={styles.summaryDivider} />
-        <SummaryItem value="6" label="actifs" live />
+        <SummaryItem value="6" label={t('common.active')} live />
       </View>
 
       <View style={styles.cards}>
@@ -58,12 +60,15 @@ function SummaryItem({ value, label, live = false }: { value: string; label: str
 }
 
 function SpaceCard({ space, onPress }: { space: Space; onPress: () => void }) {
+  const { t } = useLanguage();
   const activeCount = getActiveMemberCount(space);
+  const name = t(space.type === 'famille' ? 'groups.family' : space.type === 'amis' ? 'groups.friends' : 'groups.team');
+  const sharing = t(space.sharingLevel === 'Position précise' ? 'spaces.precise' : space.sharingLevel === 'Zone approximative' ? 'spaces.approximate' : 'spaces.activityOnly');
 
   return (
     <Pressable
       accessibilityHint="Ouvre le détail de cet espace"
-      accessibilityLabel={`${space.name}, ${space.members.length} membres, ${activeCount} actifs`}
+      accessibilityLabel={`${name}, ${space.members.length} ${t('common.members')}, ${activeCount} ${t('common.active')}`}
       accessibilityRole="button"
       onPress={onPress}
       style={({ pressed }) => [styles.card, { borderColor: `${space.color}52` }, pressed && styles.cardPressed]}>
@@ -73,10 +78,10 @@ function SpaceCard({ space, onPress }: { space: Space; onPress: () => void }) {
           <Text style={[styles.spaceIconText, { color: space.color }]}>{space.icon}</Text>
         </View>
         <View style={styles.cardTitleBlock}>
-          <Text style={styles.cardTitle}>{space.name}</Text>
+          <Text style={styles.cardTitle}>{name}</Text>
           <View style={styles.liveRow}>
             <View style={styles.liveDot} />
-            <Text style={styles.liveText}>{activeCount} actifs maintenant</Text>
+            <Text style={styles.liveText}>{t('spaces.activeNow', { count: activeCount })}</Text>
           </View>
         </View>
         <Text style={styles.chevron}>›</Text>
@@ -85,11 +90,11 @@ function SpaceCard({ space, onPress }: { space: Space; onPress: () => void }) {
       <View style={styles.statsRow}>
         <View style={styles.statBlock}>
           <Text style={styles.statValue}>{space.members.length}</Text>
-          <Text style={styles.statLabel}>membres</Text>
+          <Text style={styles.statLabel}>{t('common.members')}</Text>
         </View>
         <View style={styles.cardDivider} />
         <View style={styles.locationBlock}>
-          <Text style={styles.detailLabel}>LIEU PRINCIPAL</Text>
+          <Text style={styles.detailLabel}>{t('spaces.mainPlace')}</Text>
           <Text numberOfLines={1} style={styles.detailValue}>⌖  {space.mainPlace}</Text>
         </View>
       </View>
@@ -110,7 +115,7 @@ function SpaceCard({ space, onPress }: { space: Space; onPress: () => void }) {
           )}
         </View>
         <View style={[styles.sharingBadge, { backgroundColor: `${space.color}18` }]}>
-          <Text style={[styles.sharingText, { color: space.color }]}>◉  {space.sharingLevel}</Text>
+          <Text style={[styles.sharingText, { color: space.color }]}>◉  {sharing}</Text>
         </View>
       </View>
     </Pressable>

@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { alpha, darkColors, radius, spacing, typography } from '@/theme';
+import { useLanguage } from '@/contexts/language-context';
 
 export function ConnectedPeopleVisual() {
   const scale = useSharedValue(0.92);
@@ -48,6 +49,7 @@ function Avatar({ initials, color, style, delay }: { initials: string; color: st
 }
 
 export function MapVisual() {
+  const { t } = useLanguage();
   const markerY = useSharedValue(0);
 
   useEffect(() => {
@@ -65,12 +67,13 @@ export function MapVisual() {
       <View style={[styles.routeDot, styles.routeStart]} />
       <Animated.View style={[styles.mapMarker, styles.markerOne, markerStyle]}><Text style={styles.markerText}>RI</Text></Animated.View>
       <Animated.View entering={FadeInDown.delay(280)} style={[styles.mapMarker, styles.markerTwo]}><Text style={styles.markerText}>FA</Text></Animated.View>
-      <View style={styles.etaCard}><Text style={styles.etaLabel}>ARRIVÉE ESTIMÉE</Text><Text style={styles.etaValue}>12 min</Text><Text style={styles.etaPlace}>Maison · 3,4 km</Text></View>
+      <View style={styles.etaCard}><Text style={styles.etaLabel}>{t('onboarding.eta')}</Text><Text style={styles.etaValue}>12 min</Text><Text style={styles.etaPlace}>{t('onboarding.home')}</Text></View>
     </Animated.View>
   );
 }
 
 export function ChallengeVisual() {
+  const { t } = useLanguage();
   const progress = useSharedValue(0);
 
   useEffect(() => {
@@ -81,11 +84,11 @@ export function ChallengeVisual() {
 
   return (
     <Animated.View entering={FadeInUp.duration(550)} style={styles.rankingCard}>
-      <View style={styles.rankingHeader}><View><Text style={styles.miniLabel}>DÉFI DE LA SEMAINE</Text><Text style={styles.rankingTitle}>50 km ensemble</Text></View><Animated.View entering={FadeIn.delay(850)} style={styles.successBadge}><Text style={styles.successBadgeText}>✓ EN ROUTE</Text></Animated.View></View>
+      <View style={styles.rankingHeader}><View><Text style={styles.miniLabel}>{t('onboarding.weekChallenge')}</Text><Text style={styles.rankingTitle}>{t('onboarding.together')}</Text></View><Animated.View entering={FadeIn.delay(850)} style={styles.successBadge}><Text style={styles.successBadgeText}>{t('onboarding.onTrack')}</Text></Animated.View></View>
       <Animated.View style={[styles.challengeProgress, progressStyle]} />
       <View style={styles.rankings}>
         <RankingRow rank="1" initials="R" name="Rica" value="14,8 km" width="92%" color={darkColors.accent} />
-        <RankingRow rank="2" initials="M" name="Moi" value="12,4 km" width="78%" color={darkColors.primary} />
+        <RankingRow rank="2" initials="M" name={t('common.me')} value="12,4 km" width="78%" color={darkColors.primary} />
         <RankingRow rank="3" initials="T" name="Tovo" value="9,1 km" width="58%" color={darkColors.team} />
       </View>
     </Animated.View>
@@ -99,6 +102,7 @@ function RankingRow({ rank, initials, name, value, width, color }: { rank: strin
 }
 
 export function MiaVisual() {
+  const { t } = useLanguage();
   const pulse = useSharedValue(1);
 
   useEffect(() => {
@@ -109,30 +113,32 @@ export function MiaVisual() {
 
   return (
     <View style={styles.miaScene}>
-      <Animated.View entering={FadeInUp.duration(500)} style={styles.questionBubble}><Text style={styles.questionText}>« Où est Rica ? »</Text></Animated.View>
+      <Animated.View entering={FadeInUp.duration(500)} style={styles.questionBubble}><Text style={styles.questionText}>{t('onboarding.whereRica')}</Text></Animated.View>
       <View style={styles.micWrap}><Animated.View style={[styles.micPulse, pulseStyle]} /><View style={styles.micButton}><Text style={styles.micLabel}>MIA</Text><Text style={styles.micIcon}>●</Text></View></View>
       <View style={styles.wave}>{[12, 25, 38, 20, 44, 29, 14].map((height, index) => <Animated.View entering={FadeIn.delay(80 * index)} key={index} style={[styles.waveBar, { height }]} />)}</View>
-      <Animated.View entering={FadeInDown.delay(500).duration(550)} style={styles.answerBubble}><View style={styles.answerDot} /><Text style={styles.answerText}><Text style={styles.answerStrong}>Rica est au bureau.</Text>{'\n'}Position en direct · à l’instant</Text></Animated.View>
+      <Animated.View entering={FadeInDown.delay(500).duration(550)} style={styles.answerBubble}><View style={styles.answerDot} /><Text style={styles.answerText}><Text style={styles.answerStrong}>{t('onboarding.ricaOffice')}</Text>{'\n'}{t('onboarding.liveNow')}</Text></Animated.View>
     </View>
   );
 }
 
 export function PrivacyVisual() {
+  const { t } = useLanguage();
   return (
     <Animated.View entering={FadeIn.duration(500)} style={styles.permissions}>
-      <PermissionCard icon="⌖" title="Localisation" text="Partagée avec Famille" enabled delay={100} />
-      <PermissionCard icon="◌" title="Notifications" text="Alertes importantes" enabled delay={220} />
-      <PermissionCard icon="↗" title="Activité physique" text="Visible dans les défis" enabled={false} delay={340} />
+      <PermissionCard icon="⌖" title={t('onboarding.location')} text={t('onboarding.sharedFamily')} enabled delay={100} />
+      <PermissionCard icon="◌" title={t('onboarding.notifications')} text={t('onboarding.importantAlerts')} enabled delay={220} />
+      <PermissionCard icon="↗" title={t('onboarding.physicalActivity')} text={t('onboarding.visibleChallenges')} enabled={false} delay={340} />
     </Animated.View>
   );
 }
 
 function PermissionCard({ icon, title, text, enabled, delay }: { icon: string; title: string; text: string; enabled: boolean; delay: number }) {
+  const { t } = useLanguage();
   return (
     <Animated.View entering={FadeInDown.delay(delay).duration(450)} style={styles.permissionCard}>
       <View style={[styles.permissionIcon, enabled && styles.permissionIconEnabled]}><Text style={[styles.permissionIconText, enabled && styles.permissionIconTextEnabled]}>{icon}</Text></View>
       <View style={styles.permissionCopy}><Text style={styles.permissionTitle}>{title}</Text><Text style={styles.permissionText}>{text}</Text></View>
-      <View accessibilityLabel={enabled ? 'Activé' : 'Désactivé'} style={[styles.switchTrack, enabled && styles.switchTrackEnabled]}><View style={[styles.switchThumb, enabled && styles.switchThumbEnabled]} /></View>
+      <View accessibilityLabel={enabled ? t('common.enabled') : t('common.disabled')} style={[styles.switchTrack, enabled && styles.switchTrackEnabled]}><View style={[styles.switchThumb, enabled && styles.switchThumbEnabled]} /></View>
     </Animated.View>
   );
 }

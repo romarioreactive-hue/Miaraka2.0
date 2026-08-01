@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Miaraka - Activité</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-fixed": "#b6f393", "on-background": "#e2e4d1", "on-primary-fixed": "#171e00", "surface-container": "#1e2115", "tertiary-container": "#b6f393", "inverse-primary": "#516600", "on-primary-fixed-variant": "#3c4d00", "primary-container": "#c9f23b", "on-tertiary": "#123800", outline: "#8f937b", "error-container": "#93000a", "outline-variant": "#444935", "on-tertiary-container": "#3c7121", "surface-container-high": "#292b1f", "surface-container-highest": "#333629", "surface-dim": "#12140a", primary: "#ffffff", "on-primary-container": "#576c00", "on-error": "#690005", "surface-variant": "#333629", "secondary-fixed": "#d6ec90", "on-secondary-fixed": "#171e00", "on-tertiary-fixed": "#072100", "secondary-container": "#3c4d00", "primary-fixed": "#c9f23b", "on-surface": "#e2e4d1", surface: "#12140a", "tertiary-fixed-dim": "#9bd679", secondary: "#bad077", "inverse-on-surface": "#2f3225", "on-primary": "#293500", "on-tertiary-fixed-variant": "#1e5101", tertiary: "#ffffff", "secondary-fixed-dim": "#bad077", "on-secondary-container": "#a9be68", "on-error-container": "#ffdad6", "on-secondary-fixed-variant": "#3c4d00", "surface-tint": "#aed518", "surface-container-lowest": "#0d0f06", "primary-fixed-dim": "#aed518", "inverse-surface": "#e2e4d1", "surface-container-low": "#1a1d11", "on-surface-variant": "#c5c9af", "on-secondary": "#293500", background: "#12140a", error: "#ffb4ab", "surface-bright": "#383a2d"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}, spacing: {"margin-mobile": "20px", md: "24px", lg: "32px", xl: "48px", xs: "8px", gutter: "16px", unit: "4px", "touch-target": "44px", sm: "16px"}, fontFamily: {"display-lg": ["Inter"], "body-lg": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "body-md": ["Inter"], "stat-xl": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"display-lg": ["48px", {lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "label-md": ["14px", {lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600"}], "label-sm": ["12px", {lineHeight: "16px", fontWeight: "500"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "stat-xl": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "600"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700"}], "headline-lg-mobile": ["28px", {lineHeight: "34px", fontWeight: "700"}]}}}};</script>
+<style>
+        body {
+            background-color: #071424;
+            color: #d7e3fa;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(12, 33, 71, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .bioluminescent-glow {
+            box-shadow: 0 0 20px rgba(79, 140, 255, 0.15);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #29D391 0%, #4F8CFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .active-dot::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: linear-gradient(135deg, #29D391 0%, #4F8CFF 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 8px #4F8CFF;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .bar-transition {
+            transition: height 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="pb-32 overflow-x-hidden">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl shadow-sm flex justify-between items-center px-margin-mobile py-xs">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A professional close-up studio portrait of a young French man with kind eyes and dark hair, illuminated by soft cinematic blue and cyan accent lighting. The background is a deep navy blue, maintaining the premium dark mode aesthetic of the secure Miaraka platform. High-definition photography with a shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABVAjnHUDqM9CazPiZKX61EeVNM1fdmDE0pj7NP8nbiEHpOvsYlzpIApn4E8o4kJ_NBuvEXhd-VBm8_WFi2_7gBu1kUCcfdm0m9FAszPjn5KJNDOXiuLGkqIDW-UKujvlXbBy04Jc8NTHQ05n6_g7DT1mOFuigvysvojFzgD7TU5hodjTl3rC3gvl6JG0uK76UApGqSRESVLvo9If14O6Kj3iiq3SHwpr4PB2nh-6atwaBb0-Bb7fqmg"/>
+</div>
+<h1 class="font-display-lg text-[24px] bg-clip-text text-transparent bg-gradient-to-r from-tertiary to-primary">Activité</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</header>
+<main class="mt-20 px-margin-mobile space-y-lg">
+<!-- Filters & Timeframe -->
+<div class="flex justify-center bg-surface-container-low p-1 rounded-full w-full max-w-sm mx-auto">
+<button class="flex-1 py-2 px-4 rounded-full font-label-md text-label-md transition-all duration-300 bg-primary-container text-on-primary-container shadow-lg">Aujourd'hui</button>
+<button class="flex-1 py-2 px-4 rounded-full font-label-md text-label-md transition-all duration-300 text-on-surface-variant hover:text-primary">Semaine</button>
+<button class="flex-1 py-2 px-4 rounded-full font-label-md text-label-md transition-all duration-300 text-on-surface-variant hover:text-primary">Mois</button>
+</div>
+<!-- Person Selector -->
+<section>
+<div class="flex items-center justify-between mb-sm">
+<h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Cercle de protection</h2>
+<span class="material-symbols-outlined text-outline text-sm">chevron_right</span>
+</div>
+<div class="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
+<!-- User -->
+<div class="flex flex-col items-center gap-2 min-w-[72px]">
+<div class="relative p-1 rounded-full border-2 border-primary bioluminescent-glow">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Close up avatar of a young man with a slight smile, dark blue background with electric cyan rim light, high quality portraiture, digital safety app style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHMZSjtN7QtIhMN8BDZ9NOMwfYqQIDAuZHrQ6vv9a1Y8hUwqc37udOo6SJijjeEGO57q2adnVrtuyQ45FXmTNp8BgHODApMqeFdqoUrWWPdBIZzNG0R3ZGXkeWq5Z9DYlE-GaqYuSzBX0oqs9BP7UzULFUdG9No5NRT03Y4RKmSFthbdVeeqtUIquBw5X5vGFlhOgJR-YfKbxKXsCqSb3nV2CSGUrAIYuUUFkWpG0MjSnvrDad2_As0w"/>
+<div class="absolute -bottom-1 -right-1 bg-tertiary w-4 h-4 rounded-full border-2 border-surface flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold">Moi</span>
+</div>
+<!-- Rica -->
+<div class="flex flex-col items-center gap-2 min-w-[72px] opacity-60">
+<div class="w-14 h-14 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young woman named Rica, soft warm lighting against a dark navy background, minimalist composition, professional digital social app avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAF_6wnUox8y697uC9c-THa7xDPy5_6mXkXCa5ZXevu7v30uce_7AwOpiT2rlhku_hCl4I1cngZaioty1orqWYnSL-CqT1-PFwJkjDBg-DEJYmXJCep0G7qRuuhS4kJPoSz4n-uf2qO-QyLzNe71AN-w98fGHQRpDogUcqP6yWIkf6Qx4G9nCPX4DeH0IORnazd0_lY7Jiq49tOSv9REUfOJgVW5dDAMp0fnJNFQ9HuHE5xTDQ0w1IkGA"/>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Rica</span>
+</div>
+<!-- Mario -->
+<div class="flex flex-col items-center gap-2 min-w-[72px] opacity-60">
+<div class="w-14 h-14 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of an older man with glasses named Mario, confident expression, deep teal and black lighting, sharp focus, digital profile image for a family app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC63RMEze_M-GpV96IZw5pragROpnkfELF6qvijvvffX_kAzeMItTV0wKE_V1ZWMNnE9TM6PyG7inL2r__8T_uugqmj0Gec3Z0PWwWkYqj0cj4P5-Wz4tVY0nUJA88rijTC4drCukTepKQCLtY4NKUOfywlmQA0PgUk8zYI4a71dkdWy9Sl2U4RaSWkS0GMzBk_RYUt0iUfkULGzje00HS5qwfQx4SFSp6MFtkdweLEsseekLuvPnRO6A"/>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Mario</span>
+</div>
+<!-- Sophie -->
+<div class="flex flex-col items-center gap-2 min-w-[72px] opacity-60">
+<div class="w-14 h-14 rounded-full border-2 border-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a teenage girl with blonde hair named Sophie, glowing soft focus, deep indigo background, modern social network style avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuinqYlMxHzTcDm_L060SY1GFEyYbs4BlhctL9W04ecFHbKgXk-a7qtav5Pq3pU7nITKmxcv8YAFztxbL1xw4X2dL-1bwiPEW4Nck8a370kyuZ7cPg1DUyHRgZb4enenWREiDmb35fmKnLcddJBevj43eTEXsOaq8UzUbgi5ViZMvHj71nyApsorUq2b_yx2IBJZ_iTHIojNlPt2yQ96Hhw9MYzih6W0j2GKb2ahxv9umzhQCIfr3tgg"/>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Sophie</span>
+</div>
+<!-- Add New -->
+<div class="flex flex-col items-center gap-2 min-w-[72px]">
+<button class="w-14 h-14 rounded-full border-2 border-dashed border-outline-variant flex items-center justify-center hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-outline">add</span>
+</button>
+<span class="font-label-sm text-label-sm text-outline">Inviter</span>
+</div>
+</div>
+</section>
+<!-- Main Stats Card -->
+<section class="glass-card rounded-lg p-lg relative overflow-hidden">
+<div class="absolute -top-12 -right-12 w-32 h-32 bg-primary/10 blur-3xl rounded-full"></div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant">Pas aujourd'hui</h3>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-stat-xl text-stat-xl text-on-background">8 450</span>
+<span class="font-label-md text-label-md text-outline">/ 10 000</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="w-12 h-12 rounded-full border-4 border-surface-container flex items-center justify-center relative">
+<svg class="absolute inset-0 w-full h-full -rotate-90">
+<circle class="text-primary/20" cx="24" cy="24" fill="transparent" r="20" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-tertiary" cx="24" cy="24" fill="transparent" r="20" stroke="currentColor" stroke-dasharray="125.6" stroke-dashoffset="20" stroke-width="4"></circle>
+</svg>
+<span class="text-[10px] font-bold text-tertiary">84%</span>
+</div>
+<p class="font-label-sm text-label-sm text-tertiary mt-2">Objectif atteint</p>
+</div>
+</div>
+<!-- Bento Mini Grid -->
+<div class="grid grid-cols-2 gap-gutter mt-lg">
+<div class="bg-surface-container-low p-4 rounded-DEFAULT flex flex-col gap-1 border border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">directions_walk</span>
+<span class="font-label-sm text-label-sm text-outline">À pied</span>
+</div>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">6.2 <span class="text-sm font-normal text-outline">km</span></span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-DEFAULT flex flex-col gap-1 border border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-sm">directions_car</span>
+<span class="font-label-sm text-label-sm text-outline">Motorisé</span>
+</div>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">14.8 <span class="text-sm font-normal text-outline">km</span></span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-DEFAULT flex flex-col gap-1 border border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-sm">local_fire_department</span>
+<span class="font-label-sm text-label-sm text-outline">Calories</span>
+</div>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">432 <span class="text-sm font-normal text-outline">kcal</span></span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-DEFAULT flex flex-col gap-1 border border-white/5 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-tertiary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-sm">emoji_events</span>
+<span class="font-label-sm text-label-sm text-outline">Classement</span>
+</div>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-tertiary">#2 <span class="text-sm font-normal text-outline">/ 12</span></span>
+</div>
+</div>
+</section>
+<!-- Chart Section -->
+<section class="glass-card rounded-lg p-lg">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-label-md text-label-md text-on-surface">Résumé de la semaine</h3>
+<span class="font-label-sm text-label-sm text-outline">Moyenne: 7.2k pas</span>
+</div>
+<div class="flex items-end justify-between h-40 gap-2">
+<!-- Mon -->
+<div class="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+<div class="w-full bg-surface-container-highest rounded-t-full relative group">
+<div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-full h-[60%] bar-transition"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline">L</span>
+</div>
+<!-- Tue -->
+<div class="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+<div class="w-full bg-surface-container-highest rounded-t-full relative">
+<div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-full h-[85%] bar-transition"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline">M</span>
+</div>
+<!-- Wed -->
+<div class="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+<div class="w-full bg-surface-container-highest rounded-t-full relative">
+<div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-full h-[45%] bar-transition"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline">M</span>
+</div>
+<!-- Thu -->
+<div class="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+<div class="w-full bg-surface-container-highest rounded-t-full relative">
+<div class="absolute inset-x-0 bottom-0 bg-tertiary rounded-t-full h-[95%] bar-transition shadow-[0_0_15px_rgba(62,224,157,0.3)]"></div>
+</div>
+<span class="font-label-sm text-label-sm text-tertiary font-bold">J</span>
+</div>
+<!-- Fri -->
+<div class="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+<div class="w-full bg-surface-container-highest rounded-t-full relative">
+<div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-full h-[70%] bar-transition"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline">V</span>
+</div>
+<!-- Sat -->
+<div class="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+<div class="w-full bg-surface-container-highest rounded-t-full relative">
+<div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-full h-[55%] bar-transition"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline">S</span>
+</div>
+<!-- Sun -->
+<div class="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+<div class="w-full bg-surface-container-highest rounded-t-full relative">
+<div class="absolute inset-x-0 bottom-0 bg-primary/40 rounded-t-full h-[30%] bar-transition"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline">D</span>
+</div>
+</div>
+</section>
+<!-- Secondary List / Daily Activity Breakdown -->
+<section class="space-y-sm">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Détail des trajets</h3>
+<!-- Item 1 -->
+<div class="flex items-center gap-4 p-4 rounded-DEFAULT bg-surface-container-low border border-white/5">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">directions_walk</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<p class="font-body-md text-body-md text-on-surface font-medium">Marche matinale</p>
+<span class="font-label-sm text-label-sm text-outline">08:15</span>
+</div>
+<p class="font-label-sm text-label-sm text-outline">Parc de Bercy • 2.4 km</p>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface">+140</p>
+<p class="font-label-sm text-label-sm text-outline">pts</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-4 p-4 rounded-DEFAULT bg-surface-container-low border border-white/5">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">commute</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<p class="font-body-md text-body-md text-on-surface font-medium">Trajet Travail</p>
+<span class="font-label-sm text-label-sm text-outline">09:00</span>
+</div>
+<p class="font-label-sm text-label-sm text-outline">Voiture • 12.5 km</p>
+</div>
+<div class="text-right">
+<span class="material-symbols-outlined text-tertiary text-lg" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+</section>
+</main>
+<!-- MIA FAB -->
+<button class="fixed bottom-28 right-6 w-16 h-16 rounded-full bg-gradient-to-br from-tertiary to-primary shadow-2xl flex items-center justify-center z-50 group hover:scale-110 active:scale-95 transition-all duration-300">
+<div class="absolute inset-0 rounded-full bg-primary opacity-20 animate-ping"></div>
+<span class="material-symbols-outlined text-white text-3xl" style="font-variation-settings: 'FILL' 1;">mic</span>
+</button>
+<!-- Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-surface/90 dark:bg-surface/90 backdrop-blur-2xl border-t border-surface-container-high shadow-lg">
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-sm text-label-sm">Carte</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary font-bold relative after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-primary after:rounded-full after:shadow-[0_0_8px_#afc6ff] scale-110 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">switch_account</span>
+<span class="font-label-sm text-label-sm">Activité</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">emoji_events</span>
+<span class="font-label-sm text-label-sm">Défis</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-sm text-label-sm">Espaces</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profil</span>
+</a>
+</nav>
+<script>
+        // Simple Micro-interaction for person selection
+        const personAvatars = document.querySelectorAll('.flex-col.items-center.min-w-\\[72px\\]');
+        personAvatars.forEach(avatar => {
+            avatar.addEventListener('click', () => {
+                personAvatars.forEach(a => {
+                    a.classList.add('opacity-60');
+                    a.querySelector('.relative')?.classList.remove('border-primary', 'bioluminescent-glow');
+                    a.querySelector('.relative')?.classList.add('border-surface-container-highest');
+                    a.querySelector('span')?.classList.remove('text-primary', 'font-bold');
+                    a.querySelector('span')?.classList.add('text-outline');
+                });
+                avatar.classList.remove('opacity-60');
+                const imgContainer = avatar.querySelector('div:first-child');
+                imgContainer.classList.add('border-primary', 'bioluminescent-glow');
+                imgContainer.classList.remove('border-surface-container-highest');
+                avatar.querySelector('span').classList.remove('text-outline');
+                avatar.querySelector('span').classList.add('text-primary', 'font-bold');
+            });
+        });
+
+        // Tab selection for timeframe
+        const filterButtons = document.querySelectorAll('.flex-1.py-2.px-4.rounded-full');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => {
+                    b.classList.remove('bg-primary-container', 'text-on-primary-container', 'shadow-lg');
+                    b.classList.add('text-on-surface-variant');
+                });
+                btn.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-lg');
+                btn.classList.remove('text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

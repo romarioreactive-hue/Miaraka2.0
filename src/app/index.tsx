@@ -5,12 +5,14 @@ import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { OnboardingScreen, ProgressDots } from '@/components/onboarding/onboarding-screen';
+import { useLanguage } from '@/contexts/language-context';
 import { alpha, darkColors, radius, spacing, typography } from '@/theme';
 
 let onboardingFinishedForSession = false;
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [step, setStep] = useState(onboardingFinishedForSession ? 5 : 0);
 
   function openDemo() {
@@ -40,21 +42,21 @@ export default function HomeScreen() {
               <View style={styles.logoHalo} />
               <View style={styles.logoCircle}><Text style={styles.logoLetter}>M</Text></View>
             </Animated.View>
-            <Animated.Text entering={FadeInDown.delay(120).duration(500)} accessibilityRole="header" style={styles.title}>Bienvenue dans Miaraka</Animated.Text>
-            <Animated.Text entering={FadeInDown.delay(240).duration(500)} style={styles.slogan}>Ensemble, partout, à chaque instant.</Animated.Text>
+            <Animated.Text entering={FadeInDown.delay(120).duration(500)} accessibilityRole="header" style={styles.title}>{t('welcome.title')}</Animated.Text>
+            <Animated.Text entering={FadeInDown.delay(240).duration(500)} style={styles.slogan}>{t('welcome.subtitle')}</Animated.Text>
             <Animated.View entering={FadeInUp.delay(360).duration(500)} style={styles.trustCard}>
               <View style={styles.trustIcon}><Text style={styles.trustIconText}>✓</Text></View>
-              <Text style={styles.trustText}>Vos espaces restent privés et sous votre contrôle.</Text>
+              <Text style={styles.trustText}>{t('welcome.private')}</Text>
             </Animated.View>
             <Animated.View entering={FadeInUp.delay(480).duration(500)} style={styles.buttons}>
-              <Pressable accessibilityHint="Ouvre la démonstration avec un utilisateur fictif" accessibilityRole="button" onPress={openDemo} style={({ pressed }) => [styles.googleButton, pressed && styles.pressed]}>
-                <View style={styles.googleMark}><Text style={styles.googleLetter}>G</Text></View><Text style={styles.googleButtonText}>Continuer avec Google</Text>
+              <Pressable accessibilityHint={t('welcome.googleHint')} accessibilityRole="button" onPress={openDemo} style={({ pressed }) => [styles.googleButton, pressed && styles.pressed]}>
+                <View style={styles.googleMark}><Text style={styles.googleLetter}>G</Text></View><Text style={styles.googleButtonText}>{t('welcome.google')}</Text>
               </Pressable>
-              <Pressable accessibilityRole="button" onPress={openDemo} style={({ pressed }) => [styles.demoButton, pressed && styles.pressed]}><Text style={styles.demoButtonText}>Voir la démonstration</Text></Pressable>
+              <Pressable accessibilityRole="button" onPress={openDemo} style={({ pressed }) => [styles.demoButton, pressed && styles.pressed]}><Text style={styles.demoButtonText}>{t('welcome.demo')}</Text></Pressable>
             </Animated.View>
           </View>
         </ScrollView>
-        <View style={styles.footer}><ProgressDots activeStep={5} /><Text style={styles.fictionNote}>Connexion Google simulée pour cette démonstration</Text></View>
+        <View style={styles.footer}><ProgressDots activeStep={5} /><Text style={styles.fictionNote}>{t('welcome.simulated')}</Text></View>
       </SafeAreaView>
     </View>
   );
