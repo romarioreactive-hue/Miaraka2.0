@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
     width: 48,
   },
   toggleTrackEnabled: {
-    experimental_backgroundImage: 'linear-gradient(90deg, #29D391 0%, #4F8CFF 100%)',
+    experimental_backgroundImage: 'linear-gradient(90deg, #29D391 0%, #6C63FF 100%)',
   },
   toggleThumb: {
     backgroundColor: '#FFFFFF',

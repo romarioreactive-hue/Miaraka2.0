@@ -18,7 +18,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useLanguage } from '@/contexts/language-context';
 import { darkColors, logos, radius, spacing, typography } from '@/theme';
 
-type WelcomeScreenProps = { onOpenDemo: () => void };
+type WelcomeScreenProps = { onDemo: () => void; onLogin: () => void };
 
 const COLORS = {
   background: darkColors.background,
@@ -36,7 +36,7 @@ const COLORS = {
   paleBlue: darkColors.accent,
 } as const;
 
-export function WelcomeScreen({ onOpenDemo }: WelcomeScreenProps) {
+export function WelcomeScreen({ onDemo, onLogin }: WelcomeScreenProps) {
   const { language, setLanguage, t } = useLanguage();
   const insets = useSafeAreaInsets();
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -79,14 +79,14 @@ export function WelcomeScreen({ onOpenDemo }: WelcomeScreenProps) {
               <Pressable
                 accessibilityHint={t('welcome.googleHint')}
                 accessibilityRole="button"
-                onPress={onOpenDemo}
+                onPress={() => setFeedback(copy.futureOption)}
                 style={({ pressed }) => [styles.googleButton, pressed && styles.pressed]}>
                 <GoogleMark />
                 <Text style={styles.googleLabel}>{t('welcome.google')}</Text>
               </Pressable>
               <Pressable
                 accessibilityRole="button"
-                onPress={onOpenDemo}
+                onPress={onDemo}
                 style={({ pressed }) => [styles.demoButton, pressed && styles.pressed]}>
                 <SymbolView
                   name={{ ios: 'play.circle.fill', android: 'play_circle', web: 'play_circle' }}
@@ -104,7 +104,7 @@ export function WelcomeScreen({ onOpenDemo }: WelcomeScreenProps) {
               </View>
 
               <View style={styles.futureOptions}>
-                <FutureButton icon="mail" label="Email" onPress={() => setFeedback(copy.futureOption)} />
+                <FutureButton icon="mail" label="Email" onPress={onLogin} />
                 <FutureButton icon="apple" label="Apple" onPress={() => setFeedback(copy.futureOption)} />
               </View>
               {feedback ? <Animated.Text entering={FadeIn.duration(200)} style={styles.feedback}>{feedback}</Animated.Text> : null}

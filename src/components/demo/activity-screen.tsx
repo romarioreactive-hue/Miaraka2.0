@@ -49,21 +49,45 @@ const COLORS = {
 } as const;
 
 const PEOPLE = [
-  { id: 'me', name: 'Moi', initials: 'M', color: '#4F8CFF', steps: 8450 },
+  { id: 'me', name: 'Moi', initials: 'M', color: darkColors.primary, steps: 8450 },
   { id: 'rica', name: 'Rica', initials: 'R', color: '#F6C85F', steps: 9210 },
   { id: 'mario', name: 'Mario', initials: 'MA', color: '#29D391', steps: 7640 },
   { id: 'sophie', name: 'Sophie', initials: 'S', color: '#F2679D', steps: 6880 },
 ] as const;
 
-const WEEK = [
-  { day: 'L', ratio: 0.60 },
-  { day: 'M', ratio: 0.85 },
-  { day: 'M', ratio: 0.45 },
-  { day: 'J', ratio: 0.95, highlight: true },
-  { day: 'V', ratio: 0.70 },
-  { day: 'S', ratio: 0.55 },
-  { day: 'D', ratio: 0.30 },
-] as const;
+type WeeklyMetric = 'distance' | 'steps' | 'calories';
+
+const WEEKLY_METRICS: WeeklyMetric[] = ['distance', 'steps', 'calories'];
+
+const WEEK_BY_METRIC: Record<WeeklyMetric, { day: string; ratio: number; highlight?: boolean }[]> = {
+  distance: [
+    { day: 'L', ratio: 0.55 },
+    { day: 'M', ratio: 0.80 },
+    { day: 'M', ratio: 0.40 },
+    { day: 'J', ratio: 0.95, highlight: true },
+    { day: 'V', ratio: 0.68 },
+    { day: 'S', ratio: 0.50 },
+    { day: 'D', ratio: 0.28 },
+  ],
+  steps: [
+    { day: 'L', ratio: 0.60 },
+    { day: 'M', ratio: 0.85 },
+    { day: 'M', ratio: 0.45 },
+    { day: 'J', ratio: 1, highlight: true },
+    { day: 'V', ratio: 0.70 },
+    { day: 'S', ratio: 0.55 },
+    { day: 'D', ratio: 0.30 },
+  ],
+  calories: [
+    { day: 'L', ratio: 0.48 },
+    { day: 'M', ratio: 0.74 },
+    { day: 'M', ratio: 0.44 },
+    { day: 'J', ratio: 0.88, highlight: true },
+    { day: 'V', ratio: 0.60 },
+    { day: 'S', ratio: 0.52 },
+    { day: 'D', ratio: 0.33 },
+  ],
+};
 
 export function ActivityScreen() {
   const { language, t } = useLanguage();
@@ -265,20 +289,42 @@ function MetricCard({ accent, icon, label, unit, value }: { accent: string; icon
 }
 
 function WeeklyChart({ copy, period }: { copy: ReturnType<typeof getCopy>; period: Period }) {
+  const [metric, setMetric] = useState<WeeklyMetric>('distance');
+  const week = WEEK_BY_METRIC[metric];
+  const totalLabel = metric === 'distance' ? copy.weeklyTotalDistance : metric === 'steps' ? copy.weeklyTotalSteps : copy.weeklyTotalCalories;
+  const metricLabel = (item: WeeklyMetric) => (item === 'distance' ? copy.metricDistance : item === 'steps' ? copy.metricSteps : copy.metricCalories);
+
   return (
     <View style={styles.chartCard}>
       <View style={styles.chartHeader}>
         <Text style={styles.chartTitle}>{copy.weekSummary}</Text>
-        <Text style={styles.chartAverage}>{copy.average}</Text>
+        <Text style={styles.chartAverage}>{totalLabel}</Text>
       </View>
-      <View style={styles.chart}>
-        {WEEK.map((item, index) => <ChartBar delay={index * 70} item={item} key={`${period}-${item.day}-${index}`} />)}
+
+      <View style={styles.metricRow}>
+        {WEEKLY_METRICS.map((item) => {
+          const selected = item === metric;
+          return (
+            <Pressable
+              accessibilityRole="tab"
+              accessibilityState={{ selected }}
+              key={item}
+              onPress={() => setMetric(item)}
+              style={[styles.metricPill, selected && styles.metricPillActive]}>
+              <Text style={[styles.metricPillText, selected && styles.metricPillTextActive]}>{metricLabel(item)}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
+      <View key={`${period}-${metric}`} style={styles.chart}>
+        {week.map((item, index) => <ChartBar delay={index * 70} item={item} key={`${period}-${metric}-${item.day}-${index}`} />)}
       </View>
     </View>
   );
 }
 
-function ChartBar({ delay, item }: { delay: number; item: (typeof WEEK)[number] }) {
+function ChartBar({ delay, item }: { delay: number; item: { day: string; ratio: number; highlight?: boolean } }) {
   const reduceMotion = useReducedMotion();
   const progress = useSharedValue(reduceMotion ? item.ratio : 0);
   useEffect(() => {
@@ -314,10 +360,10 @@ function TripRow({ accent, description, icon, onPress, reward, time, title }: { 
 function getCopy(language: 'fr' | 'mg') {
   return language === 'mg'
     ? {
-        locale: 'mg-MG', notifications: 'Fampandrenesana', today: 'Anio', week: 'Herinandro', month: 'Volana', protectionCircle: 'VONDRONA FIAROVANA', invite: 'Hanasa', inviteFeedback: 'Fanasana santatra ihany.', stepsToday: 'Dingana androany', stepsForPeriod: 'Dingana amin’ity vanim-potoana ity', goalReached: 'Tratra ny tanjona', walked: 'An-tongotra', motorized: 'Amin’ny fiara', calories: 'Kaloria', ranking: 'Laharana', weekSummary: 'Famintinana ny herinandro', average: 'Salan’isa: dingana 7,2k', tripDetails: 'ANTSIPIRIAN’NY DIA', morningWalk: 'Dia an-tongotra maraina', morningWalkDescription: 'Parc de Bercy • 2,4 km', workTrip: 'Dia ho any am-piasana', workTripDescription: 'Fiara • 12,5 km', tripFeedback: 'Antsipirian’ny dia santatra.',
+        locale: 'mg-MG', notifications: 'Fampandrenesana', today: 'Anio', week: 'Herinandro', month: 'Volana', protectionCircle: 'VONDRONA FIAROVANA', invite: 'Hanasa', inviteFeedback: 'Fanasana santatra ihany.', stepsToday: 'Dingana androany', stepsForPeriod: 'Dingana amin’ity vanim-potoana ity', goalReached: 'Tratra ny tanjona', walked: 'An-tongotra', motorized: 'Amin’ny fiara', calories: 'Kaloria', ranking: 'Laharana', weekSummary: 'Famintinana ny herinandro', average: 'Salan’isa: dingana 7,2k', tripDetails: 'ANTSIPIRIAN’NY DIA', morningWalk: 'Dia an-tongotra maraina', morningWalkDescription: 'Parc de Bercy • 2,4 km', workTrip: 'Dia ho any am-piasana', workTripDescription: 'Fiara • 12,5 km', tripFeedback: 'Antsipirian’ny dia santatra.', metricDistance: 'Halavirana', metricSteps: 'Dingana', metricCalories: 'Kaloria', weeklyTotalDistance: 'Vokatra: 28,4 km', weeklyTotalSteps: 'Vokatra: dingana 58 200', weeklyTotalCalories: 'Vokatra: kaloria 2 940',
       }
     : {
-        locale: 'fr-FR', notifications: 'Notifications', today: "Aujourd'hui", week: 'Semaine', month: 'Mois', protectionCircle: 'CERCLE DE PROTECTION', invite: 'Inviter', inviteFeedback: 'Invitation fictive uniquement.', stepsToday: "Pas aujourd'hui", stepsForPeriod: 'Pas sur la période', goalReached: 'Objectif atteint', walked: 'À pied', motorized: 'Motorisé', calories: 'Calories', ranking: 'Classement', weekSummary: 'Résumé de la semaine', average: 'Moyenne : 7,2k pas', tripDetails: 'DÉTAIL DES TRAJETS', morningWalk: 'Marche matinale', morningWalkDescription: 'Parc de Bercy • 2,4 km', workTrip: 'Trajet travail', workTripDescription: 'Voiture • 12,5 km', tripFeedback: 'Détail du trajet fictif.',
+        locale: 'fr-FR', notifications: 'Notifications', today: "Aujourd'hui", week: 'Semaine', month: 'Mois', protectionCircle: 'CERCLE DE PROTECTION', invite: 'Inviter', inviteFeedback: 'Invitation fictive uniquement.', stepsToday: "Pas aujourd'hui", stepsForPeriod: 'Pas sur la période', goalReached: 'Objectif atteint', walked: 'À pied', motorized: 'Motorisé', calories: 'Calories', ranking: 'Classement', weekSummary: 'Résumé de la semaine', average: 'Moyenne : 7,2k pas', tripDetails: 'DÉTAIL DES TRAJETS', morningWalk: 'Marche matinale', morningWalkDescription: 'Parc de Bercy • 2,4 km', workTrip: 'Trajet travail', workTripDescription: 'Voiture • 12,5 km', tripFeedback: 'Détail du trajet fictif.', metricDistance: 'Distance', metricSteps: 'Pas', metricCalories: 'Calories', weeklyTotalDistance: 'Total : 28,4 km', weeklyTotalSteps: 'Total : 58 200 pas', weeklyTotalCalories: 'Total : 2 940 kcal',
       };
 }
 
@@ -371,6 +417,11 @@ const styles = StyleSheet.create({
   chartHeader: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing[6] },
   chartTitle: { ...typography.labelMedium, color: COLORS.text },
   chartAverage: { ...typography.caption, color: COLORS.outline },
+  metricRow: { flexDirection: 'row', gap: spacing[2], marginBottom: spacing[4] },
+  metricPill: { flex: 1, minHeight: 36, alignItems: 'center', justifyContent: 'center', borderRadius: radius.pill, backgroundColor: COLORS.surfaceLow, borderWidth: 1, borderColor: COLORS.outlineVariant },
+  metricPillActive: { backgroundColor: COLORS.blue, borderColor: COLORS.blue },
+  metricPillText: { ...typography.caption, fontWeight: '700', color: COLORS.outline },
+  metricPillTextActive: { color: COLORS.white },
   chart: { alignItems: 'flex-end', flexDirection: 'row', gap: spacing[2], height: 160, justifyContent: 'space-between' },
   barColumn: { alignItems: 'center', flex: 1, gap: spacing[3], height: '100%', justifyContent: 'flex-end' },
   barTrack: { backgroundColor: COLORS.surfaceHighest, borderRadius: radius.pill, flex: 1, justifyContent: 'flex-end', maxWidth: 34, overflow: 'hidden', width: '100%' },

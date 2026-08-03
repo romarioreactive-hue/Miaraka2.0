@@ -54,10 +54,10 @@ export const shadowLarge: ShadowToken = {
 };
 
 export const glowPrimary: ShadowToken = {
-  web: { boxShadow: '0 0 24px rgba(79, 140, 255, 0.48)' },
-  android: { elevation: 8, shadowColor: '#4F8CFF' },
+  web: { boxShadow: '0 0 24px rgba(108, 99, 255, 0.48)' },
+  android: { elevation: 8, shadowColor: '#6C63FF' },
   ios: {
-    shadowColor: '#4F8CFF',
+    shadowColor: '#6C63FF',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.48,
     shadowRadius: 12,

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AccessibilityInfo, Animated, Easing, StyleSheet, useColorScheme, type DimensionValue, type StyleProp, type ViewStyle } from 'react-native';
 
 import { darkColors, lightColors, radius } from '@/theme';
@@ -12,7 +12,7 @@ export type SkeletonProps = {
 
 export function Skeleton({ width = '100%', height = 16, radiusValue = radius.small, style }: SkeletonProps) {
   const theme = useColorScheme() === 'light' ? lightColors : darkColors;
-  const opacity = useRef(new Animated.Value(0.48)).current;
+  const [opacity] = useState(() => new Animated.Value(0.48));
   const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {

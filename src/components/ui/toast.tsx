@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Animated, Platform, StyleSheet, Text, useColorScheme, type StyleProp, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -33,8 +33,8 @@ export function Toast({
 }: ToastProps) {
   const theme = useColorScheme() === 'light' ? lightColors : darkColors;
   const insets = useSafeAreaInsets();
-  const opacity = useRef(new Animated.Value(0)).current;
-  const translateY = useRef(new Animated.Value(position === 'top' ? -12 : 12)).current;
+  const [opacity] = useState(() => new Animated.Value(0));
+  const [translateY] = useState(() => new Animated.Value(position === 'top' ? -12 : 12));
   const accent = {
     info: theme.info,
     success: theme.success,

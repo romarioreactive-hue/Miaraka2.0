@@ -1,6 +1,6 @@
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Image, Platform, StyleSheet, Text, View, useWindowDimensions, type ViewStyle } from 'react-native';
+import { Image, Platform, StyleSheet, View, useWindowDimensions, type ViewStyle } from 'react-native';
 import Animated, {
   type AnimatedStyle,
   Easing,
@@ -17,7 +17,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
-import { darkColors, logos, radius, spacing, typography } from '@/theme';
+import { darkColors, logos, radius, spacing } from '@/theme';
 
 const COLORS = {
   background: darkColors.background,
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   progressBar: {
     backgroundColor: COLORS.cyan,
     borderRadius: radius.pill,
-    experimental_backgroundImage: 'linear-gradient(90deg, #3EE09D 0%, #38D6E8 50%, #4F8CFF 100%)',
+    experimental_backgroundImage: 'linear-gradient(90deg, #3EE09D 0%, #38D6E8 50%, #6C63FF 100%)',
     height: 2,
   },
 });

@@ -18,7 +18,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PrimaryButton, SecondaryButton } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/cards';
 import { useLanguage } from '@/contexts/language-context';
-import { radius, spacing, typography } from '@/theme';
+import { darkColors, radius, spacing, typography } from '@/theme';
 
 type OnboardingLocationScreenProps = {
   onBack: () => void;
@@ -27,22 +27,22 @@ type OnboardingLocationScreenProps = {
 };
 
 const COLORS = {
-  background: '#071424',
-  mapBackground: '#06142B',
-  mapRoad: '#173565',
-  mapRoadMuted: '#122B57',
-  mapBlock: '#0C2147',
+  background: darkColors.background,
+  mapBackground: darkColors.background,
+  mapRoad: darkColors.surfaceInteractive,
+  mapRoadMuted: darkColors.surfaceElevated,
+  mapBlock: darkColors.surface,
   panel: 'rgba(12, 33, 71, 0.94)',
-  panelBorder: 'rgba(255, 255, 255, 0.10)',
-  text: '#D7E3FA',
-  textSecondary: '#C5C9AF',
-  green: '#29D391',
-  brightGreen: '#3EE09D',
-  cyan: '#38D6E8',
-  blue: '#4F8CFF',
-  paleBlue: '#AFC6FF',
-  surfaceHigh: '#333629',
-  outline: '#444935',
+  panelBorder: darkColors.border,
+  text: darkColors.textPrimary,
+  textSecondary: darkColors.textSecondary,
+  green: darkColors.success,
+  brightGreen: darkColors.success,
+  cyan: darkColors.accent,
+  blue: darkColors.primary,
+  paleBlue: darkColors.accent,
+  surfaceHigh: darkColors.surfaceElevated,
+  outline: darkColors.border,
 } as const;
 
 export function OnboardingLocationScreen({ onBack, onContinue, onSkip }: OnboardingLocationScreenProps) {
@@ -468,7 +468,7 @@ const styles = StyleSheet.create({
   activeDot: {
     backgroundColor: COLORS.green,
     borderRadius: radius.pill,
-    experimental_backgroundImage: 'linear-gradient(90deg, #29D391 0%, #4F8CFF 100%)',
+    experimental_backgroundImage: 'linear-gradient(90deg, #29D391 0%, #6C63FF 100%)',
     height: 6,
     shadowColor: COLORS.blue,
     shadowOpacity: 0.4,
@@ -516,7 +516,7 @@ const styles = StyleSheet.create({
   primaryButton: {
     borderColor: COLORS.green,
     borderRadius: radius.pill,
-    experimental_backgroundImage: 'linear-gradient(135deg, #29D391 0%, #4F8CFF 100%)',
+    experimental_backgroundImage: 'linear-gradient(135deg, #29D391 0%, #6C63FF 100%)',
   },
   backButton: {
     backgroundColor: 'transparent',

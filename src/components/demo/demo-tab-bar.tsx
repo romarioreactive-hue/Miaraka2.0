@@ -60,6 +60,7 @@ export function DemoTabBar({ activeTab, onChangeTab, onPressMia }: DemoTabBarPro
         style={styles.bar}>
         {barWidth > 0 ? (
           <Animated.View
+            pointerEvents="none"
             style={[styles.indicator, { width: barWidth / TAB_COUNT }, indicatorStyle]}
           />
         ) : null}
@@ -94,7 +95,9 @@ function TabButton({ icon, isActive, label, onPress }: { icon: SymbolName; isAct
       accessibilityState={{ selected: isActive }}
       hitSlop={6}
       onPress={onPress}
+      // eslint-disable-next-line react-hooks/immutability -- Reanimated shared values are mutated by design
       onPressIn={() => { scale.value = withTiming(0.88, { duration: 90 }); }}
+      // eslint-disable-next-line react-hooks/immutability -- Reanimated shared values are mutated by design
       onPressOut={() => { scale.value = withTiming(1, { duration: 140 }); }}
       style={styles.tabButton}>
       <Animated.View style={[styles.tabContent, pressStyle]}>
@@ -132,9 +135,11 @@ function MiaFab({ onPress }: { onPress?: () => void }) {
     <Pressable
       accessibilityLabel="MIA"
       accessibilityRole="button"
-      hitSlop={10}
+      hitSlop={6}
       onPress={onPress}
+      // eslint-disable-next-line react-hooks/immutability -- Reanimated shared values are mutated by design
       onPressIn={() => { scale.value = withTiming(0.9, { duration: 90 }); }}
+      // eslint-disable-next-line react-hooks/immutability -- Reanimated shared values are mutated by design
       onPressOut={() => { scale.value = withTiming(1, { duration: 140 }); }}
       style={styles.fabWrap}>
       <Animated.View pointerEvents="none" style={[styles.fabPulse, pulseStyle]} />
@@ -170,6 +175,7 @@ const styles = StyleSheet.create({
   },
   indicator: {
     position: 'absolute',
+    left: 0,
     top: 6,
     bottom: 6,
     borderRadius: radius.large,
@@ -199,7 +205,7 @@ const styles = StyleSheet.create({
   fabWrap: {
     position: 'absolute',
     right: spacing[4],
-    bottom: 68,
+    bottom: 84,
     width: 60,
     height: 60,
     alignItems: 'center',

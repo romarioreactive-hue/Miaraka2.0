@@ -17,7 +17,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { Avatar } from '@/components/ui/avatar';
 import { useLanguage } from '@/contexts/language-context';
-import { radius, spacing, typography } from '@/theme';
+import { darkColors, radius, spacing, typography } from '@/theme';
 
 type OnboardingMiaScreenProps = {
   onBack: () => void;
@@ -26,17 +26,17 @@ type OnboardingMiaScreenProps = {
 };
 
 const COLORS = {
-  background: '#071424',
+  background: darkColors.background,
   glass: 'rgba(12, 33, 71, 0.60)',
-  glassBorder: 'rgba(255, 255, 255, 0.10)',
-  text: '#D7E3FA',
-  textMuted: '#AFC6D9',
-  outline: '#8F9DB1',
-  green: '#3EE09D',
-  blue: '#4F8CFF',
-  paleBlue: '#AFC6FF',
-  lime: '#C9F23B',
-  oliveText: '#576C00',
+  glassBorder: darkColors.border,
+  text: darkColors.textPrimary,
+  textMuted: darkColors.textSecondary,
+  outline: darkColors.textMuted,
+  green: darkColors.success,
+  blue: darkColors.primary,
+  paleBlue: darkColors.accent,
+  lime: darkColors.accent,
+  oliveText: darkColors.textInverse,
 } as const;
 
 const WAVE_HEIGHTS = [20, 40, 32, 48, 24] as const;

@@ -1,8 +1,8 @@
-export { fr } from './fr';
-export type TranslationKey = keyof typeof import('./fr').fr;
-
 import { fr } from './fr';
 import { mg } from './mg';
+
+export { fr } from './fr';
+export type TranslationKey = keyof typeof import('./fr').fr;
 
 export type Language = 'fr' | 'mg';
 export type TranslationParams = Record<string, string | number>;

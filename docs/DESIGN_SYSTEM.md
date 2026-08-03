@@ -42,7 +42,8 @@ L'inspiration vient de la clarté de Find My, du sens du groupe de Life360, de l
 |---|---:|---|
 | Bleu nuit | `#06142B` | Fond principal sombre |
 | Bleu profond | `#0C2147` | Surface principale sombre |
-| Bleu principal | `#4F8CFF` | Action principale et information |
+| Indigo principal | `#6C63FF` | Action principale et information |
+| Bleu Famille | `#4F8CFF` | Repère de l'espace Famille uniquement |
 | Cyan | `#38D6E8` | Accent, mouvement et focus |
 | Vert | `#29D391` | En direct, succès et progression positive |
 | Blanc | `#FFFFFF` | Texte principal sombre et surface claire |
@@ -74,7 +75,7 @@ L'inspiration vient de la clarté de Find My, du sens du groupe de Life360, de l
 
 | Espace | Couleur | Utilisation |
 |---|---|---|
-| Famille | Bleu principal | Pastille, repère ou accent associé à Famille |
+| Famille | Bleu Famille | Pastille, repère ou accent associé à Famille |
 | Amis | Cyan | Pastille, repère ou accent associé à Amis |
 | Équipe | Vert | Pastille, repère ou accent associé à Équipe |
 
@@ -86,7 +87,7 @@ Le fichier `colors.ts` fournit des blancs, noirs et couleurs principales avec pl
 
 ## 4. Règles d'utilisation des couleurs
 
-- Utiliser le bleu principal pour l'action la plus importante d'un écran.
+- Utiliser le indigo principal pour l'action la plus importante d'un écran.
 - Réserver le vert aux succès, à la progression positive et à l'état « En direct ».
 - Réserver le rouge aux erreurs, alertes fortes et actions destructrices.
 - Employer le jaune pour une attention temporaire, jamais comme confirmation de succès.
@@ -176,7 +177,7 @@ Règles :
 
 ### Bouton principal
 
-- Fond bleu principal, texte blanc, rayon `medium` ou `pill` selon le contexte.
+- Fond indigo principal, texte blanc, rayon `medium` ou `pill` selon le contexte.
 - Hauteur minimale de 48 points.
 - Une seule action principale visible par section.
 - État pressé plus sombre et animation courte.
@@ -184,7 +185,7 @@ Règles :
 ### Bouton secondaire
 
 - Surface sombre élevée ou fond transparent avec bordure.
-- Texte principal ou bleu principal selon l'importance.
+- Texte principal ou indigo principal selon l'importance.
 - Même taille tactile que le bouton principal.
 
 ### Bouton discret
@@ -208,7 +209,7 @@ Règles :
 - Fond `surface`, rayon `large`, padding de 16 à 20 points.
 - Bordure discrète en mode sombre ; ombre seulement si la carte flotte réellement.
 - Titre court, information prioritaire visible en premier et au plus une action principale.
-- Une carte sélectionnée peut utiliser `surfaceElevated` et une bordure bleu principal.
+- Une carte sélectionnée peut utiliser `surfaceElevated` et une bordure indigo principal.
 - Les cartes de personnes donnent la priorité à l'avatar, au prénom, à l'état et à l'heure.
 - Éviter les cartes imbriquées. Utiliser des séparateurs ou des groupes simples.
 
@@ -217,7 +218,7 @@ Règles :
 - Hauteur minimale de 48 points, fond `surface`, rayon `medium`.
 - Libellé toujours visible lorsque le contenu peut être ambigu.
 - Placeholder en texte discret ; il ne remplace pas un libellé nécessaire.
-- Focus signalé par une bordure cyan ou bleu principal.
+- Focus signalé par une bordure cyan ou indigo principal.
 - Erreur affichée sous le champ en rouge, avec une explication courte et utile.
 - Icône d'action tactile d'au moins 48 points si elle efface ou révèle le contenu.
 - Ne pas demander une information qui n'est pas nécessaire au parcours.
@@ -267,7 +268,7 @@ Une pulsation douce peut accompagner l'état en direct. Elle s'arrête si l'util
 
 - Entre trois et cinq destinations principales au maximum.
 - Icône et libellé toujours visibles ; ne pas utiliser une icône seule pour une destination importante.
-- Élément actif en bleu principal, éléments inactifs en gris moyen.
+- Élément actif en indigo principal, éléments inactifs en gris moyen.
 - Surface légèrement élevée avec bordure supérieure discrète.
 - Hauteur confortable et respect de la zone sûre du téléphone.
 - Un badge de notification doit rester rare, petit et compréhensible.
@@ -277,7 +278,7 @@ Une pulsation douce peut accompagner l'état en direct. Elle s'arrête si l'util
 
 - La carte reste lisible en mode sombre et ne concurrence pas les personnes.
 - Le marqueur d'une personne utilise son avatar, un contour contrasté et éventuellement la couleur de son espace.
-- La personne sélectionnée est agrandie légèrement et mise en avant par le bleu principal.
+- La personne sélectionnée est agrandie légèrement et mise en avant par le indigo principal.
 - L'état en direct peut employer `glowLive` avec retenue.
 - Une dernière position connue porte un indicateur d'ancienneté ; elle ne ressemble jamais à un marqueur en direct.
 - Les marqueurs regroupés affichent un nombre clair et s'ouvrent progressivement.
@@ -299,7 +300,7 @@ Une pulsation douce peut accompagner l'état en direct. Elle s'arrête si l'util
 
 - Une carte de défi montre le nom, la période, l'objectif, la progression et l'espace concerné.
 - La progression personnelle est prioritaire avant le classement complet.
-- Une barre utilise le bleu principal avant l'objectif et le vert lorsque l'objectif est atteint.
+- Une barre utilise le indigo principal avant l'objectif et le vert lorsque l'objectif est atteint.
 - Ne pas donner une apparence d'échec agressive à une progression faible.
 - Le podium peut mettre en valeur les trois premiers avec sobriété, sans couleur métallique obligatoire.
 - Le rang reste accompagné du prénom et de la valeur mesurée.

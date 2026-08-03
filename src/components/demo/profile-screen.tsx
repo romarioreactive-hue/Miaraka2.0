@@ -1,13 +1,20 @@
+import { useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
+import { useAuth } from '@/auth';
 import { AppBackground } from '@/components/ui/app-background';
 import { Avatar } from '@/components/ui/avatar';
-import { alpha, avatars, darkColors, groupColors, radius, spacing, typography } from '@/theme';
+import { Toast, type ToastVariant } from '@/components/ui/toast';
 import { useLanguage } from '@/contexts/language-context';
+import { getAvatarDisplayUrl, pickAvatarImage, uploadAvatar, type AvatarPickSource, type AvatarServiceError } from '@/services/avatar-service';
+import { alpha, avatars, darkColors, groupColors, radius, spacing, typography } from '@/theme';
 
+import { getAvatarErrorMessage } from './avatar-error-messages';
+import { AvatarPickerSheet } from './avatar-picker-sheet';
+import { InvitationsScreen } from './invitations-screen';
 import {
   EditProfileModal,
   LogoutConfirmationModal,
@@ -16,6 +23,7 @@ import {
   SpacePermissionsModal,
   SpacePermissionSettings,
 } from './profile-modals';
+import { PlacesSheet } from './places-sheet';
 
 type SpaceKey = 'family' | 'friends' | 'team';
 
@@ -31,7 +39,14 @@ const INITIAL_SPACE_SETTINGS: Record<SpaceKey, SpacePermissionSettings> = {
   team: { position: true, activity: true, lastPosition: true, schedule: '08:00 – 18:00' },
 };
 
-export function ProfileScreen() {
+type ProfileScreenProps = {
+  /** Appelé après acceptation d'une invitation, pour ouvrir l'onglet Espaces. */
+  onNavigateToSpaces?: () => void;
+};
+
+export function ProfileScreen({ onNavigateToSpaces }: ProfileScreenProps) {
+  const router = useRouter();
+  const { user: authUser, profile: authProfile, signOut, refreshProfile } = useAuth();
   const { language, setLanguage, t } = useLanguage();
   const [profile, setProfile] = useState<ProfileDetails>({ name: 'Rica Rakoto', email: 'rica.rakoto@gmail.com', initials: 'RR' });
   const [location, setLocation] = useState({ share: true, background: true, lastKnown: true, batterySaver: false });
@@ -42,11 +57,52 @@ export function ProfileScreen() {
   const [selectedSpace, setSelectedSpace] = useState<SpaceKey | null>(null);
   const [pauseOpen, setPauseOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const [placesOpen, setPlacesOpen] = useState(false);
   const [sharingPause, setSharingPause] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [avatarSheetOpen, setAvatarSheetOpen] = useState(false);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [localAvatarUri, setLocalAvatarUri] = useState<string | null>(null);
+  const [avatarToast, setAvatarToast] = useState<{ variant: ToastVariant; message: string } | null>(null);
+  const [invitationsOpen, setInvitationsOpen] = useState(false);
 
   function showFeedback(message: string) {
     setFeedback(message);
+  }
+
+  async function handleLogout() {
+    try {
+      await signOut();
+    } catch {
+      // L'erreur est déjà exposée via useAuth().error ; on redirige tout de même.
+    }
+    router.replace('/login');
+  }
+
+  async function handlePickAvatar(source: AvatarPickSource) {
+    setAvatarSheetOpen(false);
+    try {
+      const asset = await pickAvatarImage(source);
+      if (!asset) return;
+
+      if (!authUser) {
+        throw { code: 'not_authenticated', message: 'not authenticated' } satisfies AvatarServiceError;
+      }
+
+      setLocalAvatarUri(asset.uri);
+      setAvatarUploading(true);
+
+      await uploadAvatar(authUser.id, asset);
+      await refreshProfile();
+
+      setLocalAvatarUri(null);
+      setAvatarToast({ variant: 'success', message: t('profile.photoUpdated') });
+    } catch (error) {
+      setLocalAvatarUri(null);
+      setAvatarToast({ variant: 'error', message: getAvatarErrorMessage(t, (error as AvatarServiceError).code) });
+    } finally {
+      setAvatarUploading(false);
+    }
   }
 
   return (
@@ -55,8 +111,9 @@ export function ProfileScreen() {
         <View style={styles.topBar}>
           <Text accessibilityRole="header" style={styles.topBarTitle}>{t('nav.profile')}</Text>
           <Pressable
-            accessibilityLabel={t('common.notifications')}
+            accessibilityLabel={t('invitations.title')}
             accessibilityRole="button"
+            onPress={() => setInvitationsOpen(true)}
             style={({ pressed }) => [styles.notificationButton, pressed && styles.pressed]}>
             <SymbolView
               name={{ ios: 'bell.fill', android: 'notifications', web: 'notifications' }}
@@ -69,14 +126,36 @@ export function ProfileScreen() {
 
         <Animated.View entering={FadeInDown.duration(450)} style={styles.profileHeader}>
           <View style={styles.avatarWrap}>
-            <Avatar
-              backgroundColor={darkColors.primarySoft}
-              initials={profile.initials}
-              name={profile.name}
-              ringColor={darkColors.accent}
-              size={64}
-              source={avatars.rica}
-            />
+            <Pressable
+              accessibilityLabel={t('profile.changePhoto')}
+              accessibilityRole="button"
+              disabled={avatarUploading}
+              onPress={() => setAvatarSheetOpen(true)}
+              style={({ pressed }) => [pressed && !avatarUploading && styles.pressed]}>
+              <Avatar
+                backgroundColor={darkColors.primarySoft}
+                imageUrl={localAvatarUri ?? getAvatarDisplayUrl(authProfile?.avatarUrl, authProfile?.updatedAt)}
+                initials={profile.initials}
+                loading={avatarUploading}
+                name={profile.name}
+                ringColor={darkColors.accent}
+                size={64}
+                source={avatars.rica}
+              />
+            </Pressable>
+            <Pressable
+              accessibilityLabel={t('profile.changePhoto')}
+              accessibilityRole="button"
+              disabled={avatarUploading}
+              onPress={() => setAvatarSheetOpen(true)}
+              style={({ pressed }) => [styles.cameraBadge, avatarUploading && styles.cameraBadgeDisabled, pressed && !avatarUploading && styles.pressed]}>
+              <SymbolView
+                name={{ ios: 'camera.fill', android: 'photo_camera', web: 'photo_camera' }}
+                size={13}
+                tintColor={darkColors.textInverse}
+                weight="bold"
+              />
+            </Pressable>
             <View style={styles.onlineDot} />
           </View>
           <View style={styles.profileCopy}>
@@ -117,6 +196,7 @@ export function ProfileScreen() {
 
         <Section icon="⌖" title={t('profile.location')} delay={100}>
           <ToggleRow label={t('profile.sharePosition')} description={t('profile.visibleBySpace')} value={location.share} onValueChange={(share) => setLocation((current) => ({ ...current, share }))} />
+          <ActionRow icon="⌂" label={t('profile.myPlaces')} onPress={() => setPlacesOpen(true)} value={t('profile.myPlacesValue')} />
           {location.share ? (
             <>
               <ToggleRow label={t('profile.backgroundLocation')} description={t('profile.simulationActive')} value={location.background} onValueChange={(background) => setLocation((current) => ({ ...current, background }))} />
@@ -206,7 +286,20 @@ export function ProfileScreen() {
         />
       )}
       <PauseSharingModal onClose={() => setPauseOpen(false)} onConfirm={(duration) => setSharingPause(duration)} visible={pauseOpen} />
-      <LogoutConfirmationModal onClose={() => setLogoutOpen(false)} onConfirm={() => showFeedback(t('profile.feedbackLogout'))} visible={logoutOpen} />
+      <LogoutConfirmationModal onClose={() => setLogoutOpen(false)} onConfirm={handleLogout} visible={logoutOpen} />
+      <PlacesSheet onClose={() => setPlacesOpen(false)} visible={placesOpen} />
+      <AvatarPickerSheet onClose={() => setAvatarSheetOpen(false)} onPick={handlePickAvatar} visible={avatarSheetOpen} />
+      <InvitationsScreen
+        onAccepted={onNavigateToSpaces}
+        onClose={() => setInvitationsOpen(false)}
+        visible={invitationsOpen}
+      />
+      <Toast
+        message={avatarToast?.message ?? ''}
+        onDismiss={() => setAvatarToast(null)}
+        variant={avatarToast?.variant ?? 'info'}
+        visible={Boolean(avatarToast)}
+      />
     </AppBackground>
   );
 }
@@ -262,6 +355,8 @@ const styles = StyleSheet.create({
   profileHeader: { minHeight: 112, flexDirection: 'row', alignItems: 'center', gap: spacing[3], padding: spacing[4], borderRadius: radius.extraLarge, borderWidth: 1, borderColor: alpha.primary32, backgroundColor: darkColors.surface },
   avatarWrap: { width: 66, height: 66 },
   onlineDot: { position: 'absolute', right: 1, bottom: 2, width: 15, height: 15, borderRadius: radius.circle, borderWidth: 3, borderColor: darkColors.surface, backgroundColor: darkColors.live },
+  cameraBadge: { position: 'absolute', left: -2, bottom: -2, width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: radius.circle, borderWidth: 2, borderColor: darkColors.surface, backgroundColor: darkColors.primary },
+  cameraBadgeDisabled: { opacity: 0.5 },
   profileCopy: { flex: 1, minWidth: 0 },
   profileName: { ...typography.titleMedium, color: darkColors.textPrimary },
   profileEmail: { ...typography.caption, color: darkColors.textMuted, marginTop: 1 },

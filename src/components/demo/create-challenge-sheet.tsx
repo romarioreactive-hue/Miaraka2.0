@@ -12,16 +12,18 @@ import {
   View,
 } from 'react-native';
 
+import { darkColors } from '@/theme';
+
 const COLORS = {
-  background: '#060C1F',
-  surface: '#0D1933',
-  surfaceLight: '#142342',
-  text: '#F7FAFF',
-  muted: '#8D9AB8',
-  border: 'rgba(255,255,255,0.10)',
-  green: '#39D98A',
-  cyan: '#35D7E8',
-  blue: '#5B8DEF',
+  background: darkColors.background,
+  surface: darkColors.surface,
+  surfaceLight: darkColors.surfaceElevated,
+  text: darkColors.textPrimary,
+  muted: darkColors.textMuted,
+  border: darkColors.border,
+  green: darkColors.success,
+  cyan: darkColors.accent,
+  blue: darkColors.primary,
 } as const;
 
 type Group = 'Famille' | 'Amis' | 'Équipe';

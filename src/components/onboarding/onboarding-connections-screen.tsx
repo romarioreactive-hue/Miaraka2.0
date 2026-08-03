@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
   },
   connectionLine: {
     backgroundColor: COLORS.cyan,
-    experimental_backgroundImage: 'linear-gradient(90deg, #29D391 0%, #4F8CFF 100%)',
+    experimental_backgroundImage: 'linear-gradient(90deg, #29D391 0%, #6C63FF 100%)',
     height: 2,
     opacity: 0.8,
     position: 'absolute',
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLORS.green,
     borderRadius: radius.circle,
-    experimental_backgroundImage: 'linear-gradient(135deg, #29D391 0%, #38D6E8 48%, #4F8CFF 100%)',
+    experimental_backgroundImage: 'linear-gradient(135deg, #29D391 0%, #38D6E8 48%, #6C63FF 100%)',
     height: 80,
     justifyContent: 'center',
     shadowColor: COLORS.blue,
@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
   activeDot: {
     backgroundColor: COLORS.green,
     borderRadius: radius.pill,
-    experimental_backgroundImage: 'linear-gradient(90deg, #29D391 0%, #4F8CFF 100%)',
+    experimental_backgroundImage: 'linear-gradient(90deg, #29D391 0%, #6C63FF 100%)',
     height: 6,
     shadowColor: COLORS.blue,
     shadowOpacity: 0.4,
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
   primaryButton: {
     borderColor: COLORS.green,
     borderRadius: radius.pill,
-    experimental_backgroundImage: 'linear-gradient(135deg, #29D391 0%, #4F8CFF 100%)',
+    experimental_backgroundImage: 'linear-gradient(135deg, #29D391 0%, #6C63FF 100%)',
   },
   skipButton: {
     backgroundColor: 'transparent',
