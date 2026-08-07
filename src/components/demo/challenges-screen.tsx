@@ -13,8 +13,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { useAuth } from '@/auth';
 import { AppBackground } from '@/components/ui/app-background';
 import { Avatar } from '@/components/ui/avatar';
+import { DemoModeBanner } from '@/components/ui/demo-mode-banner';
 import { EmptyState } from '@/components/ui/empty-state';
 import { CreateChallengeSheet } from './create-challenge-sheet';
 import { useLanguage } from '@/contexts/language-context';
@@ -45,6 +47,7 @@ const CHALLENGE_TYPES: ChallengeTypeCard[] = [
 ];
 
 export function ChallengesScreen() {
+  const { profile } = useAuth();
   const { t } = useLanguage();
   const reduceMotion = useReducedMotion();
   const enter = (delay: number) => (reduceMotion ? FadeInDown.duration(1) : FadeInDown.delay(delay).duration(420));
@@ -64,7 +67,7 @@ export function ChallengesScreen() {
         showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
           <View style={styles.topBarIdentity}>
-            <Avatar backgroundColor="#253B63" name={t('common.me')} ringColor={alpha.white24} size={32} source={avatars.moi} />
+            <Avatar backgroundColor="#253B63" imageUrl={profile?.avatarUrl} name={profile?.fullName || t('common.me')} ringColor={alpha.white24} size={32} />
             <Text accessibilityRole="header" style={styles.title}>{t('challenges.title')}</Text>
           </View>
           <Pressable
@@ -79,6 +82,8 @@ export function ChallengesScreen() {
             />
           </Pressable>
         </View>
+
+        <DemoModeBanner style={styles.demoBanner} />
 
         <View style={styles.filters}>
           {FILTERS.map((filter) => {
@@ -337,6 +342,7 @@ const styles = StyleSheet.create({
   title: { ...typography.titleLarge, color: darkColors.textPrimary },
   notificationButton: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: radius.circle, backgroundColor: darkColors.surfaceElevated },
   pressed: { opacity: 0.78, transform: [{ scale: 0.98 }] },
+  demoBanner: { marginBottom: spacing[2] },
   filters: { flexDirection: 'row', gap: 7 },
   filter: {
     flex: 1,

@@ -13,8 +13,10 @@ import Animated, {
 
 import type { ImageSourcePropType } from 'react-native';
 
+import { useAuth } from '@/auth';
 import { AppBackground } from '@/components/ui/app-background';
 import { Avatar } from '@/components/ui/avatar';
+import { DemoModeBanner } from '@/components/ui/demo-mode-banner';
 import { useLanguage } from '@/contexts/language-context';
 import { avatars, darkColors, radius, spacing, typography } from '@/theme';
 
@@ -90,6 +92,7 @@ const WEEK_BY_METRIC: Record<WeeklyMetric, { day: string; ratio: number; highlig
 };
 
 export function ActivityScreen() {
+  const { profile } = useAuth();
   const { language, t } = useLanguage();
   const [period, setPeriod] = useState<Period>('today');
   const [selectedPerson, setSelectedPerson] = useState('me');
@@ -108,7 +111,7 @@ export function ActivityScreen() {
     <AppBackground style={styles.root} variant="dashboard">
       <View style={styles.header}>
         <View style={styles.headerIdentity}>
-          <Avatar backgroundColor="#253B63" name={t('common.me')} ringColor="rgba(255, 255, 255, 0.20)" size={48} source={avatars.moi} />
+          <Avatar backgroundColor="#253B63" imageUrl={profile?.avatarUrl} name={profile?.fullName || t('common.me')} ringColor="rgba(255, 255, 255, 0.20)" size={48} />
           <Text accessibilityRole="header" style={styles.headerTitle}>{t('nav.activity')}</Text>
         </View>
         <Pressable
@@ -122,6 +125,7 @@ export function ActivityScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <DemoModeBanner />
         <PeriodSelector copy={copy} onChange={setPeriod} value={period} />
         <PeopleSelector
           copy={copy}

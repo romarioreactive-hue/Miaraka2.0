@@ -2,6 +2,7 @@ import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { DemoModeBanner } from '@/components/ui/demo-mode-banner';
 import { useLanguage } from '@/contexts/language-context';
 import { darkColors, radius, spacing, typography } from '@/theme';
 
@@ -35,6 +36,8 @@ export function PlacesSheet({ visible, onClose }: PlacesSheetProps) {
                 <Text style={styles.closeText}>×</Text>
               </Pressable>
             </View>
+
+            <DemoModeBanner style={styles.demoBanner} />
 
             <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
               {places.map((place) => (
@@ -224,6 +227,7 @@ const styles = StyleSheet.create({
   },
   handle: { alignSelf: 'center', width: 40, height: 4, borderRadius: radius.pill, backgroundColor: darkColors.borderStrong, marginBottom: spacing[3] },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing[3], minHeight: 48, marginBottom: spacing[2] },
+  demoBanner: { marginBottom: spacing[3] },
   headerCopy: { flex: 1 },
   eyebrow: { ...typography.caption, color: darkColors.accent, fontWeight: '700', letterSpacing: 1.1 },
   title: { ...typography.titleLarge, color: darkColors.textPrimary },

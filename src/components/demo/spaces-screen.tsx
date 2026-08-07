@@ -13,7 +13,7 @@ import {
   type SpaceSummary,
   type SpacesServiceError,
 } from '@/services/spaces-service';
-import { alpha, avatars, darkColors, groupColors, radius, spacing, typography } from '@/theme';
+import { alpha, darkColors, groupColors, radius, spacing, typography } from '@/theme';
 
 import { SpaceFormSheet } from './space-form-sheet';
 import { getSpacesErrorMessage } from './spaces-error-messages';
@@ -35,7 +35,7 @@ const TYPE_ICON: Record<SpaceSummary['type'], string> = {
 };
 
 export function SpacesScreen({ onSelectSpace }: SpacesScreenProps) {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { t } = useLanguage();
   const reduceMotion = useReducedMotion();
   const enter = (delay: number) => (reduceMotion ? FadeInDown.duration(1) : FadeInDown.delay(delay).duration(420));
@@ -73,7 +73,7 @@ export function SpacesScreen({ onSelectSpace }: SpacesScreenProps) {
         showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
           <View style={styles.topBarIdentity}>
-            <Avatar backgroundColor="#253B63" name={t('common.me')} ringColor={alpha.white24} size={32} source={avatars.moi} />
+            <Avatar backgroundColor="#253B63" imageUrl={profile?.avatarUrl} name={profile?.fullName || t('common.me')} ringColor={alpha.white24} size={32} />
             <Text accessibilityRole="header" style={styles.topBarTitle}>{t('spaces.title')}</Text>
           </View>
         </View>

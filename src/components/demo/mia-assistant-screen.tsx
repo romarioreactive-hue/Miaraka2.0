@@ -13,10 +13,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useAuth } from '@/auth';
 import { AppBackground } from '@/components/ui/app-background';
 import { Avatar } from '@/components/ui/avatar';
+import { DemoModeBanner } from '@/components/ui/demo-mode-banner';
 import { useLanguage } from '@/contexts/language-context';
-import { alpha, avatars, darkColors, radius, spacing, typography } from '@/theme';
+import { alpha, darkColors, radius, spacing, typography } from '@/theme';
 
 import { DemoTab, DemoTabBar } from './demo-tab-bar';
 
@@ -36,6 +38,7 @@ const SUGGESTIONS: { questionKey: 'mia.suggestion1' | 'mia.suggestion2' | 'mia.s
 ];
 
 export function MiaAssistantScreen({ activeTab, onNavigate, onClose }: MiaAssistantScreenProps) {
+  const { profile } = useAuth();
   const { t } = useLanguage();
   const [state, setState] = useState<MiaState>('idle');
   const [answerKey, setAnswerKey] = useState<AnswerKey>('mia.sampleResponse');
@@ -77,7 +80,7 @@ export function MiaAssistantScreen({ activeTab, onNavigate, onClose }: MiaAssist
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.topBar}>
           <View style={styles.topBarIdentity}>
-            <Avatar backgroundColor="#253B63" name={t('common.me')} ringColor={alpha.white24} size={32} source={avatars.moi} />
+            <Avatar backgroundColor="#253B63" imageUrl={profile?.avatarUrl} name={profile?.fullName || t('common.me')} ringColor={alpha.white24} size={32} />
             <Text accessibilityRole="header" style={styles.title}>{t('mia.title')}</Text>
           </View>
           <Pressable
@@ -92,6 +95,8 @@ export function MiaAssistantScreen({ activeTab, onNavigate, onClose }: MiaAssist
             />
           </Pressable>
         </View>
+
+        <DemoModeBanner style={styles.demoBanner} />
 
         <View style={styles.content}>
           <View style={styles.responseArea}>
@@ -210,6 +215,7 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   safeArea: { flex: 1 },
   topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 48, paddingHorizontal: spacing[4], paddingTop: spacing[2] },
+  demoBanner: { marginHorizontal: spacing[4], marginTop: spacing[2] },
   topBarIdentity: { flexDirection: 'row', alignItems: 'center', gap: spacing[3] },
   title: { ...typography.titleLarge, color: darkColors.accent },
   notificationButton: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: radius.circle, backgroundColor: darkColors.surfaceElevated },

@@ -1,16 +1,25 @@
 import { useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { useAuth } from '@/auth';
 import { AppBackground } from '@/components/ui/app-background';
 import { Avatar } from '@/components/ui/avatar';
+import { Badge, type BadgeVariant } from '@/components/ui/badge';
 import { Toast, type ToastVariant } from '@/components/ui/toast';
 import { useLanguage } from '@/contexts/language-context';
+import type { TranslationKey } from '@/i18n';
 import { getAvatarDisplayUrl, pickAvatarImage, uploadAvatar, type AvatarPickSource, type AvatarServiceError } from '@/services/avatar-service';
-import { alpha, avatars, darkColors, groupColors, radius, spacing, typography } from '@/theme';
+import {
+  getLocationSharingSetting,
+  getMyCurrentLocation,
+  setLocationSharingSetting,
+  type LocationSyncServiceError,
+} from '@/services/location-sync-service';
+import { alpha, darkColors, groupColors, radius, spacing, typography } from '@/theme';
+import { getLocationFreshness, type LocationFreshness } from '@/utils/location-freshness';
 
 import { getAvatarErrorMessage } from './avatar-error-messages';
 import { AvatarPickerSheet } from './avatar-picker-sheet';
@@ -24,6 +33,42 @@ import {
   SpacePermissionSettings,
 } from './profile-modals';
 import { PlacesSheet } from './places-sheet';
+
+/**
+ * Même vocabulaire que ShareLocationCard (my-location-screen.tsx) : une
+ * seule source de vérité pour l'état du partage (public.user_settings.
+ * share_location + la fraîcheur de public.locations.updated_at), affichée
+ * de façon identique sur l'onglet Carte et sur l'onglet Profil. `pending` :
+ * le partage vient d'être activé mais aucune position n'a encore été
+ * envoyée (l'envoi réel n'a lieu que depuis l'onglet Carte, tant qu'aucun
+ * suivi GPS en arrière-plan n'existe — voir docs/LOCATION.md).
+ */
+const SHARE_STATUS_COPY: Record<'disabled' | 'active' | 'stale' | 'pending', { key: TranslationKey; variant: BadgeVariant }> = {
+  disabled: { key: 'location.share.disabled', variant: 'neutral' },
+  active: { key: 'location.share.active', variant: 'success' },
+  stale: { key: 'location.share.stale', variant: 'warning' },
+  pending: { key: 'location.share.enabling', variant: 'neutral' },
+};
+
+function shareStatusFor(shareLocation: boolean, freshness: LocationFreshness): keyof typeof SHARE_STATUS_COPY {
+  if (!shareLocation) return 'disabled';
+  if (freshness === 'unavailable') return 'pending';
+  // Même seuil que ShareLocationCard (my-location-screen.tsx) : au-delà de
+  // « live » (< 60 s), le badge passe à « Dernière position connue » — pas
+  // seulement au-delà du palier « stale » de getLocationFreshness — pour
+  // que les deux onglets affichent toujours exactement le même état.
+  return freshness === 'live' ? 'active' : 'stale';
+}
+
+function initialsFromName(name: string): string {
+  const trimmed = name.trim();
+  if (!trimmed) return '';
+  return trimmed
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join('');
+}
 
 type SpaceKey = 'family' | 'friends' | 'team';
 
@@ -46,10 +91,33 @@ type ProfileScreenProps = {
 
 export function ProfileScreen({ onNavigateToSpaces }: ProfileScreenProps) {
   const router = useRouter();
-  const { user: authUser, profile: authProfile, signOut, refreshProfile } = useAuth();
+  const { user: authUser, profile: authProfile, signOut, refreshProfile, updateProfile } = useAuth();
   const { language, setLanguage, t } = useLanguage();
-  const [profile, setProfile] = useState<ProfileDetails>({ name: 'Rica Rakoto', email: 'rica.rakoto@gmail.com', initials: 'RR' });
-  const [location, setLocation] = useState({ share: true, background: true, lastKnown: true, batterySaver: false });
+  // Nom/e-mail/initiales réels du compte connecté (auth.users + profiles),
+  // jamais une identité fictive : voir mission « audit des données
+  // fictives ». `profile` reste un état local éditable (formulaire de
+  // EditProfileModal) mais part toujours de la vraie identité, et
+  // `handleSaveProfile` persiste réellement le nom via useAuth().updateProfile.
+  const [profile, setProfile] = useState<ProfileDetails>(() => {
+    const name = authProfile?.fullName?.trim() || authUser?.email || '';
+    return { name, email: authUser?.email ?? '', initials: initialsFromName(name) };
+  });
+  const [location, setLocation] = useState({ background: true, lastKnown: true, batterySaver: false });
+  // Partage de position : seule source de vérité = public.user_settings.share_location
+  // (même service que l'onglet Carte — src/services/location-sync-service.ts).
+  // Chargé au montage ; jamais initialisé à une valeur fictive.
+  const [shareLocation, setShareLocationState] = useState(false);
+  const [shareLocationLoaded, setShareLocationLoaded] = useState(false);
+  const [shareLocationUpdatedAt, setShareLocationUpdatedAt] = useState<string | null>(null);
+  // Recalculée périodiquement (comme ShareLocationCard sur l'onglet Carte)
+  // pour ne jamais laisser « Position partagée » affiché après que la
+  // position a cessé d'être fraîche, même si l'utilisateur reste sur cet
+  // écran sans rien faire.
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 10_000);
+    return () => clearInterval(interval);
+  }, []);
   const [notifications, setNotifications] = useState({ arrival: true, departure: false, invitation: true, challenge: true, offline: true, lowBattery: false });
   const [spaceSettings, setSpaceSettings] = useState(INITIAL_SPACE_SETTINGS);
   const [darkTheme, setDarkTheme] = useState(true);
@@ -68,6 +136,67 @@ export function ProfileScreen({ onNavigateToSpaces }: ProfileScreenProps) {
 
   function showFeedback(message: string) {
     setFeedback(message);
+  }
+
+  // Charge l'état RÉEL du partage (public.user_settings.share_location) et
+  // la fraîcheur de la dernière position connue (public.locations.updated_at)
+  // au montage de l'onglet Profil — remonté à chaque fois que l'onglet est
+  // rouvert (voir src/app/demo.tsx : les onglets sont démontés, pas juste
+  // masqués), donc toujours à jour avec ce qui a été changé depuis l'onglet
+  // Carte, sans état partagé ni abonnement supplémentaire à maintenir.
+  useEffect(() => {
+    if (!authUser) return;
+    let cancelled = false;
+
+    Promise.all([getLocationSharingSetting(authUser.id), getMyCurrentLocation(authUser.id)])
+      .then(([shared, lastLocation]) => {
+        if (cancelled) return;
+        setShareLocationState(shared);
+        setShareLocationUpdatedAt(lastLocation?.updatedAt ?? null);
+      })
+      .catch(() => {
+        // Reste à false (état par défaut du schéma) si la lecture échoue.
+      })
+      .finally(() => {
+        if (!cancelled) setShareLocationLoaded(true);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authUser]);
+
+  /**
+   * Écrit réellement public.user_settings.share_location — même colonne,
+   * même service (location-sync-service.ts) que l'interrupteur de l'onglet
+   * Carte (useLocationSync) : une seule source de vérité, jamais deux
+   * états indépendants. `useLocationSync` lui-même ne peut pas être réutilisé
+   * ici tel quel : il dépend de <LocationProvider>, volontairement monté
+   * uniquement autour de l'onglet Carte (aucune demande de permission GPS
+   * depuis Profil — voir docs/LOCATION.md).
+   */
+  async function handleToggleShareLocation(next: boolean) {
+    if (!authUser) return;
+    const previous = shareLocation;
+    setShareLocationState(next);
+    try {
+      await setLocationSharingSetting(authUser.id, next);
+    } catch (error) {
+      // Le réglage n'a pas pu être écrit dans Supabase : on revient à l'état
+      // précédent plutôt que de laisser l'interrupteur mentir sur l'état réel.
+      setShareLocationState(previous);
+      showFeedback((error as LocationSyncServiceError).message);
+    }
+  }
+
+  /** Persiste réellement le nom modifié (public.profiles.full_name via Supabase), au lieu de ne mettre à jour qu'un état local jeté au prochain montage de l'écran. */
+  async function handleSaveProfile(updated: ProfileDetails) {
+    setProfile(updated);
+    try {
+      await updateProfile({ fullName: updated.name });
+    } catch {
+      // L'erreur est déjà exposée via useAuth().error ; le formulaire reste modifiable pour réessayer.
+    }
   }
 
   async function handleLogout() {
@@ -105,6 +234,8 @@ export function ProfileScreen({ onNavigateToSpaces }: ProfileScreenProps) {
     }
   }
 
+  const shareStatus = SHARE_STATUS_COPY[shareStatusFor(shareLocation, getLocationFreshness(shareLocationUpdatedAt, now))];
+
   return (
     <AppBackground variant="profile">
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -140,7 +271,6 @@ export function ProfileScreen({ onNavigateToSpaces }: ProfileScreenProps) {
                 name={profile.name}
                 ringColor={darkColors.accent}
                 size={64}
-                source={avatars.rica}
               />
             </Pressable>
             <Pressable
@@ -156,12 +286,14 @@ export function ProfileScreen({ onNavigateToSpaces }: ProfileScreenProps) {
                 weight="bold"
               />
             </Pressable>
-            <View style={styles.onlineDot} />
+            {authProfile?.isOnline ? <View style={styles.onlineDot} /> : null}
           </View>
           <View style={styles.profileCopy}>
             <Text accessibilityRole="header" style={styles.profileName}>{profile.name}</Text>
             <Text numberOfLines={1} style={styles.profileEmail}>{profile.email}</Text>
-            <View style={styles.verifiedRow}><Text style={styles.verifiedIcon}>✓</Text><Text style={styles.verifiedText}>{t('profile.verified')}</Text></View>
+            {authUser?.emailConfirmedAt ? (
+              <View style={styles.verifiedRow}><Text style={styles.verifiedIcon}>✓</Text><Text style={styles.verifiedText}>{t('profile.verified')}</Text></View>
+            ) : null}
           </View>
           <Pressable accessibilityRole="button" onPress={() => setEditOpen(true)} style={({ pressed }) => [styles.editButton, pressed && styles.pressed]}>
             <Text style={styles.editButtonText}>{t('profile.edit')}</Text>
@@ -176,7 +308,6 @@ export function ProfileScreen({ onNavigateToSpaces }: ProfileScreenProps) {
 
         <Section icon="◉" title={t('profile.account')} delay={60}>
           <InfoRow icon="Aa" label={t('profile.fullName')} value={profile.name} />
-          <InfoRow icon="◍" label={t('profile.photo')} value={t('profile.fakeAvatar')} />
           <InfoRow icon="G" label={t('profile.googleAccount')} value={profile.email} />
           <View style={styles.settingRow}>
             <View style={styles.rowIcon}><Text style={styles.rowIconText}>文</Text></View>
@@ -195,9 +326,17 @@ export function ProfileScreen({ onNavigateToSpaces }: ProfileScreenProps) {
         </Section>
 
         <Section icon="⌖" title={t('profile.location')} delay={100}>
-          <ToggleRow label={t('profile.sharePosition')} description={t('profile.visibleBySpace')} value={location.share} onValueChange={(share) => setLocation((current) => ({ ...current, share }))} />
+          <ShareLocationRow
+            badgeKey={shareStatus.key}
+            badgeVariant={shareStatus.variant}
+            description={t('profile.visibleBySpace')}
+            disabled={!shareLocationLoaded}
+            label={t('profile.sharePosition')}
+            onValueChange={handleToggleShareLocation}
+            value={shareLocation}
+          />
           <ActionRow icon="⌂" label={t('profile.myPlaces')} onPress={() => setPlacesOpen(true)} value={t('profile.myPlacesValue')} />
-          {location.share ? (
+          {shareLocation ? (
             <>
               <ToggleRow label={t('profile.backgroundLocation')} description={t('profile.simulationActive')} value={location.background} onValueChange={(background) => setLocation((current) => ({ ...current, background }))} />
               <ToggleRow label={t('profile.lastKnown')} value={location.lastKnown} onValueChange={(lastKnown) => setLocation((current) => ({ ...current, lastKnown }))} />
@@ -215,7 +354,7 @@ export function ProfileScreen({ onNavigateToSpaces }: ProfileScreenProps) {
               </View>
               <Pressable
                 accessibilityRole="button"
-                onPress={() => setLocation((current) => ({ ...current, share: true }))}
+                onPress={() => void handleToggleShareLocation(true)}
                 style={({ pressed }) => [styles.positionDisabledButton, pressed && styles.pressed]}>
                 <Text style={styles.positionDisabledButtonText}>{t('states.activateSharing')}</Text>
               </Pressable>
@@ -260,21 +399,21 @@ export function ProfileScreen({ onNavigateToSpaces }: ProfileScreenProps) {
           ) : (
             <ActionRow icon="Ⅱ" label={t('profile.pauseSharing')} value={t('profile.pauseValue')} onPress={() => setPauseOpen(true)} />
           )}
-          <ActionRow icon="👁" label={t('profile.whoSees')} value={t('profile.authorizedPeople')} onPress={() => showFeedback(t('profile.feedbackWho'))} />
+          <ActionRow icon="👁" label={t('profile.whoSees')} onPress={() => showFeedback(t('profile.feedbackWho'))} />
           <ActionRow icon="↗" label={t('profile.leaveSpace')} onPress={() => showFeedback(t('profile.feedbackLeave'))} />
           <ActionRow danger icon="×" label={t('profile.deleteAccount')} value={t('profile.fakeAction')} onPress={() => showFeedback(t('profile.feedbackDelete'))} />
         </Section>
 
         <Section icon="⚙" title={t('profile.application')} delay={260}>
           <ToggleRow label={t('profile.darkTheme')} description={t('profile.officialTheme')} value={darkTheme} onValueChange={setDarkTheme} />
-          <InfoRow icon="i" label={t('profile.appVersion')} value={`1.0.0 · ${t('common.fictional')}`} />
+          <InfoRow icon="i" label={t('profile.appVersion')} value="1.0.0" />
           <ActionRow icon="?" label={t('profile.help')} onPress={() => showFeedback(t('profile.feedbackHelp'))} />
           <ActionRow icon="◇" label={t('profile.privacyPolicy')} onPress={() => showFeedback(t('profile.feedbackDocument'))} />
           <ActionRow icon="≡" label={t('profile.terms')} onPress={() => showFeedback(t('profile.feedbackDocument'))} />
         </Section>
       </ScrollView>
 
-      <EditProfileModal onClose={() => setEditOpen(false)} onSave={setProfile} profile={profile} visible={editOpen} />
+      <EditProfileModal onClose={() => setEditOpen(false)} onSave={handleSaveProfile} profile={profile} visible={editOpen} />
       {selectedSpace && (
         <SpacePermissionsModal
           color={SPACE_META[selectedSpace].color}
@@ -318,6 +457,44 @@ function ToggleRow({ description, label, onValueChange, value }: { description?:
     <View style={styles.settingRow}>
       <View style={styles.rowCopy}><Text style={styles.rowLabel}>{label}</Text>{description && <Text style={styles.rowValue}>{description}</Text>}</View>
       <Switch accessibilityLabel={label} onValueChange={onValueChange} thumbColor={darkColors.textPrimary} trackColor={{ false: darkColors.disabledSurface, true: darkColors.success }} value={value} />
+    </View>
+  );
+}
+
+/**
+ * Comme ToggleRow, avec en plus le badge d'état réel du partage (même
+ * variantes que ShareLocationCard sur l'onglet Carte — voir
+ * my-location-screen.tsx) : « Position partagée » / « Dernière position
+ * connue » / « Partage suspendu ». `disabled` tant que la vraie valeur
+ * Supabase n'a pas encore été chargée, pour ne jamais laisser l'utilisateur
+ * togguer une valeur devinée.
+ */
+function ShareLocationRow({
+  badgeKey,
+  badgeVariant,
+  description,
+  disabled,
+  label,
+  onValueChange,
+  value,
+}: {
+  badgeKey: TranslationKey;
+  badgeVariant: BadgeVariant;
+  description?: string;
+  disabled: boolean;
+  label: string;
+  onValueChange: (value: boolean) => void;
+  value: boolean;
+}) {
+  const { t } = useLanguage();
+  return (
+    <View style={styles.settingRow}>
+      <View style={styles.rowCopy}>
+        <Text style={styles.rowLabel}>{label}</Text>
+        {description && <Text style={styles.rowValue}>{description}</Text>}
+        <Badge label={t(badgeKey)} style={styles.shareLocationBadge} variant={badgeVariant} />
+      </View>
+      <Switch accessibilityLabel={label} disabled={disabled} onValueChange={onValueChange} thumbColor={darkColors.textPrimary} trackColor={{ false: darkColors.disabledSurface, true: darkColors.success }} value={value} />
     </View>
   );
 }
@@ -380,6 +557,7 @@ const styles = StyleSheet.create({
   rowCopy: { flex: 1, minWidth: 0 },
   rowLabel: { ...typography.labelLarge, color: darkColors.textPrimary },
   rowValue: { ...typography.caption, color: darkColors.textMuted, marginTop: 1 },
+  shareLocationBadge: { marginTop: spacing[2] },
   segmented: { flexDirection: 'row', padding: 3, borderRadius: radius.pill, backgroundColor: darkColors.disabledSurface },
   segment: { minWidth: 42, minHeight: 38, alignItems: 'center', justifyContent: 'center', borderRadius: radius.pill },
   segmentActive: { backgroundColor: darkColors.primary },

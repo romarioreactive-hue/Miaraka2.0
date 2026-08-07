@@ -67,25 +67,69 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       dispatch({ type: 'UNAUTHENTICATED' });
       return;
     }
-    try {
-      const profile = await authService.loadProfile(session);
-      if (mountedRef.current) dispatch({ type: 'AUTHENTICATED', session, profile });
-    } catch (error) {
-      if (mountedRef.current) dispatch({ type: 'ERROR', error: toAuthError(error) });
+    // Rebind `const` : contrairement au paramètre `session`, cette liaison
+    // garde son type affiné (Session, non-null) à l'intérieur de la fonction
+    // imbriquée ci-dessous.
+    const authenticatedSession = session;
+
+    // Fonction locale (pas `settle` lui-même) : une valeur mémoïsée par
+    // useCallback ne doit jamais se référencer elle-même dans son propre
+    // corps (incompatible avec React Compiler). `attemptLoadProfile` est une
+    // déclaration hoistée ordinaire, donc l'auto-référence pour la
+    // nouvelle tentative est sans risque.
+    async function attemptLoadProfile() {
+      try {
+        const profile = await authService.loadProfile(authenticatedSession);
+        if (mountedRef.current) dispatch({ type: 'AUTHENTICATED', session: authenticatedSession, profile });
+      } catch (error) {
+        if (!mountedRef.current) return;
+        const authError = toAuthError(error);
+        if (authError.code === 'network_error') {
+          // La session elle-même est valide : seul le chargement du profil a
+          // échoué temporairement (réseau). On ne déconnecte jamais pour ça —
+          // ni ne remplace un état déjà authentifié affiché à l'écran par une
+          // erreur — on réessaie simplement en tâche de fond.
+          setTimeout(() => {
+            if (mountedRef.current) void attemptLoadProfile();
+          }, 3000);
+          return;
+        }
+        dispatch({ type: 'ERROR', error: authError });
+      }
     }
+
+    await attemptLoadProfile();
   }, []);
 
   useEffect(() => {
     mountedRef.current = true;
+    let retryTimeout: ReturnType<typeof setTimeout> | undefined;
 
-    authService
-      .getSession()
-      .then((session) => {
-        if (mountedRef.current) void settle(session);
-      })
-      .catch((error) => {
-        if (mountedRef.current) dispatch({ type: 'ERROR', error: toAuthError(error) });
-      });
+    // Résolution de la session au démarrage. Une erreur réseau temporaire
+    // (ex. app rouverte hors connexion après une longue absence, le seul cas
+    // où getSession() peut réellement échouer — Supabase préserve déjà la
+    // session dans tous les autres cas) ne doit JAMAIS déconnecter
+    // l'utilisateur : on reste en 'loading' (aucune redirection depuis
+    // ProtectedRoute/PublicRoute tant que ce statut n'a pas changé) et on
+    // réessaie, au lieu de traiter ça comme une session invalide.
+    function resolveInitialSession() {
+      authService
+        .getSession()
+        .then((session) => {
+          if (mountedRef.current) void settle(session);
+        })
+        .catch((error) => {
+          if (!mountedRef.current) return;
+          const authError = toAuthError(error);
+          if (authError.code === 'network_error') {
+            retryTimeout = setTimeout(resolveInitialSession, 3000);
+            return;
+          }
+          dispatch({ type: 'ERROR', error: authError });
+        });
+    }
+
+    resolveInitialSession();
 
     const unsubscribe = authService.onSessionChange((session) => {
       if (mountedRef.current) void settle(session);
@@ -93,6 +137,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => {
       mountedRef.current = false;
+      if (retryTimeout) clearTimeout(retryTimeout);
       unsubscribe();
     };
   }, [settle]);
