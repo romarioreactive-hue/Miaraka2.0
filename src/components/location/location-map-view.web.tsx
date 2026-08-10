@@ -103,6 +103,15 @@ export const LocationMapView = forwardRef<LocationMapViewHandle, LocationMapView
       let cancelled = false;
       let resizeObserver: ResizeObserver | null = null;
 
+      // ---- Instrumentation temporaire de diagnostic (voir demande) ----
+      // Contrairement à `devLog`, ces logs NE SONT PAS retirés du bundle de
+      // production : ils doivent rester visibles dans la console du
+      // navigateur sur le déploiement Vercel réel pour comprendre pourquoi
+      // le repli liste s'y déclenche. À retirer une fois la cause confirmée.
+      console.log('[MAP] component mounted');
+      const mountRect = containerRef.current.getBoundingClientRect();
+      console.log('[MAP] container dimensions:', { width: mountRect.width, height: mountRect.height });
+
       // Vérification proactive AVANT de charger MapLibre : si le contexte
       // WebGL ne peut pas être créé du tout, inutile de télécharger ~1,1 Mo
       // de JS + le CSS pour rien, et ça évite surtout un piège réel de
@@ -113,7 +122,9 @@ export const LocationMapView = forwardRef<LocationMapViewHandle, LocationMapView
       // l'instance à peine créée. Sans ce garde-fou, un appareil sans WebGL
       // utilisable resterait bloqué indéfiniment sur le spinner de
       // chargement au lieu de basculer sur le repli liste.
-      if (!isWebGLAvailable()) {
+      const webglAvailable = isWebGLAvailable();
+      console.log('[MAP] WebGL available:', webglAvailable);
+      if (!webglAvailable) {
         devLog('WebGL indisponible — repli liste sans charger MapLibre');
         setMapState('unavailable');
         return;
@@ -128,6 +139,7 @@ export const LocationMapView = forwardRef<LocationMapViewHandle, LocationMapView
       // zone vide".
       const timeoutId = setTimeout(() => {
         if (cancelled || mapReadyRef.current) return;
+        console.warn('[MAP] load timeout — repli liste');
         devLog('délai de chargement dépassé — repli liste');
         cancelled = true;
         try {
@@ -148,6 +160,7 @@ export const LocationMapView = forwardRef<LocationMapViewHandle, LocationMapView
           const maplibregl = module;
           maplibreModuleRef.current = maplibregl;
 
+          console.log('[MAP] creating MapLibre map', { style: MAP_STYLE_URL });
           const map = new maplibregl.Map({
             container: containerRef.current,
             style: MAP_STYLE_URL,
@@ -156,6 +169,19 @@ export const LocationMapView = forwardRef<LocationMapViewHandle, LocationMapView
           });
           devLog('instance de carte créée');
           map.addControl(new maplibregl.NavigationControl({ showCompass: false, showZoom: true }), 'bottom-right');
+
+          // Écouteur dédié à la création du contexte WebGL lui-même (distinct
+          // de l'événement générique 'error' ci-dessous) : voir point 7/8 du
+          // diagnostic demandé — permet de distinguer "WebGL indisponible"
+          // de "WebGL disponible mais la carte échoue pour une autre raison"
+          // (style/tuiles/CORS…).
+          map.on('webglcontextcreationerror', (event) => {
+            console.error('[MAP] WebGL context error:', event);
+          });
+
+          map.on('style.load', () => {
+            console.log('[MAP] style loaded');
+          });
 
           // `originalEvent` n'est présent que pour un geste réel de
           // l'utilisateur (souris, tactile, molette) — jamais pour un appel
@@ -169,6 +195,7 @@ export const LocationMapView = forwardRef<LocationMapViewHandle, LocationMapView
           map.on('zoomstart', markUserInteracted);
 
           map.once('load', () => {
+            console.log('[MAP] map load');
             if (cancelled) return;
             devLog('style chargé, carte prête');
             clearTimeout(timeoutId);
@@ -181,6 +208,7 @@ export const LocationMapView = forwardRef<LocationMapViewHandle, LocationMapView
             // Ignoré une fois la carte déjà affichée avec succès : une
             // erreur transitoire (ex. une tuile isolée en 404) ne doit
             // jamais faire disparaître une carte qui fonctionne déjà.
+            console.error('[MAP] map error:', event.error);
             console.warn('[LocationMapView] MapLibre error', event.error);
             if (mapReadyRef.current) return;
             clearTimeout(timeoutId);
@@ -206,12 +234,14 @@ export const LocationMapView = forwardRef<LocationMapViewHandle, LocationMapView
           // laisse une bande vide.
           if (typeof ResizeObserver !== 'undefined' && containerRef.current) {
             resizeObserver = new ResizeObserver(() => {
+              console.log('[MAP] map resize');
               mapRef.current?.resize();
             });
             resizeObserver.observe(containerRef.current);
           }
         })
         .catch((error) => {
+          console.error('[MAP] maplibre-gl import failed:', error);
           console.warn('[LocationMapView] MapLibre indisponible, repli liste', error);
           clearTimeout(timeoutId);
           if (!cancelled) setMapState('unavailable');
