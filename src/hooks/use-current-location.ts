@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Platform } from 'react-native';
 
 import {
   getCurrentLocation,
@@ -9,6 +10,17 @@ import {
   type LocationWatchHandle,
 } from '@/services/location-service';
 import type { LocationPermission, LocationSample, LocationServiceError, LocationState } from '@/types/location';
+
+/**
+ * Instrumentation temporaire de diagnostic (voir demande "diagnostiquer
+ * l'échec de navigator.geolocation") : contrairement aux logs habituels
+ * gardés par `__DEV__`, ceux-ci restent volontairement dans le bundle de
+ * production pour rester visibles dans la console du navigateur sur le
+ * déploiement Vercel réel. À retirer une fois la cause confirmée.
+ */
+function geoLog(...args: unknown[]): void {
+  console.log('[GEO]', ...args);
+}
 
 export interface UseCurrentLocationOptions {
   /** Suit la position en continu (watchPositionAsync) plutôt qu'une seule lecture. @default true */
@@ -66,7 +78,35 @@ export function useCurrentLocation(options: UseCurrentLocationOptions = {}): Loc
 
     setState((current) => ({ ...current, status: 'locating', permission }));
 
-    const sample = await getCurrentLocation();
+    // Voir node_modules/expo-location/src/ExpoLocation.web.ts:
+    // getCurrentPositionAsync({ accuracy: Balanced }) appelle
+    // navigator.geolocation.getCurrentPosition avec
+    // { maximumAge: Infinity, enableHighAccuracy: (accuracy > Balanced) = false, ...options }
+    // — aucun `timeout` explicite n'est ajouté, donc le défaut navigateur
+    // (aucune limite) s'applique. Valeurs déduites de la lecture du code
+    // source, pas mesurées en direct (le navigateur n'expose pas les
+    // options utilisées après coup).
+    geoLog('requesting position — options (via expo-location, accuracy=Balanced): enableHighAccuracy=false, maximumAge=Infinity, timeout=non défini (défaut navigateur)');
+
+    let sample: LocationSample;
+    try {
+      sample = await getCurrentLocation();
+    } catch (error) {
+      const serviceError = error as LocationServiceError;
+      // `cause` porte l'objet GeolocationPositionError brut du navigateur :
+      // voir location-service.ts (`createError('unavailable', ..., error)`)
+      // et ExpoLocation.web.ts (`reject` passé tel quel comme error callback
+      // de navigator.geolocation.getCurrentPosition).
+      const rawError = serviceError?.cause as GeolocationPositionError | undefined;
+      geoLog('error code:', rawError?.code);
+      geoLog('error message:', rawError?.message ?? serviceError?.message);
+      if (rawError?.code === 1) geoLog('error PERMISSION_DENIED');
+      else if (rawError?.code === 2) geoLog('error POSITION_UNAVAILABLE');
+      else if (rawError?.code === 3) geoLog('error TIMEOUT');
+      throw error; // comportement inchangé : propage exactement comme avant, seul le log est ajouté.
+    }
+    geoLog('success:', sample.coords);
+
     if (!mountedRef.current) return;
     setState({ status: 'available', permission, sample, error: null });
 
@@ -95,6 +135,7 @@ export function useCurrentLocation(options: UseCurrentLocationOptions = {}): Loc
   const checkOnly = useCallback(async () => {
     try {
       const permission = await getForegroundPermission();
+      geoLog('permission (expo-location getForegroundPermissionsAsync):', permission.state, 'canAskAgain:', permission.canAskAgain);
       if (!mountedRef.current) return;
 
       if (permission.state === 'granted') {
@@ -149,6 +190,25 @@ export function useCurrentLocation(options: UseCurrentLocationOptions = {}): Loc
       stopWatch();
     };
   }, [checkOnly, stopWatch]);
+
+  // ---- Instrumentation temporaire de diagnostic (voir demande) ----
+  // Sonde directe des API navigateur, indépendante d'expo-location, pour
+  // confirmer ce que le navigateur expose réellement sur ce déploiement.
+  // Purement observationnel : ne déclenche aucune demande de position, ne
+  // modifie aucun état de ce hook.
+  useEffect(() => {
+    if (Platform.OS !== 'web' || typeof navigator === 'undefined') return;
+
+    geoLog('navigator.geolocation:', 'geolocation' in navigator);
+    geoLog('navigator.permissions:', 'permissions' in navigator);
+
+    if (navigator.permissions?.query) {
+      navigator.permissions
+        .query({ name: 'geolocation' as PermissionName })
+        .then((result) => geoLog('permission (navigator.permissions.query):', result.state))
+        .catch((error) => geoLog('navigator.permissions.query a échoué:', error));
+    }
+  }, []);
 
   const refresh = useCallback(async (): Promise<LocationSample | null> => {
     setState((current) => ({ ...current, status: 'locating', error: null }));
