@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MapView, { Circle, Marker, type Region } from 'react-native-maps';
 import Animated, {
@@ -20,9 +20,42 @@ import type { LocationMapViewHandle, LocationMapViewProps, VisibleMemberMarker }
 /** ~ niveau de rue. Valeur fixe : pas de "niveau de zoom" distinct côté react-native-maps (région = delta lat/lng). */
 const DEFAULT_DELTA = 0.006;
 const RECENTER_DURATION_MS = 400;
+/** Durée d'un cycle de pulsation (voir MeMarker/MemberMarker) — doit rester alignée avec PULSE_REPS × PULSE_DURATION_MS ci-dessous. */
+const PULSE_DURATION_MS = 2000;
+const PULSE_REPS = 2;
+/** Petite marge après la fin des `PULSE_REPS` cycles avant de figer le marqueur (voir useSettlingTrackViewChanges). */
+const SETTLE_MARGIN_MS = 300;
 
 function regionFromCoordinates(coordinates: Coordinates): Region {
   return { ...coordinates, latitudeDelta: DEFAULT_DELTA, longitudeDelta: DEFAULT_DELTA };
+}
+
+/**
+ * `tracksViewChanges={true}` en continu force react-native-maps à
+ * régénérer un bitmap natif du marqueur à CHAQUE frame — avec une
+ * pulsation Reanimated infinie (`withRepeat(..., -1)`) sur un marqueur
+ * toujours affiché (Moi), ça sature le rendu natif et peut geler l'app au
+ * chargement de la carte (symptôme observé : "l'app cesse de répondre").
+ *
+ * Ce hook ne suit les changements que pendant les `PULSE_REPS` premiers
+ * cycles de pulsation (le temps de capturer l'avatar + le halo), puis fige
+ * le marqueur en bitmap statique. Se réarme si `active` redevient vrai
+ * (ex. un membre repasse "en direct").
+ */
+function useSettlingTrackViewChanges(active: boolean): boolean {
+  const [tracking, setTracking] = useState(active);
+
+  useEffect(() => {
+    if (!active) {
+      setTracking(false);
+      return;
+    }
+    setTracking(true);
+    const timeout = setTimeout(() => setTracking(false), PULSE_DURATION_MS * PULSE_REPS + SETTLE_MARGIN_MS);
+    return () => clearTimeout(timeout);
+  }, [active]);
+
+  return tracking;
 }
 
 /**
@@ -37,6 +70,7 @@ export const LocationMapView = forwardRef<LocationMapViewHandle, LocationMapView
   function LocationMapView({ myLocation, marker, accuracyMeters, members, onSelectMember, style }, ref) {
     const mapRef = useRef<MapView>(null);
     const reduceMotion = useReducedMotion();
+    const meTracksViewChanges = useSettlingTrackViewChanges(!reduceMotion);
 
     useImperativeHandle(ref, () => ({
       recenter: (coordinates: Coordinates) => {
@@ -67,7 +101,7 @@ export const LocationMapView = forwardRef<LocationMapViewHandle, LocationMapView
             anchor={{ x: 0.5, y: 0.5 }}
             coordinate={marker.coordinates}
             title={marker.label}
-            tracksViewChanges={!reduceMotion}>
+            tracksViewChanges={meTracksViewChanges}>
             <MeMarker imageUrl={marker.imageUrl} label={marker.label} reduceMotion={reduceMotion} />
           </Marker>
           {(members ?? []).map((member) => (
@@ -94,6 +128,7 @@ function MemberMapMarker({
   reduceMotion: boolean;
 }) {
   const isLive = member.freshness === 'live';
+  const tracksViewChanges = useSettlingTrackViewChanges(isLive && !reduceMotion);
 
   return (
     <Marker
@@ -101,7 +136,7 @@ function MemberMapMarker({
       coordinate={member.coordinates}
       onPress={onSelect ? () => onSelect(member.id) : undefined}
       title={member.label}
-      tracksViewChanges={isLive && !reduceMotion}>
+      tracksViewChanges={tracksViewChanges}>
       <MemberMarker freshness={member.freshness} imageUrl={member.imageUrl} label={member.label} reduceMotion={reduceMotion} />
     </Marker>
   );
@@ -121,7 +156,7 @@ function MeMarker({
 
   useEffect(() => {
     if (reduceMotion) return;
-    pulse.value = withRepeat(withTiming(1, { duration: 2000, easing: Easing.out(Easing.ease) }), -1, false);
+    pulse.value = withRepeat(withTiming(1, { duration: PULSE_DURATION_MS, easing: Easing.out(Easing.ease) }), PULSE_REPS, false);
   }, [pulse, reduceMotion]);
 
   const pulseStyle = useAnimatedStyle(() => ({
@@ -164,7 +199,7 @@ function MemberMarker({
 
   useEffect(() => {
     if (reduceMotion || !isLive) return;
-    pulse.value = withRepeat(withTiming(1, { duration: 2000, easing: Easing.out(Easing.ease) }), -1, false);
+    pulse.value = withRepeat(withTiming(1, { duration: PULSE_DURATION_MS, easing: Easing.out(Easing.ease) }), PULSE_REPS, false);
   }, [pulse, reduceMotion, isLive]);
 
   const pulseStyle = useAnimatedStyle(() => ({
