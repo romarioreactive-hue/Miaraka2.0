@@ -175,7 +175,10 @@ export const LocationMapView = forwardRef<LocationMapViewHandle, LocationMapView
           // diagnostic demandé — permet de distinguer "WebGL indisponible"
           // de "WebGL disponible mais la carte échoue pour une autre raison"
           // (style/tuiles/CORS…).
-          map.on('webglcontextcreationerror', (event) => {
+          // Événement natif du canvas WebGL, absent du typage MapLibre
+          // (voir MapEventType) : la surcharge générique `Listener` exige
+          // néanmoins un nom de clé connu, d'où le contournement `as never`.
+          (map as MapLibreMap).on('webglcontextcreationerror' as never, (event: unknown) => {
             console.error('[MAP] WebGL context error:', event);
           });
 
