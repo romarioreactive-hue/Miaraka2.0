@@ -1,6 +1,6 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import MapView, { Circle, Marker, type Region } from 'react-native-maps';
+import { Camera, Map as MapLibreMap, Marker, type CameraRef } from '@maplibre/maplibre-react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -17,146 +17,79 @@ import type { Coordinates } from '@/types/location';
 
 import type { LocationMapViewHandle, LocationMapViewProps, VisibleMemberMarker } from './location-map-view.types';
 
-/** ~ niveau de rue. Valeur fixe : pas de "niveau de zoom" distinct côté react-native-maps (région = delta lat/lng). */
-const DEFAULT_DELTA = 0.006;
+/** ~ niveau de rue (même valeur que le repli web, voir location-map-view.web.tsx). */
+const DEFAULT_ZOOM = 15.5;
+const RECENTER_ZOOM = 16;
 const RECENTER_DURATION_MS = 400;
-/** Durée d'un cycle de pulsation (voir MeMarker/MemberMarker) — doit rester alignée avec PULSE_REPS × PULSE_DURATION_MS ci-dessous. */
-const PULSE_DURATION_MS = 2000;
-const PULSE_REPS = 2;
-/** Petite marge après la fin des `PULSE_REPS` cycles avant de figer le marqueur (voir useSettlingTrackViewChanges). */
-const SETTLE_MARGIN_MS = 300;
-
-function regionFromCoordinates(coordinates: Coordinates): Region {
-  return { ...coordinates, latitudeDelta: DEFAULT_DELTA, longitudeDelta: DEFAULT_DELTA };
-}
 
 /**
- * `tracksViewChanges={true}` en continu force react-native-maps à
- * régénérer un bitmap natif du marqueur à CHAQUE frame — avec une
- * pulsation Reanimated infinie (`withRepeat(..., -1)`) sur un marqueur
- * toujours affiché (Moi), ça sature le rendu natif et peut geler l'app au
- * chargement de la carte (symptôme observé : "l'app cesse de répondre").
- *
- * Ce hook ne suit les changements que pendant les `PULSE_REPS` premiers
- * cycles de pulsation (le temps de capturer l'avatar + le halo), puis fige
- * le marqueur en bitmap statique. Se réarme si `active` redevient vrai
- * (ex. un membre repasse "en direct").
+ * Tuiles vectorielles OpenFreeMap (https://openfreemap.org) : projet gratuit
+ * et open-source, sans clé API et sans quota, bâti sur les données
+ * OpenStreetMap — la même source que le repli web (location-map-view.web.tsx).
+ * Aucune clé secrète à protéger.
  */
-function useSettlingTrackViewChanges(active: boolean): boolean {
-  const [tracking, setTracking] = useState(active);
+const MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
 
-  useEffect(() => {
-    if (!active) {
-      setTracking(false);
-      return;
-    }
-    setTracking(true);
-    const timeout = setTimeout(() => setTracking(false), PULSE_DURATION_MS * PULSE_REPS + SETTLE_MARGIN_MS);
-    return () => clearTimeout(timeout);
-  }, [active]);
-
-  return tracking;
+function toLngLat(coordinates: Coordinates): [number, number] {
+  return [coordinates.longitude, coordinates.latitude];
 }
 
 /**
- * Rendu natif (Android/iOS) via react-native-maps : Google Maps sur
- * Android, Apple Maps sur iOS par défaut (aucune clé requise). Un marqueur
- * personnalisé (avatar réel + halo) est utilisé à la place du point bleu
- * natif — voir MeMarker plus bas.
+ * Rendu natif (Android/iOS) via MapLibre Native
+ * (@maplibre/maplibre-react-native) : mêmes tuiles OpenFreeMap que le repli
+ * web, sans clé Google Maps à fournir/facturer. Un marqueur personnalisé
+ * (avatar réel + halo) est utilisé à la place du point natif — voir
+ * MeMarker plus bas.
+ *
+ * Contrairement à react-native-maps (abandonné ici, voir historique git),
+ * les marqueurs MapLibre sont de vraies Views natives positionnées sur la
+ * carte, pas des captures bitmap régénérées à chaque frame (`tracksViewChanges`)
+ * — l'animation de pulsation peut donc rester continue sans risque de geler
+ * l'app (c'était la cause du gel au chargement de la carte avant ce changement).
  *
  * Ce fichier n'est jamais chargé sur le web : voir location-map-view.web.tsx.
  */
 export const LocationMapView = forwardRef<LocationMapViewHandle, LocationMapViewProps>(
-  function LocationMapView({ myLocation, marker, accuracyMeters, members, onSelectMember, style }, ref) {
-    const mapRef = useRef<MapView>(null);
-    const reduceMotion = useReducedMotion();
-    const meTracksViewChanges = useSettlingTrackViewChanges(!reduceMotion);
+  function LocationMapView({ myLocation, marker, members, onSelectMember, style }, ref) {
+    const cameraRef = useRef<CameraRef>(null);
 
     useImperativeHandle(ref, () => ({
       recenter: (coordinates: Coordinates) => {
-        mapRef.current?.animateToRegion(regionFromCoordinates(coordinates), RECENTER_DURATION_MS);
+        cameraRef.current?.easeTo({ center: toLngLat(coordinates), zoom: RECENTER_ZOOM, duration: RECENTER_DURATION_MS });
       },
     }));
 
     return (
       <View style={[styles.fill, style]}>
-        <MapView
-          initialRegion={regionFromCoordinates(myLocation)}
-          ref={mapRef}
-          showsCompass={false}
-          showsMyLocationButton={false}
-          showsUserLocation={false}
-          style={styles.fill}
-          toolbarEnabled={false}>
-          {accuracyMeters != null && accuracyMeters > 0 ? (
-            <Circle
-              center={myLocation}
-              fillColor="rgba(108, 99, 255, 0.12)"
-              radius={accuracyMeters}
-              strokeColor="rgba(108, 99, 255, 0.45)"
-              strokeWidth={1}
-            />
-          ) : null}
-          <Marker
-            anchor={{ x: 0.5, y: 0.5 }}
-            coordinate={marker.coordinates}
-            title={marker.label}
-            tracksViewChanges={meTracksViewChanges}>
-            <MeMarker imageUrl={marker.imageUrl} label={marker.label} reduceMotion={reduceMotion} />
+        <MapLibreMap attribution={false} compass={false} logo={false} mapStyle={MAP_STYLE_URL} scaleBar={false} style={styles.fill}>
+          <Camera ref={cameraRef} initialViewState={{ center: toLngLat(myLocation), zoom: DEFAULT_ZOOM }} />
+          <Marker anchor="center" id="me" lngLat={toLngLat(marker.coordinates)}>
+            <MeMarker imageUrl={marker.imageUrl} label={marker.label} />
           </Marker>
           {(members ?? []).map((member) => (
-            <MemberMapMarker
+            <Marker
+              anchor="center"
+              id={member.id}
               key={member.id}
-              member={member}
-              onSelect={onSelectMember}
-              reduceMotion={reduceMotion}
-            />
+              lngLat={toLngLat(member.coordinates)}
+              onPress={onSelectMember ? () => onSelectMember(member.id) : undefined}>
+              <MemberMarker freshness={member.freshness} imageUrl={member.imageUrl} label={member.label} />
+            </Marker>
           ))}
-        </MapView>
+        </MapLibreMap>
       </View>
     );
   },
 );
 
-function MemberMapMarker({
-  member,
-  onSelect,
-  reduceMotion,
-}: {
-  member: VisibleMemberMarker;
-  onSelect?: (memberId: string) => void;
-  reduceMotion: boolean;
-}) {
-  const isLive = member.freshness === 'live';
-  const tracksViewChanges = useSettlingTrackViewChanges(isLive && !reduceMotion);
-
-  return (
-    <Marker
-      anchor={{ x: 0.5, y: 0.5 }}
-      coordinate={member.coordinates}
-      onPress={onSelect ? () => onSelect(member.id) : undefined}
-      title={member.label}
-      tracksViewChanges={tracksViewChanges}>
-      <MemberMarker freshness={member.freshness} imageUrl={member.imageUrl} label={member.label} reduceMotion={reduceMotion} />
-    </Marker>
-  );
-}
-
-function MeMarker({
-  imageUrl,
-  label,
-  reduceMotion,
-}: {
-  imageUrl?: string | null;
-  label: string;
-  reduceMotion: boolean;
-}) {
+function MeMarker({ imageUrl, label }: { imageUrl?: string | null; label: string }) {
   const { t } = useLanguage();
+  const reduceMotion = useReducedMotion();
   const pulse = useSharedValue(0);
 
   useEffect(() => {
     if (reduceMotion) return;
-    pulse.value = withRepeat(withTiming(1, { duration: PULSE_DURATION_MS, easing: Easing.out(Easing.ease) }), PULSE_REPS, false);
+    pulse.value = withRepeat(withTiming(1, { duration: 2000, easing: Easing.out(Easing.ease) }), -1, false);
   }, [pulse, reduceMotion]);
 
   const pulseStyle = useAnimatedStyle(() => ({
@@ -186,20 +119,19 @@ function MemberMarker({
   imageUrl,
   label,
   freshness,
-  reduceMotion,
 }: {
   imageUrl?: string | null;
   label: string;
   freshness: VisibleMemberMarker['freshness'];
-  reduceMotion: boolean;
 }) {
+  const reduceMotion = useReducedMotion();
   const isLive = freshness === 'live';
   const isStale = freshness === 'stale';
   const pulse = useSharedValue(0);
 
   useEffect(() => {
     if (reduceMotion || !isLive) return;
-    pulse.value = withRepeat(withTiming(1, { duration: PULSE_DURATION_MS, easing: Easing.out(Easing.ease) }), PULSE_REPS, false);
+    pulse.value = withRepeat(withTiming(1, { duration: 2000, easing: Easing.out(Easing.ease) }), -1, false);
   }, [pulse, reduceMotion, isLive]);
 
   const pulseStyle = useAnimatedStyle(() => ({

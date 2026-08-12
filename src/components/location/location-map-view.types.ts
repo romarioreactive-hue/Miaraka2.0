@@ -4,11 +4,12 @@ import type { Coordinates } from '@/types/location';
 import type { LocationFreshness } from '@/utils/location-freshness';
 
 /**
- * Types partagés entre location-map-view.tsx (natif, react-native-maps) et
- * location-map-view.web.tsx (repli web). Ce fichier ne doit JAMAIS importer
- * react-native-maps : c'est justement ce qui permet au bundle web de ne
- * jamais charger ce module natif (voir docs/LOCATION.md "Pourquoi deux
- * fichiers").
+ * Types partagés entre location-map-view.tsx (natif,
+ * @maplibre/maplibre-react-native) et location-map-view.web.tsx (repli
+ * web, maplibre-gl). Ce fichier ne doit JAMAIS importer
+ * @maplibre/maplibre-react-native : c'est justement ce qui permet au bundle
+ * web de ne jamais charger ce module natif (voir docs/LOCATION.md "Pourquoi
+ * deux fichiers").
  */
 export interface LocationMapMarker {
   id: string;
