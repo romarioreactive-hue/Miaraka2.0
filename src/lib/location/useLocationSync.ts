@@ -33,8 +33,14 @@ export interface UseLocationSyncResult extends LocationSyncState {
   setEnabled: (enabled: boolean) => void;
 }
 
-/** Fenêtre minimale entre deux écritures Supabase, même si la position change à chaque échantillon GPS. */
-const MIN_SYNC_INTERVAL_MS = 15_000;
+/**
+ * Fenêtre minimale entre deux écritures Supabase, même si la position change
+ * à chaque échantillon GPS. Resserré de 15s à 6s (2026-08-12, sur demande
+ * explicite) pour un partage quasi temps réel entre membres ; contrepartie
+ * assumée : plus d'écritures Supabase et un peu plus de batterie consommée
+ * pendant le partage actif.
+ */
+const MIN_SYNC_INTERVAL_MS = 6_000;
 /** Déplacement minimal (mètres) pour justifier une resynchronisation avant l'expiration de MIN_SYNC_INTERVAL_MS. */
 const MIN_SYNC_DISTANCE_METERS = 15;
 /** Au-delà de cette imprécision (mètres), la mesure est ignorée : ni envoyée, ni comptée comme un échec. */
